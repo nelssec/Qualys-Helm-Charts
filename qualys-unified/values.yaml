@@ -63,11 +63,11 @@ global:
     allowlistLabelForQcsSensor: ""
 
 # =============================================================================
-# HOST-BASED CONTAINER SENSOR (Linux Agent for Containers)
+# HOST SENSOR (Linux Agent for Containers)
 # =============================================================================
 # This sensor runs on host nodes and scans containers/images
 # Requires cloud provider specification: AWS, GCP, or COREOS
-hostBasedSensor:
+hostsensor:
   enabled: false
 
   qualys:
@@ -152,7 +152,7 @@ qualysTc:
     enabled: false
 
   # ---------------------------------------------------------------------------
-  # QCS SENSOR (General Sensor / Container Security Sensor)
+  # GENERAL SENSOR (Container Security Sensor)
   # Scans container images for vulnerabilities
   # ---------------------------------------------------------------------------
   qcsSensor:
@@ -173,9 +173,9 @@ qualysTc:
 # DEPLOYMENT EXAMPLES
 # =============================================================================
 #
-# Example 1: Host-based Container Sensor only (AWS)
+# Example 1: Host Sensor only (AWS)
 # --------------------------------------------------
-# hostBasedSensor:
+# hostsensor:
 #   enabled: true
 #   qualys:
 #     args:
@@ -185,7 +185,7 @@ qualysTc:
 #
 # Example 2: Cluster Sensor + Runtime Sensor (Azure)
 # ---------------------------------------------------
-# hostBasedSensor:
+# hostsensor:
 #   enabled: false
 # global:
 #   clusterInfoArgs:
@@ -210,7 +210,7 @@ qualysTc:
 #     cloudProvider: "GCP"
 #     GCP:
 #       krn: "your-krn"
-# hostBasedSensor:
+# hostsensor:
 #   enabled: true
 #   qualys:
 #     args:

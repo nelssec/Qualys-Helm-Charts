@@ -52,7 +52,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 Validate required values
 */}}
 {{- define "qualys-unified.validateValues" -}}
-{{- if or .Values.hostBasedSensor.enabled .Values.qualysTc.enabled -}}
+{{- if or .Values.hostsensor.enabled .Values.qualysTc.enabled -}}
   {{- if not .Values.global.customerId -}}
     {{- fail "global.customerId is required when any sensor is enabled" -}}
   {{- end -}}
@@ -64,13 +64,13 @@ Validate required values
   {{- end -}}
 {{- end -}}
 
-{{- if .Values.hostBasedSensor.enabled -}}
-  {{- $providerName := .Values.hostBasedSensor.qualys.args.providerName -}}
+{{- if .Values.hostsensor.enabled -}}
+  {{- $providerName := .Values.hostsensor.qualys.args.providerName -}}
   {{- if not $providerName -}}
-    {{- fail "hostBasedSensor.qualys.args.providerName is required when hostBasedSensor is enabled. Valid values: AWS, GCP, COREOS" -}}
+    {{- fail "hostsensor.qualys.args.providerName is required when hostsensor is enabled. Valid values: AWS, GCP, COREOS" -}}
   {{- end -}}
   {{- if not (has $providerName (list "AWS" "GCP" "COREOS")) -}}
-    {{- fail (printf "Invalid hostBasedSensor.qualys.args.providerName: %s. Valid values are: AWS, GCP, COREOS" $providerName) -}}
+    {{- fail (printf "Invalid hostsensor.qualys.args.providerName: %s. Valid values are: AWS, GCP, COREOS" $providerName) -}}
   {{- end -}}
 {{- end -}}
 

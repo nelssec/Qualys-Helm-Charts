@@ -6,15 +6,15 @@ Thank you for installing {{ .Chart.Name }} version {{ .Chart.Version }}!
 
 Your Qualys sensors have been deployed with the following configuration:
 
-{{- if .Values.hostBasedSensor.enabled }}
+{{- if .Values.hostsensor.enabled }}
 
-✓ HOST-BASED CONTAINER SENSOR
-  Provider: {{ .Values.hostBasedSensor.qualys.args.providerName | default "Not specified" }}
-  Namespace: {{ .Values.hostBasedSensor.qualys.namespace }}
+✓ HOST SENSOR
+  Provider: {{ .Values.hostsensor.qualys.args.providerName | default "Not specified" }}
+  Namespace: {{ .Values.hostsensor.qualys.namespace }}
 
-  The host-based sensor runs as a DaemonSet on your cluster nodes.
+  The host sensor runs as a DaemonSet on your cluster nodes.
   To check the status:
-    kubectl get daemonset -n {{ .Values.hostBasedSensor.qualys.namespace }}
+    kubectl get daemonset -n {{ .Values.hostsensor.qualys.namespace }}
 
 {{- end }}
 
@@ -32,7 +32,7 @@ QUALYS TC SENSORS:
 {{- end }}
 
 {{- if .Values.qualysTc.qcsSensor.enabled }}
-  ✓ QCS Sensor (Container Security Sensor) - Enabled
+  ✓ General Sensor - Enabled
     Scans container images for vulnerabilities
     Concurrent Scans: {{ .Values.qualysTc.qcsSensor.qualys.args.concurrentScan | default "2" }}
 {{- end }}
@@ -49,13 +49,13 @@ QUALYS TC SENSORS:
 
 {{- end }}
 
-{{- if not (or .Values.hostBasedSensor.enabled .Values.qualysTc.enabled) }}
+{{- if not (or .Values.hostsensor.enabled .Values.qualysTc.enabled) }}
 
 ⚠ WARNING: No sensors are currently enabled!
 
   Please enable at least one sensor in your values.yaml:
-  - hostBasedSensor.enabled: true (for host-based container scanning)
-  - qualysTc.enabled: true (for cluster/runtime/container security)
+  - hostsensor.enabled: true (for host container scanning)
+  - qualysTc.enabled: true (for cluster/runtime/general sensor)
 
 {{- end }}
 

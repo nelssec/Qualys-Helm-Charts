@@ -1,19 +1,19 @@
 apiVersion: v2
 name: qualys-unified
-description: A unified Helm chart to deploy Qualys sensors - Host-based Container Sensor, Cluster Sensor, Runtime Sensor, and QCS Sensor
+description: A unified Helm chart to deploy Qualys sensors - Host Sensor, Cluster Sensor, Runtime Sensor, and General Sensor
 type: application
-version: 1.0.0
+version: 1.0.1
 appVersion: "1.0"
 
 dependencies:
-  # Host-based Container Sensor (Linux Agent for containers)
+  # Host Sensor (Linux Agent for containers)
   - name: lxag_container_agent
-    alias: hostBasedSensor
-    condition: hostBasedSensor.enabled
+    alias: hostsensor
+    condition: hostsensor.enabled
     repository: "file://../lxag_container_agent"
     version: "1.0.0"
 
-  # Qualys TC - includes cluster sensor, runtime sensor, qcs-sensor, admission controller
+  # Qualys TC - includes cluster sensor, runtime sensor, general sensor, admission controller
   - name: qualys-tc
     alias: qualysTc
     condition: qualysTc.enabled

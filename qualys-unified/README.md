@@ -2,10 +2,10 @@
 
 A comprehensive Helm chart for deploying Qualys security sensors in Kubernetes and OpenShift clusters. This unified chart allows you to selectively install:
 
-- **Host-based Container Sensor** - Scans hosts and containers
+- **Host Sensor** - Scans hosts and containers
 - **Cluster Sensor** - Discovers and monitors Kubernetes resources
 - **Runtime Sensor** - Monitors runtime behavior and detects anomalies
-- **QCS Sensor** (Container Security Sensor) - Scans container images for vulnerabilities
+- **General Sensor** - Scans container images for vulnerabilities
 - **Admission Controller** - Controls deployments based on security policy
 
 ## Prerequisites
@@ -41,7 +41,7 @@ global:
       arn: "your-cluster-arn"
 
 # Enable the sensors you need
-hostBasedSensor:
+hostsensor:
   enabled: true
   qualys:
     args:
@@ -88,12 +88,12 @@ All sensors require the following global configuration:
 | EU Platform 1 | https://gateway.qg1.apps.qualys.eu |
 | EU Platform 2 | https://gateway.qg2.apps.qualys.eu |
 
-### Host-based Container Sensor
+### Host Sensor
 
 Deploy the Linux Agent for containers to scan host nodes:
 
 ```yaml
-hostBasedSensor:
+hostsensor:
   enabled: true
   qualys:
     args:
@@ -133,7 +133,7 @@ qualysTc:
     enabled: true
 ```
 
-### QCS Sensor (Container Security Sensor)
+### General Sensor
 
 Scans container images for vulnerabilities:
 
@@ -169,7 +169,7 @@ global:
     AWS:
       arn: "arn:aws:eks:region:account-id:cluster/cluster-name"
 
-hostBasedSensor:
+hostsensor:
   enabled: true
   qualys:
     args:
@@ -186,8 +186,8 @@ global:
       id: "your-cluster-id"
       region: "eastus"
 
-hostBasedSensor:
-  enabled: false  # Azure not supported for host-based sensor
+hostsensor:
+  enabled: false  # Azure not supported for host sensor
 ```
 
 ### Google Cloud Platform (GCP)
@@ -199,7 +199,7 @@ global:
     GCP:
       krn: "krn:qgcp:project-id:region:cluster-name"
 
-hostBasedSensor:
+hostsensor:
   enabled: true
   qualys:
     args:
@@ -215,7 +215,7 @@ global:
     SELF_MANAGED_K8S:
       clusterName: "my-cluster"
 
-hostBasedSensor:
+hostsensor:
   enabled: false  # Not applicable for self-managed
 ```
 
@@ -235,7 +235,7 @@ global:
     AWS:
       arn: "arn:aws:eks:us-east-1:123456789:cluster/prod-cluster"
 
-hostBasedSensor:
+hostsensor:
   enabled: true
   qualys:
     args:
@@ -255,7 +255,7 @@ qualysTc:
 
 ### Scenario 2: Host Scanning Only
 
-Deploy only the host-based container sensor:
+Deploy only the host sensor:
 
 ```yaml
 global:
@@ -263,7 +263,7 @@ global:
   activationId: "xyz-789"
   gatewayUrl: "https://gateway.qg1.apps.qualys.com"
 
-hostBasedSensor:
+hostsensor:
   enabled: true
   qualys:
     args:
@@ -275,7 +275,7 @@ qualysTc:
 
 ### Scenario 3: Container Image Scanning (GCP)
 
-Deploy cluster and QCS sensors for image vulnerability scanning:
+Deploy cluster and general sensors for image vulnerability scanning:
 
 ```yaml
 global:
@@ -287,7 +287,7 @@ global:
     GCP:
       krn: "krn:qgcp:my-project:us-central1:my-cluster"
 
-hostBasedSensor:
+hostsensor:
   enabled: false
 
 qualysTc:
@@ -316,7 +316,7 @@ global:
       id: "cluster-resource-id"
       region: "eastus"
 
-hostBasedSensor:
+hostsensor:
   enabled: false
 
 qualysTc:
@@ -335,7 +335,7 @@ For OpenShift clusters, enable the OpenShift flag:
 global:
   openshift: true
 
-hostBasedSensor:
+hostsensor:
   openshift: true
 ```
 
@@ -415,7 +415,7 @@ helm uninstall qualys-sensors -n qualys
    kubectl create namespace qualys
    ```
 
-### Host-based sensor failing
+### Host sensor failing
 
 - Verify `providerName` is one of: AWS, GCP, COREOS
 - Check if the sensor has host access (hostNetwork, hostPID, hostIPC)
