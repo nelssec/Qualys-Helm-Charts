@@ -84,14 +84,15 @@ hostsensor:
         cpu: "0.2"
 
     args:
-      # Cloud Provider - REQUIRED when hostBasedSensor.enabled is true
+      # Cloud Provider - REQUIRED when hostsensor.enabled is true
       # Valid values: AWS, GCP, COREOS
       providerName: ""
 
-      # These are inherited from global if not specified
-      activationId: ""  # Defaults to global.activationId
-      customerId: ""    # Defaults to global.customerId
-      serverUri: ""     # Defaults to global.gatewayUrl
+      # IMPORTANT: Host sensor typically uses DIFFERENT credentials than other sensors
+      # If not specified, these inherit from global values
+      activationId: ""  # Override with host sensor-specific activation ID
+      customerId: ""    # Override with host sensor-specific customer ID
+      serverUri: ""     # Override with host sensor-specific server URI (or use global.gatewayUrl)
 
       # Log level (1-5, default: 1)
       logLevel: "3"
@@ -305,41 +306,60 @@ qualysTc:
 #   qualys:
 #     args:
 #       providerName: "AWS"
+#       activationId: "host-sensor-activation-id"
+#       customerId: "host-sensor-customer-id"
+#       serverUri: "https://gateway.qg2.apps.qualys.com"
 # qualysTc:
 #   enabled: false
 #
-# Example 2: Cluster Sensor + Runtime Sensor (Azure)
-# ---------------------------------------------------
-# hostsensor:
-#   enabled: false
+# Example 2: Cluster + General Sensors only (Azure)
+# --------------------------------------------------
 # global:
+#   customerId: "cluster-sensor-customer-id"
+#   activationId: "cluster-sensor-activation-id"
+#   gatewayUrl: "https://gateway.qg2.apps.qualys.com"
+#   cmsqagPublicUrl: "https://cmsqagpublic.qg2.apps.qualys.com/ContainerSensor"
 #   clusterInfoArgs:
 #     cloudProvider: "AZURE"
 #     AZURE:
 #       id: "your-cluster-id"
 #       region: "eastus"
+# hostsensor:
+#   enabled: false
 # qualysTc:
 #   enabled: true
 #   clusterSensor:
 #     enabled: true
-#   runtimeSensor:
+#   qcsSensor:
 #     enabled: true
+#     qualys:
+#       args:
+#         performScaScan: true
+#         enableConsoleLogs: true
+#         withoutPersistentStorage: true
 #
-# Example 3: All Sensors (GCP)
-# -----------------------------
+# Example 3: All Sensors with Separate Credentials (AWS)
+# --------------------------------------------------------
+# IMPORTANT: Host sensor and cluster sensors use DIFFERENT credentials
 # global:
-#   customerId: "your-customer-id"
-#   activationId: "your-activation-id"
-#   gatewayUrl: "https://gateway.qg1.apps.qualys.com"
+#   # Credentials for cluster/runtime/general sensors
+#   customerId: "dd6ac00f-cac2-5630-82f9-44cb9fcee66c"
+#   activationId: "be2bcfe0-21dd-4108-ab9f-26976c435ed7"
+#   gatewayUrl: "https://gateway.qg2.apps.qualys.com"
+#   cmsqagPublicUrl: "https://cmsqagpublic.qg2.apps.qualys.com/ContainerSensor"
 #   clusterInfoArgs:
-#     cloudProvider: "GCP"
-#     GCP:
-#       krn: "your-krn"
+#     cloudProvider: "AWS"
+#     AWS:
+#       arn: "arn:aws:eks:us-east-1:123456789:cluster/prod"
 # hostsensor:
 #   enabled: true
 #   qualys:
 #     args:
-#       providerName: "GCP"
+#       # Separate credentials for host sensor
+#       providerName: "AWS"
+#       activationId: "host-sensor-activation-id"
+#       customerId: "host-sensor-customer-id"
+#       serverUri: "https://gateway.qg2.apps.qualys.com"
 # qualysTc:
 #   enabled: true
 #   clusterSensor:
@@ -348,5 +368,10 @@ qualysTc:
 #     enabled: true
 #   qcsSensor:
 #     enabled: true
+#     qualys:
+#       args:
+#         performScaScan: true
+#         enableStorageDriver: true
+#         storageDriverType: "overlay"
 #   admissionController:
-#     enabled: true
+#     enabled: false

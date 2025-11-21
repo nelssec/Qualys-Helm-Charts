@@ -59,17 +59,80 @@ qualysTc:
 
 ### 3. Install the chart
 
+**Option A: Install with values file**
+
 ```bash
 helm install qualys-sensors qualys-helm-chart/qualys-unified \
   -f my-values.yaml \
   -n qualys --create-namespace
 ```
 
+**Option B: Install with command-line flags**
+
+```bash
+# Example: Cluster + General Sensors only
+helm install qualys-sensors qualys-helm-chart/qualys-unified \
+  --set global.customerId=dd6ac00f-cac2-5630-82f9-44cb9fcee66c \
+  --set global.activationId=be2bcfe0-21dd-4108-ab9f-26976c435ed7 \
+  --set global.gatewayUrl=https://gateway.qg2.apps.qualys.com \
+  --set global.cmsqagPublicUrl=https://cmsqagpublic.qg2.apps.qualys.com/ContainerSensor \
+  --set global.clusterInfoArgs.cloudProvider=AWS \
+  --set global.clusterInfoArgs.AWS.arn="arn:aws:eks:region:account:cluster/name" \
+  --set hostsensor.enabled=false \
+  --set qualysTc.enabled=true \
+  --set qualysTc.clusterSensor.enabled=true \
+  --set qualysTc.qcsSensor.enabled=true \
+  --set qualysTc.qcsSensor.qualys.args.performScaScan=true \
+  --set qualysTc.qcsSensor.qualys.args.enableConsoleLogs=true \
+  --set qualysTc.qcsSensor.qualys.args.withoutPersistentStorage=true \
+  --namespace qualys --create-namespace
+
+# Example: Host Sensor only
+helm install qualys-sensors qualys-helm-chart/qualys-unified \
+  --set hostsensor.enabled=true \
+  --set hostsensor.qualys.args.providerName=AWS \
+  --set hostsensor.qualys.args.activationId=YOUR_HOST_ACTIVATION_ID \
+  --set hostsensor.qualys.args.customerId=YOUR_HOST_CUSTOMER_ID \
+  --set hostsensor.qualys.args.serverUri=https://gateway.qg2.apps.qualys.com \
+  --set qualysTc.enabled=false \
+  --namespace qualys --create-namespace
+
+# Example: All Sensors (with SEPARATE credentials for host sensor)
+helm install qualys-sensors qualys-helm-chart/qualys-unified \
+  --set global.customerId=CLUSTER_CUSTOMER_ID \
+  --set global.activationId=CLUSTER_ACTIVATION_ID \
+  --set global.gatewayUrl=https://gateway.qg2.apps.qualys.com \
+  --set global.cmsqagPublicUrl=https://cmsqagpublic.qg2.apps.qualys.com/ContainerSensor \
+  --set global.clusterInfoArgs.cloudProvider=AWS \
+  --set global.clusterInfoArgs.AWS.arn="arn:aws:eks:region:account:cluster/name" \
+  --set hostsensor.enabled=true \
+  --set hostsensor.qualys.args.providerName=AWS \
+  --set hostsensor.qualys.args.activationId=HOST_ACTIVATION_ID \
+  --set hostsensor.qualys.args.customerId=HOST_CUSTOMER_ID \
+  --set hostsensor.qualys.args.serverUri=https://gateway.qg2.apps.qualys.com \
+  --set qualysTc.enabled=true \
+  --set qualysTc.clusterSensor.enabled=true \
+  --set qualysTc.qcsSensor.enabled=true \
+  --set qualysTc.qcsSensor.qualys.args.performScaScan=true \
+  --namespace qualys --create-namespace
+```
+
 ## Configuration
+
+### Important: Separate Credentials for Host Sensor
+
+**The host sensor typically uses DIFFERENT credentials than cluster/runtime/general sensors.**
+
+- **Global credentials** (`global.customerId`, `global.activationId`): Used by cluster sensor, runtime sensor, general sensor, and admission controller
+- **Host sensor credentials** (`hostsensor.qualys.args.customerId`, `hostsensor.qualys.args.activationId`): Used only by the host sensor
+
+You can obtain these separate activation IDs from different sections in the Qualys platform:
+- **Host sensor**: From the Container Security > Sensors > Host Sensor section
+- **Cluster sensors**: From the Container Security > Sensors > Kubernetes section
 
 ### Global Settings
 
-All sensors require the following global configuration:
+Global settings apply to cluster sensor, runtime sensor, general sensor, and admission controller:
 
 | Parameter | Description | Required |
 |-----------|-------------|----------|
@@ -90,7 +153,7 @@ All sensors require the following global configuration:
 
 ### Host Sensor
 
-Deploy the Linux Agent for containers to scan host nodes:
+Deploy the Linux Agent for containers to scan host nodes. **Note: This sensor uses separate credentials.**
 
 ```yaml
 hostsensor:
@@ -98,6 +161,10 @@ hostsensor:
   qualys:
     args:
       providerName: "AWS"  # Required: AWS, GCP, or COREOS
+      # Host sensor-specific credentials (different from global)
+      activationId: "YOUR_HOST_SENSOR_ACTIVATION_ID"
+      customerId: "YOUR_HOST_SENSOR_CUSTOMER_ID"
+      serverUri: "https://gateway.qg2.apps.qualys.com"
       logLevel: "3"
     image:
       repository: "qualys/qca"
@@ -108,6 +175,11 @@ hostsensor:
 - `AWS` - Amazon Web Services
 - `GCP` - Google Cloud Platform
 - `COREOS` - CoreOS/Bottlerocket
+
+**Credential Inheritance:**
+- If `hostsensor.qualys.args.activationId` is not specified, it inherits from `global.activationId`
+- If `hostsensor.qualys.args.customerId` is not specified, it inherits from `global.customerId`
+- Best practice: Always specify separate credentials for the host sensor
 
 ### Cluster Sensor
 
