@@ -1,0 +1,56 @@
+suite: Test Qualys Config Map for k8s
+values:
+  - ../values.yaml
+templates:
+  - config-map.yaml
+tests:
+  - it: Should pass all kinds of assertions when config map is set
+    set:
+      global:
+        customerId: 232d2ddb-c9d8-6698-80fc-52bdfac1876b
+        activationId: 232d2ddb-c9d8-6698-80fc-52bdfac1876b
+        gatewayUrl: https://gateway.p04.eng.sjc01.qualys.com
+        clusterInfoArgs:
+          cloudProvider: "AWS"
+          AWS:
+            arn: arn:aws:eks:us-east-1:362990800442:cluster/k8s-admission-controller
+        proxy:
+          skipVerifyTLS: false
+    documentIndex: 0
+    asserts:
+      - equal:
+          path: apiVersion
+          value: v1
+      - equal:
+          path: metadata.name
+          value: admission-controller-config
+      - equal:
+          path: metadata.namespace
+          value: NAMESPACE
+      - exists:
+          path: data["config.yaml"]
+  - it: Should pass all kinds of assertions when config map is set
+    set:
+      global:
+        customerId: 232d2ddb-c9d8-6698-80fc-52bdfac1876b
+        activationId: 232d2ddb-c9d8-6698-80fc-52bdfac1876b
+        gatewayUrl: https://gateway.p04.eng.sjc01.qualys.com
+        clusterInfoArgs:
+          cloudProvider: SELF_MANAGED_K8S
+          SELF_MANAGED_K8S:
+            clusterName: myCluster
+        proxy:
+          skipVerifyTLS: false
+    documentIndex: 1
+    asserts:
+      - equal:
+          path: apiVersion
+          value: v1
+      - equal:
+          path: metadata.name
+          value: qualys-registry-config
+      - equal:
+          path: metadata.namespace
+          value: NAMESPACE
+      - exists:
+          path: data["registry-config.yaml"]

@@ -1,0 +1,21 @@
+# OpenShift
+
+{{- if .Values.global.openshift }}
+kind: SecurityContextConstraints
+apiVersion: security.openshift.io/v1
+metadata:
+  name: scc-qualys-cluster-sensor
+allowHostDirVolumePlugin: true
+allowHostNetwork: true
+allowHostIPC: false
+allowHostPID: false
+allowHostPorts: false
+allowPrivilegedContainer: false
+readOnlyRootFilesystem: false
+runAsUser:
+  type: RunAsAny
+seLinuxContext:
+  type: RunAsAny
+users:
+- {{printf "system:serviceaccount:%s:qualys-clustersensor-sa" .Release.Namespace }}
+{{- end }}

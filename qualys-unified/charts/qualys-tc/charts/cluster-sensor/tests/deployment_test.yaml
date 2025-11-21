@@ -1,0 +1,312 @@
+suite: Test Qualys deployement creation
+values:
+  - ../values.yaml
+templates:
+  - clustersensor-deployment.yaml
+tests:
+  - it: Should create document with required values are set for daemonset
+    set:
+      global:
+        customerId: 232d2ddb-c9d8-6698-80fc-02bdfac1876b
+        activationId: c2b006f3-ed8f-4c82-adc6-3de9b106b008
+        gatewayUrl: http://gateway.p19.eng.sjc01.qualys.com/
+        clusterInfoArgs:
+          # valid values of cloud provider(AWS,AZURE,GCP,OCI,SELF_MANAGED_K8S)
+          cloudProvider: SELF_MANAGED_K8S
+          AWS:
+            arn:
+          AZURE:
+            id:
+            region:
+          GCP:
+            krn:
+          OCI:
+            ocid:
+            clusterName: 
+          SELF_MANAGED_K8S:
+            clusterName: testK8s
+        rootCA:
+            certificate: #certificate in base64 encoded format
+        proxy:
+            value:   #"<proxy FQDN or Ip address>:<port#>"
+            # if proxy(with CA cert) required to connect Qualys Cloud
+            certificate: #certificate in base64 encoded format
+        skipVerifyTLS: false
+      image: qualys/cluster-sensor:1.0.0-0
+      hostNetwork: false
+      persistentStorage:
+        enabled: true
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: Deployment
+      - equal:
+          path: apiVersion
+          value: "apps/v1"
+      - equal:
+          path: kind
+          value: Deployment
+      - equal:
+          path: metadata.name
+          value: qualys-cluster-sensor
+      - equal:
+          path: metadata.namespace
+          value: NAMESPACE
+      - equal:
+          path: metadata.labels.k8s-app
+          value: qualys-cluster-sensor
+      - equal:
+          path: spec.selector.matchLabels.name
+          value: qualys-cluster-sensor
+      - equal:
+          path: spec.template.metadata.labels.name
+          value: qualys-cluster-sensor
+      - equal:
+          path: spec.template.spec.serviceAccountName
+          value: qualys-clustersensor-sa
+      - equal:
+          path: spec.template.spec.containers[0].name
+          value: qualys-cluster-sensor
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: qualys/cluster-sensor:1.0.0-0
+      - equal:
+          path: spec.template.spec.containers[0].resources.limits.cpu
+          value: 500m
+      - equal:
+          path: spec.template.spec.containers[0].resources.limits.memory
+          value: 750Mi
+      - equal:
+          path: spec.template.spec.containers[0].resources.requests.cpu
+          value: 200m
+      - equal:
+          path: spec.template.spec.containers[0].resources.requests.memory
+          value: 256Mi
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--customer-id"
+          count: 1
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--activation-id"
+          count: 1
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--gateway-url"
+          count: 1
+      - equal:
+          path: spec.template.spec.containers[0].volumeMounts[0].mountPath
+          value: "/home/qualys/clustersensor/data"
+      - equal:
+          path: spec.template.spec.containers[0].volumeMounts[0].name
+          value: persistent-volume
+      - equal:
+          path: spec.template.spec.volumes[0].name
+          value: persistent-volume
+      - equal:
+          path: spec.template.spec.volumes[0].hostPath.path
+          value: "/usr/local/qualys/clustersensor/data"
+      - equal:
+          path: spec.template.spec.volumes[0].hostPath.type
+          value: DirectoryOrCreate
+      - equal:
+          path: spec.template.spec.hostNetwork
+          value: false
+  - it: Validate required parameter for AWS cloud provider
+    set:
+      global:
+        customerId: 232d2ddb-c9d8-6698-80fc-02bdfac1876b
+        activationId: c2b006f3-ed8f-4c82-adc6-3de9b106b008
+        gatewayUrl: http://gateway.p19.eng.sjc01.qualys.com/
+        clusterInfoArgs:
+          # valid values of cloud provider(AWS,AZURE,GCP,OCI,SELF_MANAGED_K8S)
+          cloudProvider: AWS
+          AWS:
+            arn: "arn:aws:eks:us-east-1:860454016470:cluster/TestAnshCluster"
+          AZURE:
+            id:
+            region:
+          GCP:
+            krn:
+          OCI:
+            ocid:
+            clusterName: 
+          SELF_MANAGED_K8S:
+            clusterName:
+        rootCA:
+            certificate: #certificate in base64 encoded format
+        proxy:
+            value:   #"<proxy FQDN or Ip address>:<port#>"
+            # if proxy(with CA cert) required to connect Qualys Cloud
+            certificate: #certificate in base64 encoded format
+        skipVerifyTLS: false 
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content:  "--cloud-provider"
+          count: 1
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "AWS"
+          count: 1
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--cluster-id"
+          count: 1
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "arn:aws:eks:us-east-1:860454016470:cluster/TestAnshCluster"
+          count: 1
+  - it: Validate required parameter for AZURE cloud provider
+    set:
+      global:
+        customerId: 232d2ddb-c9d8-6698-80fc-02bdfac1876b
+        activationId: c2b006f3-ed8f-4c82-adc6-3de9b106b008
+        gatewayUrl: http://gateway.p19.eng.sjc01.qualys.com/
+        clusterInfoArgs:
+          # valid values of cloud provider(AWS,AZURE,GCP,OCI,SELF_MANAGED_K8S)
+          cloudProvider: AZURE
+          AWS:
+            arn:
+          AZURE:
+            id: "/subscriptions/1d767489-da0c-4948-a285-bf2c708c0586/resourcegroups/NK_test/providers/Microsoft.ContainerService/managedClusters/TEST"
+            region: "eastus"
+          GCP:
+            krn:
+          OCI:
+            ocid:
+            clusterName: 
+          SELF_MANAGED_K8S:
+            clusterName:
+        rootCA:
+            certificate: #certificate in base64 encoded format
+        proxy:
+            value:   #"<proxy FQDN or Ip address>:<port#>"
+            # if proxy(with CA cert) required to connect Qualys Cloud
+            certificate: #certificate in base64 encoded format
+        skipVerifyTLS: false 
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content:  "--cloud-provider"
+          count: 1
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "AZURE"
+          count: 1
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--cluster-id"
+          count: 1
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "/subscriptions/1d767489-da0c-4948-a285-bf2c708c0586/resourcegroups/NK_test/providers/Microsoft.ContainerService/managedClusters/TEST"
+          count: 1
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--cluster-region"
+          count: 1
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "eastus"
+          count: 1
+  - it: Validate required parameter for GCP cloud provider
+    set:
+      global:
+        customerId: 232d2ddb-c9d8-6698-80fc-02bdfac1876b
+        activationId: c2b006f3-ed8f-4c82-adc6-3de9b106b008
+        gatewayUrl: http://gateway.p19.eng.sjc01.qualys.com/
+        clusterInfoArgs:
+          # valid values of cloud provider(AWS,AZURE,GCP,OCI,SELF_MANAGED_K8S)
+          cloudProvider: GCP
+          AWS:
+            arn:
+          AZURE:
+            id:
+            region:
+          GCP:
+            krn: "projects/[PROJECT_ID]/locations/[ZONE]/clusters/[CLUSTER_NAME]"
+          OCI:
+            ocid:
+            clusterName: 
+          SELF_MANAGED_K8S:
+            clusterName:
+        rootCA:
+            certificate: #certificate in base64 encoded format
+        proxy:
+            value:   #"<proxy FQDN or Ip address>:<port#>"
+            # if proxy(with CA cert) required to connect Qualys Cloud
+            certificate: #certificate in base64 encoded format
+        skipVerifyTLS: false 
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content:  "--cloud-provider"
+          count: 1
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "GCP"
+          count: 1
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--cluster-id"
+          count: 1
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "projects/[PROJECT_ID]/locations/[ZONE]/clusters/[CLUSTER_NAME]"
+          count: 1          
+  - it: Validate required parameter for GCP cloud provider
+    set:
+      global:
+        customerId: 232d2ddb-c9d8-6698-80fc-02bdfac1876b
+        activationId: c2b006f3-ed8f-4c82-adc6-3de9b106b008
+        gatewayUrl: http://gateway.p19.eng.sjc01.qualys.com/
+        clusterInfoArgs:
+          # valid values of cloud provider(AWS,AZURE,GCP,OCI,SELF_MANAGED_K8S)
+          cloudProvider: OCI
+          AWS:
+            arn:
+          AZURE:
+            id:
+            region:
+          GCP:
+            krn:
+          OCI:
+            ocid: "ocid1.cluster.oc1.[REGION].[TENANCY_OCID].[CLUSTER_OCID]"
+            clusterName: "testCluster"
+          SELF_MANAGED_K8S:
+            clusterName:
+        rootCA:
+            certificate: #certificate in base64 encoded format
+        proxy:
+            value:   #"<proxy FQDN or Ip address>:<port#>"
+            # if proxy(with CA cert) required to connect Qualys Cloud
+            certificate: #certificate in base64 encoded format
+        skipVerifyTLS: false 
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content:  "--cloud-provider"
+          count: 1
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "OCI"
+          count: 1
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--cluster-id"
+          count: 1
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "ocid1.cluster.oc1.[REGION].[TENANCY_OCID].[CLUSTER_OCID]"
+          count: 1 
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--cluster-name"
+          count: 1
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "testCluster"
+          count: 1          
+

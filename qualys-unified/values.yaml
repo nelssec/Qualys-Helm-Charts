@@ -1,0 +1,227 @@
+# Qualys Unified Helm Chart Values
+# This chart allows you to selectively install Qualys sensors based on your needs
+
+# =============================================================================
+# GLOBAL CONFIGURATION
+# These settings apply to all Qualys sensors
+# =============================================================================
+global:
+  # Qualys account credentials (required for all sensors)
+  customerId: ""
+  activationId: ""
+
+  # Qualys gateway URL (required for all sensors)
+  # Examples:
+  #   US Platform 1: https://gateway.qg1.apps.qualys.com
+  #   US Platform 2: https://gateway.qg2.apps.qualys.com
+  #   US Platform 3: https://gateway.qg3.apps.qualys.com
+  #   EU Platform 1: https://gateway.qg1.apps.qualys.eu
+  #   EU Platform 2: https://gateway.qg2.apps.qualys.eu
+  gatewayUrl: ""
+
+  # Image pull secret (if using private registry)
+  imagePullSecret: ""
+
+  # Cluster identification - required for cluster sensor, runtime sensor
+  clusterInfoArgs:
+    # Cloud provider: AWS, AZURE, GCP, OCI, SELF_MANAGED_K8S
+    cloudProvider: ""
+
+    AWS:
+      arn: ""
+
+    AZURE:
+      id: ""
+      region: ""
+
+    GCP:
+      krn: ""
+
+    OCI:
+      ocid: ""
+      clusterName: ""
+
+    SELF_MANAGED_K8S:
+      clusterName: ""
+
+  # Root CA certificate for custom CAs (base64 encoded)
+  rootCA:
+    certificate: ""
+
+  # Proxy configuration (if required)
+  proxy:
+    value: ""  # Format: "<proxy FQDN or IP address>:<port>"
+    certificate: ""  # CA certificate in base64 encoded format
+    skipVerifyTLS: false
+
+  # Set to true if running on OpenShift
+  openshift: false
+
+  # GKE Autopilot specific settings
+  gkeAutopilot:
+    enabled: false
+    allowlistLabelForQcsSensor: ""
+
+# =============================================================================
+# HOST-BASED CONTAINER SENSOR (Linux Agent for Containers)
+# =============================================================================
+# This sensor runs on host nodes and scans containers/images
+# Requires cloud provider specification: AWS, GCP, or COREOS
+hostBasedSensor:
+  enabled: false
+
+  qualys:
+    namespace: "qualys"
+
+    image:
+      repository: "qualys/qca"
+      tag: "latest"
+      pullPolicy: "Always"
+
+    resources:
+      limits:
+        cpu: "0.2"
+
+    args:
+      # Cloud Provider - REQUIRED when hostBasedSensor.enabled is true
+      # Valid values: AWS, GCP, COREOS
+      providerName: ""
+
+      # These are inherited from global if not specified
+      activationId: ""  # Defaults to global.activationId
+      customerId: ""    # Defaults to global.customerId
+      serverUri: ""     # Defaults to global.gatewayUrl
+
+      # Log level (1-5, default: 1)
+      logLevel: "3"
+
+    # Host access settings (required for container scanning)
+    hostNetwork: true
+    hostIPC: true
+    hostPID: true
+
+  # Container runtime settings
+  containerd:
+    enabled: true
+
+  crio:
+    enabled: false
+
+  docker:
+    enabled: false
+    tlsVerify:
+      enabled: false
+      certPath: ""
+
+# =============================================================================
+# QUALYS TC SENSORS
+# The following sensors are part of the qualys-tc unified chart
+# =============================================================================
+
+qualysTc:
+  # Enable/disable the entire qualys-tc chart
+  # Set to false if you only want the host-based sensor
+  enabled: true
+
+  # Inherit global settings
+  global:
+    customerId: ""  # Inherits from root global.customerId
+    activationId: ""  # Inherits from root global.activationId
+    gatewayUrl: ""  # Inherits from root global.gatewayUrl
+    cmsqagPublicUrl: ""
+    imagePullSecret: ""  # Inherits from root global.imagePullSecret
+    clusterInfoArgs: {}  # Inherits from root global.clusterInfoArgs
+    rootCA:
+      certificate: ""  # Inherits from root global.rootCA.certificate
+    proxy: {}  # Inherits from root global.proxy
+    openshift: false  # Inherits from root global.openshift
+    gkeAutopilot: {}  # Inherits from root global.gkeAutopilot
+
+  # ---------------------------------------------------------------------------
+  # CLUSTER SENSOR
+  # Discovers and monitors Kubernetes cluster resources
+  # ---------------------------------------------------------------------------
+  clusterSensor:
+    enabled: true
+
+  # ---------------------------------------------------------------------------
+  # RUNTIME SENSOR
+  # Monitors runtime behavior and detects anomalies
+  # ---------------------------------------------------------------------------
+  runtimeSensor:
+    enabled: false
+
+  # ---------------------------------------------------------------------------
+  # QCS SENSOR (General Sensor / Container Security Sensor)
+  # Scans container images for vulnerabilities
+  # ---------------------------------------------------------------------------
+  qcsSensor:
+    enabled: false
+    qualys:
+      args:
+        # Number of concurrent scans (valid range: 1-20)
+        concurrentScan: "2"
+
+  # ---------------------------------------------------------------------------
+  # ADMISSION CONTROLLER
+  # Controls which container images can be deployed based on policy
+  # ---------------------------------------------------------------------------
+  admissionController:
+    enabled: false
+
+# =============================================================================
+# DEPLOYMENT EXAMPLES
+# =============================================================================
+#
+# Example 1: Host-based Container Sensor only (AWS)
+# --------------------------------------------------
+# hostBasedSensor:
+#   enabled: true
+#   qualys:
+#     args:
+#       providerName: "AWS"
+# qualysTc:
+#   enabled: false
+#
+# Example 2: Cluster Sensor + Runtime Sensor (Azure)
+# ---------------------------------------------------
+# hostBasedSensor:
+#   enabled: false
+# global:
+#   clusterInfoArgs:
+#     cloudProvider: "AZURE"
+#     AZURE:
+#       id: "your-cluster-id"
+#       region: "eastus"
+# qualysTc:
+#   enabled: true
+#   clusterSensor:
+#     enabled: true
+#   runtimeSensor:
+#     enabled: true
+#
+# Example 3: All Sensors (GCP)
+# -----------------------------
+# global:
+#   customerId: "your-customer-id"
+#   activationId: "your-activation-id"
+#   gatewayUrl: "https://gateway.qg1.apps.qualys.com"
+#   clusterInfoArgs:
+#     cloudProvider: "GCP"
+#     GCP:
+#       krn: "your-krn"
+# hostBasedSensor:
+#   enabled: true
+#   qualys:
+#     args:
+#       providerName: "GCP"
+# qualysTc:
+#   enabled: true
+#   clusterSensor:
+#     enabled: true
+#   runtimeSensor:
+#     enabled: true
+#   qcsSensor:
+#     enabled: true
+#   admissionController:
+#     enabled: true

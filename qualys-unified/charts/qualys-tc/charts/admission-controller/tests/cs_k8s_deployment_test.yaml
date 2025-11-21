@@ -1,0 +1,156 @@
+suite: Test Qualys deployment for k8s admission controller
+values:
+  - ../values.yaml
+templates:
+  - config-map.yaml
+  - validating-webhook-configuration.yaml
+  - deployment.yaml
+tests:
+  - it: Should pass all kinds of assertions for deployment
+    set:
+      certs:
+        secretName: TestSecret
+      global:
+        imagePullSecret: TestImagePullSecret
+        customerId: 232d2ddb-c9d8-6698-80fc-52bdfac1876b
+        activationId: 232d2ddb-c9d8-6698-80fc-52bdfac1876b
+        gatewayUrl: https://gateway.p04.eng.sjc01.qualys.com
+        clusterInfoArgs:
+          cloudProvider: "AWS"
+          AWS:
+            arn: arn:aws:eks:us-east-1:362990800442:cluster/k8s-admission-controller
+        proxy:
+          skipVerifyTLS: false
+        rootCA:
+          certificate: s0EoVGhpcyBlbmNvZGluZyBrZXkgbmVlZCB0byBiZSBhIG5vdCBjb21wbGV0ZWx5IGdlbmVyYXRlZCBiYXNlNjQgc2VjcmV0IGtleQ=
+    template: deployment.yaml
+    documentIndex: 0
+    asserts:
+      - isKind:
+          of: Deployment
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: apiVersion
+          value: apps/v1
+      - equal:
+          path: metadata.labels.app
+          value: admission-controller
+      - equal:
+          path: metadata.name
+          value: admission-controller
+      - equal:
+          path: metadata.namespace
+          value: NAMESPACE
+      - equal:
+          path: spec.replicas
+          value: 1
+      - equal:
+          path: spec.selector.matchLabels.app
+          value: admission-controller
+      - equal:
+          path: spec.strategy.type
+          value: RollingUpdate
+      - equal:
+          path: spec.template.metadata.labels.app
+          value: admission-controller
+      - equal:
+          path: spec.template.metadata.annotations.checksum/config
+          value: 9e5c706924797382347b9c46adfb89014fa8424a0faec1b953ae013c05858f36
+      - equal:
+          path: spec.template.spec.serviceAccountName
+          value: admission-controller-qualys-sa
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "admission-controller")].env[?(@.name == "CONFIG_PATH")].value
+          value: /etc/config/config.yaml
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "admission-controller")].env[?(@.name == "REGISTRY_CONFIG_PATH")].value
+          value: /etc/config/registry-config.yaml
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "admission-controller")].livenessProbe.initialDelaySeconds
+          value: 5
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "admission-controller")].ports
+          content:
+            containerPort: 8443
+            name: adm-ctrl-port
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "admission-controller")].livenessProbe.periodSeconds
+          value: 5
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "admission-controller")].livenessProbe.httpGet.scheme
+          value: HTTPS
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "admission-controller")].livenessProbe.httpGet.path
+          value: /healthz
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "admission-controller")].livenessProbe.httpGet.port
+          value: 8443
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "admission-controller")].volumeMounts[?(@.name == "certs")].mountPath
+          value: "/etc/certs"
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "admission-controller")].volumeMounts[?(@.name == "certs")].readOnly
+          value: true
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "admission-controller")].volumeMounts[?(@.name == "qualys-registry-config-volume")].mountPath
+          value: "/etc/config/registry-config.yaml"
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "admission-controller")].volumeMounts[?(@.name == "qualys-registry-config-volume")].readOnly
+          value: true
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "admission-controller")].volumeMounts[?(@.name == "qualys-registry-config-volume")].subPath
+          value: "registry-config.yaml"
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "admission-controller")].volumeMounts[?(@.name == "root-ca")].mountPath
+          value: "/etc/ssl/certs/custom-root-ca.crt"
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "admission-controller")].volumeMounts[?(@.name == "root-ca")].readOnly
+          value: true
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "admission-controller")].volumeMounts[?(@.name == "root-ca")].subPath
+          value: "custom-root-ca.crt"
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "admission-controller")].volumeMounts[?(@.name == "admission-controller-volume")].readOnly
+          value: true
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "admission-controller")].volumeMounts[?(@.name == "admission-controller-volume")].subPath
+          value: config.yaml
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "admission-controller")].volumeMounts[?(@.name == "admission-controller-volume")].mountPath
+          value: "/etc/config/config.yaml"
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "admission-controller")].image
+          value: qualys/admission-controller:1.1.1-0
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "admission-controller")].imagePullPolicy
+          value: Always
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "admission-controller")].resources.limits.cpu
+          value: 200m
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "admission-controller")].resources.limits.memory
+          value: 256Mi
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "admission-controller")].resources.requests.memory
+          value: 256Mi
+      - equal:
+          path: spec.template.spec.volumes[?(@.name == "certs")].secret.secretName
+          value: TestSecret
+      - equal:
+          path: spec.template.spec.volumes[?(@.name == "root-ca")].secret.secretName
+          value: root-ca-secret
+      - equal:
+          path: spec.template.spec.volumes[?(@.name == "admission-controller-volume")].configMap.name
+          value: admission-controller-config
+      - equal:
+          path: spec.template.spec.volumes[?(@.name == "admission-controller-volume")].configMap.items[?(@.key == "config.yaml")].path
+          value: "config.yaml"
+      - equal:
+          path: spec.template.spec.volumes[?(@.name == "qualys-registry-config-volume")].configMap.name
+          value: "qualys-registry-config"
+      - equal:
+          path: spec.template.spec.volumes[?(@.name == "qualys-registry-config-volume")].configMap.items[?(@.key == "registry-config.yaml")].path
+          value: "registry-config.yaml"
+      - exists:
+          path: spec.template.spec.imagePullSecrets[?(@.name == "TestImagePullSecret")]

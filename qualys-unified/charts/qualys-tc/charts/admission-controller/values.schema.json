@@ -1,0 +1,309 @@
+{
+    "$schema": "http://json-schema.org/schema#",
+    "type": "object",
+    "properties": {
+        "certificateFilePath": {
+            "type": "string"
+        },
+        "certificateKeyPath": {
+            "type": "string"
+        },
+        "certs": {
+            "type": "object",
+            "properties": {
+                "annotations": {
+                    "type": "object"
+                },
+                "certsProvider": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "secretName": {
+                    "type": ["string","null"]
+                },
+                "serverCertificate": {
+                    "type": ["string","null"]
+                },
+                "serverKey": {
+                    "type": ["string","null"]
+                }
+            },
+            "additionalProperties": false
+        },
+        "config": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false
+        },
+        "configFile": {
+            "type": "string"
+        },
+        "configPathDir": {
+            "type": "string"
+        },
+        "dataRetention": {
+            "type": "object",
+            "properties": {
+                "inDays": {
+                    "type": "integer"
+                },
+                "scheduleInDays": {
+                    "type": "integer"
+                }
+            },
+            "additionalProperties": false
+        },
+        "enforcementAction": {
+            "type": "string"
+        },
+        "image": {
+            "type": "string"
+        },
+        "imageDigestCacheTTL": {
+            "type": "string"
+        },
+        "imagePullPolicy": {
+            "type": "string"
+        },
+        "logging": {
+            "type": "object",
+            "properties": {
+                "file": {
+                    "type": "object",
+                    "properties": {
+                        "directory": {
+                            "type": "string"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "rotation": {
+                            "type": "object",
+                            "properties": {
+                                "compress": {
+                                    "type": "boolean"
+                                },
+                                "enabled": {
+                                    "type": "boolean"
+                                },
+                                "maxAge": {
+                                    "type": "integer"
+                                },
+                                "maxBackups": {
+                                    "type": "integer"
+                                },
+                                "maxSize": {
+                                    "type": "integer"
+                                }
+                            }
+                        }
+                    }
+                },
+                "level": {
+                    "type": "string"
+                }
+            }
+        },
+        "network": {
+            "type": "object",
+            "properties": {
+                "hostNetwork": {
+                    "type": "boolean"
+                }
+            },
+            "additionalProperties": false
+        },
+        "persistentStorage": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                }
+            },
+            "additionalProperties": false
+        },
+        "persistentVolumeClaim": {
+            "type": "object",
+            "properties": {
+                "accessModes": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "enabled": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "storageClassName": {
+                    "type": ["string", "null"]
+                },
+                "storageSize": {
+                    "type": ["string","null"]
+                }
+            },
+            "additionalProperties": false
+        },
+        "persistentVolumeHostPath": {
+            "type": "string"
+        },
+        "platformSyncInterval": {
+            "type": "integer"
+        },
+        "port": {
+            "type": "integer"
+        },
+        "registry": {
+            "type": "object",
+            "properties": {
+                "config": {
+                    "type": "object",
+                    "properties": {
+                        "fileContent": {
+                            "type": ["string","null"]
+                        },
+                        "filename": {
+                            "type": "string"
+                        },
+                        "name": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "additionalProperties": false
+        },
+        "resources": {
+            "type": "object",
+            "properties": {
+                "limits": {
+                    "type": "object",
+                    "properties": {
+                        "cpu": {
+                            "type": "string"
+                        },
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "memory": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "replicas": {
+                    "type": "integer"
+                },
+                "requests": {
+                    "type": "object",
+                    "properties": {
+                        "cpu": {
+                            "type": "string"
+                        },
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "memory": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "additionalProperties": false
+        },
+        "serviceAccount": {
+            "type": "object",
+            "properties": {
+                "create": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false
+        },
+        "syncInterval": {
+            "type": "integer"
+        },
+        "webhook": {
+            "type": "object",
+            "properties": {
+                "caBundle": {
+                    "type": ["string","null"]
+                },
+                "failurePolicy": {
+                    "type": "string"
+                },
+                "timeoutSeconds": {
+                    "type": "integer"
+                }
+            },
+            "additionalProperties": false
+        },
+        "tolerations": {
+            "type": ["array", "null"],
+            "items": {
+                "type": "object",
+                "properties": {
+                    "key": {
+                        "type": "string"
+                    },
+                    "operator": {
+                        "type": "string",
+                        "enum": ["Exists","Equal"]
+                    },
+                    "value": {
+                        "type": "string"
+                    },
+                    "effect": {
+                        "type": "string",
+                        "enum": ["NoSchedule","PreferNoSchedule","NoExecute"]
+                    }
+                },
+                "required": ["key","operator"],
+                "additionalProperties": false
+            }
+        },
+        "nodeSelector": {
+            "type": ["object","null"],
+            "additionalProperties": {
+                "type": "string"
+            }
+        },
+        "affinity": {
+            "type": ["object","null"],
+            "properties": {
+                "nodeAffinity": {
+                    "type": ["object","null"]
+                },
+                "podAffinity": {
+                    "type": ["object","null"]
+                },
+                "podAntiAffinity": {
+                    "type": ["object","null"]
+                }
+            }
+        },
+        "global": {
+            "type": "object",
+            "additionalProperties": true
+        },
+        "common": {
+            "type": "object",
+            "additionalProperties": true
+        },
+        "enabled": {
+            "type": "boolean",
+            "additionalProperties": true
+        }
+    },
+    "additionalProperties": false
+}

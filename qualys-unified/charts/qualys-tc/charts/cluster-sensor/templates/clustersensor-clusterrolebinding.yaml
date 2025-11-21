@@ -1,0 +1,13 @@
+kind: ClusterRoleBinding
+# if k8s version is 1.17 and earlier then change apiVersion to "rbac.authorization.k8s.io/v1beta1"
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: qualys-clustersensor-cluster-reader-rb
+subjects:
+- kind: ServiceAccount
+  name: qualys-clustersensor-sa
+  namespace: {{ .Release.Namespace }}
+roleRef:
+  kind: ClusterRole
+  name: qualys-clustersensor-cluster-reader-role 
+  apiGroup: rbac.authorization.k8s.io

@@ -1,0 +1,12 @@
+apiVersion: v2
+appVersion: 1.1.1-0
+description: Qualys container security admission controller (admission-controller)
+keywords:
+- admission-controller
+- qualys
+maintainers:
+- email: pgundarapu@qualys.com
+  name: paulgundarapu
+name: admission-controller
+type: application
+version: 1.0.5

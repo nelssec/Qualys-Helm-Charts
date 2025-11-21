@@ -1,0 +1,21 @@
+{{- if eq .Values.qualys.args.providerName "COREOS" }}
+# Role 'qualys-agent-role' for permission to Namespace 'qualys-agent'
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: qualys-agent-role
+  namespace: {{ .Values.qualys.namespace }}
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list"]
+  - apiGroups: [""]
+    resources: ["pods/status"]
+    verbs: ["get"]
+  - apiGroups: ["apps"]
+    resources: ["daemonsets"]
+    verbs: ["get", "list"]
+  - apiGroups: ["apps"]
+    resources: ["daemonsets/status"]
+    verbs: ["get"]
+{{- end }}

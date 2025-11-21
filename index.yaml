@@ -1,0 +1,1083 @@
+apiVersion: v1
+entries:
+  lxag_container_agent:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2025-11-21T23:23:10.864086652Z"
+    description: A Helm chart for Kubernetes
+    digest: b303474e0fb4e88a20bdc6d1aa045ad5c7078e26995b4a646307d4b4d58f8ee9
+    name: lxag_container_agent
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/lxag_container_agent-1.0.0.tgz
+    version: 1.0.0
+  qcs-sensor:
+  - apiVersion: v2
+    appVersion: 1.40.1-0
+    created: "2025-11-21T23:23:10.897853695Z"
+    description: A Helm chart for Kubernetes
+    digest: 1b23493f22c5493ca6a967a81a3d34923be73a897eb5be6d1c09956a612dd432
+    name: qcs-sensor
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.19.0.tgz
+    version: 1.19.0
+  - apiVersion: v2
+    appVersion: 1.39.0-1
+    created: "2025-11-21T23:23:10.896270748Z"
+    description: A Helm chart for Kubernetes
+    digest: 4467b383e13c0d1bd7eb72fc94dd41f13aba447042c8e26626e44504533542b7
+    name: qcs-sensor
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.18.1.tgz
+    version: 1.18.1
+  - apiVersion: v2
+    appVersion: 1.39.0-1
+    created: "2025-11-21T23:23:10.894536982Z"
+    description: A Helm chart for Kubernetes
+    digest: 6379cfd51b2fa5eb550278950bdea48ae3dc3840864d17c156b9b93eb10a50c9
+    name: qcs-sensor
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.18.0.tgz
+    version: 1.18.0
+  - apiVersion: v2
+    appVersion: 1.38.0-1
+    created: "2025-11-21T23:23:10.892757269Z"
+    dependencies:
+    - name: common
+      repository: file://../common
+      version: 1.0.0
+    description: A Helm chart for Kubernetes
+    digest: b0d5281aedc89092213971262b68d69666a831e634ca0a965ef0c3d898f26505
+    name: qcs-sensor
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.17.0.tgz
+    version: 1.17.0
+  - apiVersion: v2
+    appVersion: 1.37.0-0
+    created: "2025-11-21T23:23:10.88952853Z"
+    dependencies:
+    - name: common
+      repository: file://../common
+      version: 1.0.0
+    description: A Helm chart for Kubernetes
+    digest: 32def30d58b8ca65b6e59aac15a789565c95ffa944d0df4c86b57158e1abf0f0
+    name: qcs-sensor
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.16.0.tgz
+    version: 1.16.0
+  - apiVersion: v2
+    appVersion: 1.36.1-0
+    created: "2025-11-21T23:23:10.887959247Z"
+    dependencies:
+    - name: common
+      repository: file://../common
+      version: 1.0.0
+    description: A Helm chart for Kubernetes
+    digest: c49faf937ca233e2f47dcd20c5b472de79c4330f7fb2acb4c06287e532af3857
+    name: qcs-sensor
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.15.1.tgz
+    version: 1.15.1
+  - apiVersion: v2
+    appVersion: 1.36.1-0
+    created: "2025-11-21T23:23:10.886471733Z"
+    dependencies:
+    - name: common
+      repository: file://../common
+      version: 1.0.0
+    description: A Helm chart for Kubernetes
+    digest: edde3cb1798e1aaa772e4791a576d97151bf53389cd61d5ebc8b67fcf9e82cc6
+    name: qcs-sensor
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.15.0.tgz
+    version: 1.15.0
+  - apiVersion: v2
+    appVersion: 1.35.0-0
+    created: "2025-11-21T23:23:10.884940988Z"
+    dependencies:
+    - name: common
+      repository: file://../common
+      version: 1.0.0
+    description: A Helm chart for Kubernetes
+    digest: 31aa1bcacebe4bbbabc7ff6bd85d31b4fe632e6f4eeb41ab2b267e88045831e9
+    name: qcs-sensor
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.14.0.tgz
+    version: 1.14.0
+  - apiVersion: v2
+    appVersion: 1.34.3-0
+    created: "2025-11-21T23:23:10.883409794Z"
+    dependencies:
+    - name: common
+      repository: file://../common
+      version: 1.0.0
+    description: A Helm chart for Kubernetes
+    digest: f5f30c167dfb8818195a387b71714a043d1aa00a7780305f9c2468f983ae03dd
+    name: qcs-sensor
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.13.2.tgz
+    version: 1.13.2
+  - apiVersion: v2
+    appVersion: 1.34.1-1
+    created: "2025-11-21T23:23:10.881946581Z"
+    dependencies:
+    - name: common
+      repository: file://../common
+      version: 1.0.0
+    description: A Helm chart for Kubernetes
+    digest: b021ae2ee684fb1d7a642974aba980e3828f450b04df1a25239f55cb6b225df3
+    name: qcs-sensor
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.13.1.tgz
+    version: 1.13.1
+  - apiVersion: v2
+    appVersion: 1.34.1-0
+    created: "2025-11-21T23:23:10.880403476Z"
+    dependencies:
+    - name: common
+      repository: file://../common
+      version: 1.0.0
+    description: A Helm chart for Kubernetes
+    digest: cbb49c9f6ede1e406413f641966239ccf0739a2f7548010ab292f97521c3c2f7
+    name: qcs-sensor
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.13.0.tgz
+    version: 1.13.0
+  - apiVersion: v2
+    appVersion: 1.33.2-0
+    created: "2025-11-21T23:23:10.878845988Z"
+    dependencies:
+    - name: common
+      repository: file://../common
+      version: 1.0.0
+    description: A Helm chart for Kubernetes
+    digest: 48c623d3918ada19e01dcf3794e30468190b3151049acca0bf01a3b5b9f158ec
+    name: qcs-sensor
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.12.2.tgz
+    version: 1.12.2
+  - apiVersion: v2
+    appVersion: 1.33.0-0
+    created: "2025-11-21T23:23:10.877352326Z"
+    dependencies:
+    - name: common
+      repository: file://../common
+      version: 1.0.0
+    description: A Helm chart for Kubernetes
+    digest: 3ac917bf3a2e778ab192606863ee8bbfd48de4a5f20f45826f1706cb25f13381
+    name: qcs-sensor
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.12.1.tgz
+    version: 1.12.1
+  - apiVersion: v2
+    appVersion: 1.33.0-0
+    created: "2025-11-21T23:23:10.875765292Z"
+    dependencies:
+    - name: common
+      repository: file://../common
+      version: 1.0.0
+    description: A Helm chart for Kubernetes
+    digest: 38aad9776968f3ed2e59501ed4ed3e693bcc546a345dad0401850af2a5d0afaf
+    name: qcs-sensor
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.12.0.tgz
+    version: 1.12.0
+  - apiVersion: v2
+    appVersion: 1.32.2-0
+    created: "2025-11-21T23:23:10.872869372Z"
+    description: A Helm chart for Kubernetes
+    digest: c65398a25af47369b5174a885e9240676f5740a33a70f9b10c7e839773518b02
+    name: qcs-sensor
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.11.1.tgz
+    version: 1.11.1
+  - apiVersion: v2
+    appVersion: 1.32.0-0
+    created: "2025-11-21T23:23:10.870689626Z"
+    description: A Helm chart for Kubernetes
+    digest: 82f6e7c8ecd90109f42aa1074bb5c7bff4a23098df00f70a59e6e61c94fc0740
+    name: qcs-sensor
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.11.0.tgz
+    version: 1.11.0
+  - apiVersion: v2
+    appVersion: 1.31.2-0
+    created: "2025-11-21T23:23:10.8692431Z"
+    description: A Helm chart for Kubernetes
+    digest: 1b542747630d5b6baa4e9b468f3501fc205ac3e57693219047ff66ad84c51fdc
+    name: qcs-sensor
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.10.1.tgz
+    version: 1.10.1
+  - apiVersion: v2
+    appVersion: 1.31.0-0
+    created: "2025-11-21T23:23:10.867890773Z"
+    description: A Helm chart for Kubernetes
+    digest: b05f293f6c111523560144c8a4e9313ee052df0b600d01d706a6360209c5f43a
+    name: qcs-sensor
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.10.0.tgz
+    version: 1.10.0
+  - apiVersion: v2
+    appVersion: 1.30.0-0
+    created: "2025-11-21T23:23:10.907424007Z"
+    description: A Helm chart for Kubernetes
+    digest: 84b9ae9b6e1e9db7e5b1052734a8834c060ac7d6200018da0982d202f43128e9
+    name: qcs-sensor
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.9.0.tgz
+    version: 1.9.0
+  - apiVersion: v2
+    appVersion: 1.29.0-0
+    created: "2025-11-21T23:23:10.906273234Z"
+    description: A Helm chart for Kubernetes
+    digest: 3511cf34f8c1c97ed229674742c0882f97d82f18c0772ba94e514547c076a961
+    name: qcs-sensor
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.8.0.tgz
+    version: 1.8.0
+  - apiVersion: v2
+    appVersion: 1.28.0-0
+    created: "2025-11-21T23:23:10.905040031Z"
+    description: A Helm chart for Kubernetes
+    digest: 720b55ced11cf2cbfd4f15676e19b1b59ba3dc520051c030d73844c2491ca17c
+    name: qcs-sensor
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.7.0.tgz
+    version: 1.7.0
+  - apiVersion: v2
+    appVersion: 1.27.0-0
+    created: "2025-11-21T23:23:10.903750756Z"
+    description: A Helm chart for Kubernetes
+    digest: 3d8c390a0d1fd032dec33b9d0704b7952b1ed0284dc34d690d601ee732e00d46
+    name: qcs-sensor
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.6.0.tgz
+    version: 1.6.0
+  - apiVersion: v2
+    appVersion: 1.26.0-0
+    created: "2025-11-21T23:23:10.902540587Z"
+    description: A Helm chart for Kubernetes
+    digest: 089c7b52f5f1e4465926f9ed892115e1d3279b1f36e4fe52248bc26d183a4281
+    name: qcs-sensor
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.5.0.tgz
+    version: 1.5.0
+  - apiVersion: v2
+    appVersion: 1.25.0-0
+    created: "2025-11-21T23:23:10.901399163Z"
+    description: A Helm chart for Kubernetes
+    digest: 4c83c0c425b22e43432c981a78687f39d7942f8081893ed6e6be66fba08dc684
+    name: qcs-sensor
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.4.0.tgz
+    version: 1.4.0
+  - apiVersion: v2
+    appVersion: 1.24.0-1
+    created: "2025-11-21T23:23:10.900256195Z"
+    description: A Helm chart for Kubernetes
+    digest: bee2a11ae0eb7da36aa533736e37be0bce52f25bc164357ed2c6de8248b46e6e
+    name: qcs-sensor
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.3.0.tgz
+    version: 1.3.0
+  - apiVersion: v2
+    appVersion: 1.22.0-0
+    created: "2025-11-21T23:23:10.899097888Z"
+    description: A Helm chart for Kubernetes
+    digest: c9e41f513ba0861415f3d5a8e87eefc0bd1a754e2636450f4fcc24928ccc509f
+    name: qcs-sensor
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.2.0.tgz
+    version: 1.2.0
+  - apiVersion: v2
+    appVersion: 1.21.0-0
+    created: "2025-11-21T23:23:10.86666236Z"
+    description: A Helm chart for Kubernetes
+    digest: 6b1c8c918777be8cf7985ceba7b691a4e24769ef343ee844408ef3cc0f2fce3c
+    name: qcs-sensor
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.1.0.tgz
+    version: 1.1.0
+  - apiVersion: v2
+    appVersion: 1.19.2-0
+    created: "2025-11-21T23:23:10.865495766Z"
+    description: A Helm chart for Kubernetes
+    digest: ed55fb8391e54edcaec93fe4f6ba83016398adec34fd6e199a89df1a7160e4fd
+    name: qcs-sensor
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.0.0.tgz
+    version: 1.0.0
+  qualys-scanner:
+  - apiVersion: v1
+    appVersion: 4.6.0-4
+    created: "2025-11-21T23:23:10.912132557Z"
+    description: Harbor scanner adapter for QScanner
+    digest: 4a6a61c5548cc6358aa5dc0dc0d6bcff524be3977ce8d8c6a78ed10878f16034
+    keywords:
+    - scanner
+    - harbor
+    - qscanner
+    - vulnerability
+    name: qualys-scanner
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qualys-scanner-1.2.0.tgz
+    version: 1.2.0
+  - apiVersion: v1
+    appVersion: 4.5.0-2
+    created: "2025-11-21T23:23:10.909604773Z"
+    description: Harbor scanner adapter for QScanner
+    digest: 0100efaba308e61f063be96dad649b565d558076e1425a52fccd26860b3366ec
+    keywords:
+    - scanner
+    - harbor
+    - qscanner
+    - vulnerability
+    name: qualys-scanner
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qualys-scanner-1.1.0.tgz
+    version: 1.1.0
+  - apiVersion: v1
+    appVersion: 4.4.0-3
+    created: "2025-11-21T23:23:10.908521301Z"
+    description: Harbor scanner adapter for QScanner
+    digest: 7ea564c546fb717c0d4a6a75368f15429474708a57dedf7b52b91ac6d1bfc563
+    keywords:
+    - scanner
+    - harbor
+    - qscanner
+    - vulnerability
+    name: qualys-scanner
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qualys-scanner-1.0.0.tgz
+    version: 1.0.0
+  qualys-tc:
+  - apiVersion: v2
+    created: "2025-11-21T23:23:11.014464837Z"
+    dependencies:
+    - alias: clusterSensor
+      condition: clusterSensor.enabled
+      name: cluster-sensor
+      repository: file://../cluster-sensor
+      version: 1.3.0
+    - alias: admissionController
+      condition: admissionController.enabled
+      name: admission-controller
+      repository: file://../admission-controller
+      version: 1.0.5
+    - alias: runtimeSensor
+      condition: runtimeSensor.enabled
+      name: runtime-sensor
+      repository: file://../runtime-sensor
+      version: 1.3.0
+    - alias: qcsSensor
+      condition: qcsSensor.enabled
+      name: qcs-sensor
+      repository: file://../qcs-sensor
+      version: 1.19.0
+    - name: common
+      repository: file://../common
+      version: 1.0.0
+    description: Unified helm chart to deploy all sensor
+    digest: abf4d2c8a37973a88ef3d389a93ca05522e4459a6f9b49d3305dc04a049be546
+    name: qualys-tc
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qualys-tc-2.6.1.tgz
+    version: 2.6.1
+  - apiVersion: v2
+    created: "2025-11-21T23:23:11.010044539Z"
+    dependencies:
+    - alias: clusterSensor
+      condition: clusterSensor.enabled
+      name: cluster-sensor
+      repository: file://../cluster-sensor
+      version: 1.3.0
+    - alias: admissionController
+      condition: admissionController.enabled
+      name: admission-controller
+      repository: file://../admission-controller
+      version: 1.0.5
+    - alias: runtimeSensor
+      condition: runtimeSensor.enabled
+      name: runtime-sensor
+      repository: file://../runtime-sensor
+      version: 1.3.0
+    - alias: qcsSensor
+      condition: qcsSensor.enabled
+      name: qcs-sensor
+      repository: file://../qcs-sensor
+      version: 1.19.0
+    - name: common
+      repository: file://../common
+      version: 1.0.0
+    description: Unified helm chart to deploy all sensor
+    digest: ec5d4fc55e0f439b30e8b33fd10c3522ffe040cf71e1e74cb03366a90ccbe713
+    name: qualys-tc
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qualys-tc-2.6.0.tgz
+    version: 2.6.0
+  - apiVersion: v2
+    created: "2025-11-21T23:23:11.004031203Z"
+    dependencies:
+    - alias: clusterSensor
+      condition: clusterSensor.enabled
+      name: cluster-sensor
+      repository: file://../cluster-sensor
+      version: 1.2.1
+    - alias: admissionController
+      condition: admissionController.enabled
+      name: admission-controller
+      repository: file://../admission-controller
+      version: 1.0.5
+    - alias: runtimeSensor
+      condition: runtimeSensor.enabled
+      name: runtime-sensor
+      repository: file://../runtime-sensor
+      version: 1.2.0
+    - alias: qcsSensor
+      condition: qcsSensor.enabled
+      name: qcs-sensor
+      repository: file://../qcs-sensor
+      version: 1.18.1
+    - name: common
+      repository: file://../common
+      version: 1.0.0
+    description: Unified helm chart to deploy all sensor
+    digest: 9fdb8cc079fb9bf82d9306e2ec608c69aee71851020404270bf68553241e3a62
+    name: qualys-tc
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qualys-tc-2.5.1.tgz
+    version: 2.5.1
+  - apiVersion: v2
+    created: "2025-11-21T23:23:10.999681928Z"
+    dependencies:
+    - alias: clusterSensor
+      condition: clusterSensor.enabled
+      name: cluster-sensor
+      repository: file://../cluster-sensor
+      version: 1.2.1
+    - alias: admissionController
+      condition: admissionController.enabled
+      name: admission-controller
+      repository: file://../admission-controller
+      version: 1.0.5
+    - alias: runtimeSensor
+      condition: runtimeSensor.enabled
+      name: runtime-sensor
+      repository: file://../runtime-sensor
+      version: 1.2.0
+    - alias: qcsSensor
+      condition: qcsSensor.enabled
+      name: qcs-sensor
+      repository: file://../qcs-sensor
+      version: 1.18.0
+    - name: common
+      repository: file://../common
+      version: 1.0.0
+    description: Unified helm chart to deploy all sensor
+    digest: e32ebd9ca2baf1dd8d012309eba14931766d94290442bb78d19f14256853ff75
+    name: qualys-tc
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qualys-tc-2.5.0.tgz
+    version: 2.5.0
+  - apiVersion: v2
+    created: "2025-11-21T23:23:10.993775518Z"
+    dependencies:
+    - alias: clusterSensor
+      condition: clusterSensor.enabled
+      name: cluster-sensor
+      repository: file://../cluster-sensor
+      version: 1.2.0
+    - alias: admissionController
+      condition: admissionController.enabled
+      name: admission-controller
+      repository: file://../admission-controller
+      version: 1.0.4
+    - alias: runtimeSensor
+      condition: runtimeSensor.enabled
+      name: runtime-sensor
+      repository: file://../runtime-sensor
+      version: 1.1.1
+    - alias: qcsSensor
+      condition: qcsSensor.enabled
+      name: qcs-sensor
+      repository: file://../qcs-sensor
+      version: 1.17.0
+    description: Unified helm chart to deploy all sensor
+    digest: 101df9011260290b520e57685ed5cb926ebab418dd00d138db84813d0599c184
+    name: qualys-tc
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qualys-tc-2.4.1.tgz
+    version: 2.4.1
+  - apiVersion: v2
+    created: "2025-11-21T23:23:10.989687176Z"
+    dependencies:
+    - alias: clusterSensor
+      condition: clusterSensor.enabled
+      name: cluster-sensor
+      repository: file://../cluster-sensor
+      version: 1.2.0
+    - alias: admissionController
+      condition: admissionController.enabled
+      name: admission-controller
+      repository: file://../admission-controller
+      version: 1.0.4
+    - alias: runtimeSensor
+      condition: runtimeSensor.enabled
+      name: runtime-sensor
+      repository: file://../runtime-sensor
+      version: 1.1.1
+    - alias: qcsSensor
+      condition: qcsSensor.enabled
+      name: qcs-sensor
+      repository: file://../qcs-sensor
+      version: 1.17.0
+    description: Unified helm chart to deploy all sensor
+    digest: 1e54d3081fa30e777117ac6499b5341f905c8b9fe2909c44f84c2d74b84b48e7
+    name: qualys-tc
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qualys-tc-2.4.0.tgz
+    version: 2.4.0
+  - apiVersion: v2
+    created: "2025-11-21T23:23:10.983409039Z"
+    dependencies:
+    - alias: clusterSensor
+      condition: clusterSensor.enabled
+      name: cluster-sensor
+      repository: file://../cluster-sensor
+      version: 1.1.2
+    - alias: admissionController
+      condition: admissionController.enabled
+      name: admission-controller
+      repository: file://../admission-controller
+      version: 1.0.4
+    - alias: runtimeSensor
+      condition: runtimeSensor.enabled
+      name: runtime-sensor
+      repository: file://../runtime-sensor
+      version: 1.1.1
+    - alias: qcsSensor
+      condition: qcsSensor.enabled
+      name: qcs-sensor
+      repository: file://../qcs-sensor
+      version: 1.16.0
+    description: Unified helm chart to deploy all sensor
+    digest: 45bcf68800447967aa310ccc3b14ed040212dcac7950713741c558c752a1d7b6
+    name: qualys-tc
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qualys-tc-2.3.2.tgz
+    version: 2.3.2
+  - apiVersion: v2
+    created: "2025-11-21T23:23:10.97943972Z"
+    dependencies:
+    - alias: clusterSensor
+      condition: clusterSensor.enabled
+      name: cluster-sensor
+      repository: file://../cluster-sensor
+      version: 1.1.2
+    - alias: admissionController
+      condition: admissionController.enabled
+      name: admission-controller
+      repository: file://../admission-controller
+      version: 1.0.4
+    - alias: runtimeSensor
+      condition: runtimeSensor.enabled
+      name: runtime-sensor
+      repository: file://../runtime-sensor
+      version: 1.1.0
+    - alias: qcsSensor
+      condition: qcsSensor.enabled
+      name: qcs-sensor
+      repository: file://../qcs-sensor
+      version: 1.16.0
+    description: Unified helm chart to deploy all sensor
+    digest: 07f9ce50dd4bfeb3583bf32bb2c62ae770dd5c4738cf39038b344ef41b25b43e
+    name: qualys-tc
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qualys-tc-2.3.1.tgz
+    version: 2.3.1
+  - apiVersion: v2
+    created: "2025-11-21T23:23:10.97532729Z"
+    dependencies:
+    - alias: clusterSensor
+      condition: clusterSensor.enabled
+      name: cluster-sensor
+      repository: file://../cluster-sensor
+      version: 1.1.2
+    - alias: admissionController
+      condition: admissionController.enabled
+      name: admission-controller
+      repository: file://../admission-controller
+      version: 1.0.4
+    - alias: runtimeSensor
+      condition: runtimeSensor.enabled
+      name: runtime-sensor
+      repository: file://../runtime-sensor
+      version: 1.1.0
+    - alias: qcsSensor
+      condition: qcsSensor.enabled
+      name: qcs-sensor
+      repository: file://../qcs-sensor
+      version: 1.15.1
+    description: Unified helm chart to deploy all sensor
+    digest: 010acd9e2220f1548ec889851bddfeba831e6209d2a4299b41fc710db2983df2
+    name: qualys-tc
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qualys-tc-2.3.0.tgz
+    version: 2.3.0
+  - apiVersion: v2
+    created: "2025-11-21T23:23:10.969200124Z"
+    dependencies:
+    - alias: clusterSensor
+      condition: clusterSensor.enabled
+      name: cluster-sensor
+      repository: file://../cluster-sensor
+      version: 1.1.1
+    - alias: admissionController
+      condition: admissionController.enabled
+      name: admission-controller
+      repository: file://../admission-controller
+      version: 1.0.4
+    - alias: runtimeSensor
+      condition: runtimeSensor.enabled
+      name: runtime-sensor
+      repository: file://../runtime-sensor
+      version: 1.0.0
+    - alias: qcsSensor
+      condition: qcsSensor.enabled
+      name: qcs-sensor
+      repository: file://../qcs-sensor
+      version: 1.15.1
+    description: Unified helm chart to deploy all sensor
+    digest: 5741b8a6848540ff503363340bedb7c9a727db0d8b030cc5eef6496f7aad16a5
+    name: qualys-tc
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qualys-tc-2.2.1.tgz
+    version: 2.2.1
+  - apiVersion: v2
+    created: "2025-11-21T23:23:10.965404318Z"
+    dependencies:
+    - alias: clusterSensor
+      condition: clusterSensor.enabled
+      name: cluster-sensor
+      repository: file://../cluster-sensor
+      version: 1.1.1
+    - alias: admissionController
+      condition: admissionController.enabled
+      name: admission-controller
+      repository: file://../admission-controller
+      version: 1.0.4
+    - alias: runtimeSensor
+      condition: runtimeSensor.enabled
+      name: runtime-sensor
+      repository: file://../runtime-sensor
+      version: 1.0.0
+    - alias: qcsSensor
+      condition: qcsSensor.enabled
+      name: qcs-sensor
+      repository: file://../qcs-sensor
+      version: 1.15.0
+    description: Unified helm chart to deploy all sensor
+    digest: fce5ae267177fc0bf07e16e2b6229728b5f4dc1bd83c612d66147c1eb05d67f5
+    name: qualys-tc
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qualys-tc-2.2.0.tgz
+    version: 2.2.0
+  - apiVersion: v2
+    created: "2025-11-21T23:23:10.959947549Z"
+    dependencies:
+    - alias: clusterSensor
+      condition: clusterSensor.enabled
+      name: cluster-sensor
+      repository: file://../cluster-sensor
+      version: 1.1.1
+    - alias: admissionController
+      condition: admissionController.enabled
+      name: admission-controller
+      repository: file://../admission-controller
+      version: 1.0.2
+    - alias: runtimeSensor
+      condition: runtimeSensor.enabled
+      name: runtime-sensor
+      repository: file://../runtime-sensor
+      version: 1.0.0
+    - alias: qcsSensor
+      condition: qcsSensor.enabled
+      name: qcs-sensor
+      repository: file://../qcs-sensor
+      version: 1.14.0
+    description: Unified helm chart to deploy all sensor
+    digest: d8896a00e80ea10871fd3a709e2b0ef6aba5850b4cb1e333d1989b26c3de2533
+    name: qualys-tc
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qualys-tc-2.1.1.tgz
+    version: 2.1.1
+  - apiVersion: v2
+    created: "2025-11-21T23:23:10.956201024Z"
+    dependencies:
+    - alias: clusterSensor
+      condition: clusterSensor.enabled
+      name: cluster-sensor
+      repository: file://../cluster-sensor
+      version: 1.1.1
+    - alias: admissionController
+      condition: admissionController.enabled
+      name: admission-controller
+      repository: file://../admission-controller
+      version: 1.0.2
+    - alias: runtimeSensor
+      condition: runtimeSensor.enabled
+      name: runtime-sensor
+      repository: file://../runtime-sensor
+      version: 1.0.0
+    - alias: qcsSensor
+      condition: qcsSensor.enabled
+      name: qcs-sensor
+      repository: file://../qcs-sensor
+      version: 1.13.2
+    description: Unified helm chart to deploy all sensor
+    digest: 44c78f29bb536db216a9ba35d119c01aa4ffdc3f311b5920a32655452c0810a4
+    name: qualys-tc
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qualys-tc-2.1.0.tgz
+    version: 2.1.0
+  - apiVersion: v2
+    created: "2025-11-21T23:23:10.952569687Z"
+    dependencies:
+    - alias: clusterSensor
+      condition: clusterSensor.enabled
+      name: cluster-sensor
+      repository: file://../cluster-sensor
+      version: 1.1.1
+    - alias: admissionController
+      condition: admissionController.enabled
+      name: admission-controller
+      repository: file://../admission-controller
+      version: 1.0.1
+    - alias: runtimeSensor
+      condition: runtimeSensor.enabled
+      name: runtime-sensor
+      repository: file://../runtime-sensor
+      version: 1.0.0
+    - alias: qcsSensor
+      condition: qcsSensor.enabled
+      name: qcs-sensor
+      repository: file://../qcs-sensor
+      version: 1.13.2
+    description: Unified helm chart to deploy all sensor
+    digest: 0fa4691914b767f42bc6b3d4179c61741786c43404c39a1321c010fe29d941f0
+    name: qualys-tc
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qualys-tc-2.0.4.tgz
+    version: 2.0.4
+  - apiVersion: v2
+    created: "2025-11-21T23:23:10.946548592Z"
+    dependencies:
+    - alias: clusterSensor
+      condition: clusterSensor.enabled
+      name: cluster-sensor
+      repository: file://../cluster-sensor
+      version: 1.1.1
+    - alias: admissionController
+      condition: admissionController.enabled
+      name: admission-controller
+      repository: file://../admission-controller
+      version: 1.0.1
+    - alias: runtimeSensor
+      condition: runtimeSensor.enabled
+      name: runtime-sensor
+      repository: file://../runtime-sensor
+      version: 1.0.0
+    - alias: qcsSensor
+      condition: qcsSensor.enabled
+      name: qcs-sensor
+      repository: file://../qcs-sensor
+      version: 1.13.1
+    description: Unified helm chart to deploy all sensor
+    digest: 16d3df1b530d041c2e4bbd10b5a5b3c34b6b00adca2db48d8fa2c76e124d5575
+    name: qualys-tc
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qualys-tc-2.0.3.tgz
+    version: 2.0.3
+  - apiVersion: v2
+    created: "2025-11-21T23:23:10.942931645Z"
+    dependencies:
+    - alias: clusterSensor
+      condition: clusterSensor.enabled
+      name: cluster-sensor
+      repository: file://../cluster-sensor
+      version: 1.1.1
+    - alias: admissionController
+      condition: admissionController.enabled
+      name: admission-controller
+      repository: file://../admission-controller
+      version: 1.0.1
+    - alias: runtimeSensor
+      condition: runtimeSensor.enabled
+      name: runtime-sensor
+      repository: file://../runtime-sensor
+      version: 1.0.0
+    - alias: qcsSensor
+      condition: qcsSensor.enabled
+      name: qcs-sensor
+      repository: file://../qcs-sensor
+      version: 1.13.0
+    description: Unified helm chart to deploy all sensor
+    digest: dd16ab14edce83d44fda23cf4bd96db35feb1a8f372f84896a8e5f465202e299
+    name: qualys-tc
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qualys-tc-2.0.2.tgz
+    version: 2.0.2
+  - apiVersion: v2
+    created: "2025-11-21T23:23:10.939170474Z"
+    dependencies:
+    - alias: clusterSensor
+      condition: clusterSensor.enabled
+      name: cluster-sensor
+      repository: file://../cluster-sensor
+      version: 1.1.1
+    - alias: admissionController
+      condition: admissionController.enabled
+      name: admission-controller
+      repository: file://../admission-controller
+      version: 1.0.1
+    - alias: runtimeSensor
+      condition: runtimeSensor.enabled
+      name: runtime-sensor
+      repository: file://../runtime-sensor
+      version: 1.0.0
+    - alias: qcsSensor
+      condition: qcsSensor.enabled
+      name: qcs-sensor
+      repository: file://../qcs-sensor
+      version: 1.12.1
+    description: Unified helm chart to deploy all sensor
+    digest: 5f6b6b7133c9ce243d220a7f72324e8feca9194fcb7263eeb2d7e34d84afac86
+    name: qualys-tc
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qualys-tc-2.0.1.tgz
+    version: 2.0.1
+  - apiVersion: v2
+    created: "2025-11-21T23:23:10.93333961Z"
+    dependencies:
+    - alias: clusterSensor
+      condition: clusterSensor.enabled
+      name: cluster-sensor
+      repository: file://../cluster-sensor
+      version: 1.1.0
+    - alias: admissionController
+      condition: admissionController.enabled
+      name: admission-controller
+      repository: file://../admission-controller
+      version: 1.0.1
+    - alias: runtimeSensor
+      condition: runtimeSensor.enabled
+      name: runtime-sensor
+      repository: file://../runtime-sensor
+      version: 1.0.0
+    - alias: qcsSensor
+      condition: qcsSensor.enabled
+      name: qcs-sensor
+      repository: file://../qcs-sensor
+      version: 1.12.1
+    description: Unified helm chart to deploy all sensor
+    digest: ed2a4cab92c243c59007ef13279100602e8ae5a1fdd208abc2d388b1ee872960
+    name: qualys-tc
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qualys-tc-2.0.0.tgz
+    version: 2.0.0
+  - apiVersion: v2
+    created: "2025-11-21T23:23:10.929294288Z"
+    dependencies:
+    - alias: clusterSensor
+      condition: clusterSensor.enabled
+      name: cluster-sensor
+      repository: file://../cluster-sensor
+      version: 1.0.2
+    - alias: admissionController
+      condition: admissionController.enabled
+      name: admission-controller
+      repository: file://../admission-controller
+      version: 1.0.1
+    - alias: qcsSensor
+      condition: qcsSensor.enabled
+      name: qcs-sensor
+      repository: file://../qcs-sensor
+      version: 1.12.1
+    description: Unified helm chart to deploy all sensor
+    digest: 0e4fa62052c5e1e947737e123733784f2996a496a10ab5e2107378de073bd21b
+    name: qualys-tc
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qualys-tc-1.0.4.tgz
+    version: 1.0.4
+  - apiVersion: v2
+    created: "2025-11-21T23:23:10.926287297Z"
+    dependencies:
+    - alias: clusterSensor
+      condition: clusterSensor.enabled
+      name: cluster-sensor
+      repository: file://../cluster-sensor
+      version: 1.0.2
+    - alias: admissionController
+      condition: admissionController.enabled
+      name: admission-controller
+      repository: file://../admission-controller
+      version: 1.0.1
+    - alias: qcsSensor
+      condition: qcsSensor.enabled
+      name: qcs-sensor
+      repository: file://../qcs-sensor
+      version: 1.12.0
+    description: Unified helm chart to deploy all sensor
+    digest: e4ee6057d32af883f9931ead9f3397a0fb689a7d59e000c787288df65a8a3c57
+    name: qualys-tc
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qualys-tc-1.0.3.tgz
+    version: 1.0.3
+  - apiVersion: v2
+    created: "2025-11-21T23:23:10.922002633Z"
+    dependencies:
+    - alias: clusterSensor
+      condition: clusterSensor.enabled
+      name: cluster-sensor
+      repository: file://../cluster-sensor
+      version: 1.0.1
+    - alias: admissionController
+      condition: admissionController.enabled
+      name: admission-controller
+      repository: file://../admission-controller
+      version: 1.0.1
+    - alias: qcsSensor
+      condition: qcsSensor.enabled
+      name: qcs-sensor
+      repository: file://../qcs-sensor
+      version: 1.12.0
+    description: Unified helm chart to deploy all sensor
+    digest: 61b6b0bf678e0d00563cc45f30556e10426f6af645e725fda81a38a975b0dd03
+    name: qualys-tc
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qualys-tc-1.0.2.tgz
+    version: 1.0.2
+  - apiVersion: v2
+    created: "2025-11-21T23:23:10.919022989Z"
+    dependencies:
+    - alias: clusterSensor
+      condition: clusterSensor.enabled
+      name: cluster-sensor
+      repository: file://../cluster-sensor
+      version: 1.0.1
+    - alias: admissionController
+      condition: admissionController.enabled
+      name: admission-controller
+      repository: file://../admission-controller
+      version: 1.0.0
+    - alias: qcsSensor
+      condition: qcsSensor.enabled
+      name: qcs-sensor
+      repository: file://../qcs-sensor
+      version: 1.12.0
+    description: Unified helm chart to deploy all sensor
+    digest: 7b0ebbe3a0b44610bd31d847c1c1bb04fe67aab18de10a08e3518057244a93e8
+    name: qualys-tc
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qualys-tc-1.0.1.tgz
+    version: 1.0.1
+  - apiVersion: v2
+    created: "2025-11-21T23:23:10.9161444Z"
+    dependencies:
+    - alias: clusterSensor
+      condition: clusterSensor.enabled
+      name: cluster-sensor
+      repository: file://../cluster-sensor
+      version: 1.0.0
+    - alias: admissionController
+      condition: admissionController.enabled
+      name: admission-controller
+      repository: file://../admission-controller
+      version: 1.0.0
+    - alias: qcsSensor
+      condition: qcsSensor.enabled
+      name: qcs-sensor
+      repository: file://../qcs-sensor
+      version: 1.12.0
+    description: parent helm chart to deploy all sensor
+    digest: 5894d6153a3bca88f4049380ec5aa0dedc1e3c89aa735e4e06b6646e0ea1fddd
+    name: qualys-tc
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qualys-tc-1.0.0.tgz
+    version: 1.0.0
+  qualys-unified:
+  - apiVersion: v2
+    appVersion: "1.0"
+    created: "2025-11-21T23:23:11.020816912Z"
+    dependencies:
+    - alias: hostBasedSensor
+      condition: hostBasedSensor.enabled
+      name: lxag_container_agent
+      repository: file://../lxag_container_agent
+      version: 1.0.0
+    - alias: qualysTc
+      condition: qualysTc.enabled
+      name: qualys-tc
+      repository: file://../qualys-tc
+      version: 2.6.1
+    description: A unified Helm chart to deploy Qualys sensors - Host-based Container
+      Sensor, Cluster Sensor, Runtime Sensor, and QCS Sensor
+    digest: 90db0be493c340641ebf61d6ee560a62b47a0e87d4f462aaf7decadb4f7f6653
+    name: qualys-unified
+    type: application
+    urls:
+    - https://qualys.github.io/Qualys-Helm-Charts/qualys-unified-1.0.0.tgz
+    version: 1.0.0
+generated: "2025-11-21T23:23:10.862693662Z"

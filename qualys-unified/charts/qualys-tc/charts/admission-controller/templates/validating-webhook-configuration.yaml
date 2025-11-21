@@ -1,0 +1,72 @@
+{{- $caCrt := .Values.webhook.caBundle -}}
+{{- $tlsCrt := .Values.certs.serverCertificate -}}
+{{- $tlsKey := .Values.certs.serverKey -}}
+{{- if eq .Values.certs.certsProvider "helm" -}}
+{{- $validity := 3650 -}}
+{{- $_ca := genCA "admission-controller-ca" $validity -}}
+{{- $cn := include "admission-controller.fullname" . }}
+{{- $altNames := list ( printf "%s.%s" (include "admission-controller.fullname" .) .Release.Namespace ) ( printf "%s.%s.svc" (include "admission-controller.fullname" .) .Release.Namespace ) ( printf "%s.%s.svc.cluster.local" (include "admission-controller.fullname" .) .Release.Namespace ) -}}
+{{- $cert := genSignedCert $cn nil $altNames $validity $_ca -}}
+{{- $caCrt = $_ca.Cert | b64enc -}}
+{{- $tlsCrt = $cert.Cert | b64enc -}}
+{{- $tlsKey = $cert.Key | b64enc -}}
+{{- end }}
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: {{ include "admission-controller.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
+  annotations:
+    "helm.sh/hook": "post-install, post-upgrade"
+    "helm.sh/hook-delete-policy": "before-hook-creation"
+    {{- if eq .Values.certs.certsProvider "cert-manager" }}
+    "cert-manager.io/inject-ca-from": {{ include "admission-controller.certManagerInject" . }}
+    {{- end }}
+webhooks:
+  - name: cs.qualys.com
+    failurePolicy: {{ .Values.webhook.failurePolicy }}
+    namespaceSelector:
+      matchExpressions:
+        - key: cs.qualys.com/webhook
+          operator: NotIn
+          values:
+          - ignore
+        - key: kubernetes.io/metadata.name
+          operator: NotIn
+          values:
+          - {{ .Release.Namespace }}
+    rules:
+      - apiGroups: ["apps", "", "v1", "batch"]
+        apiVersions: ["*"]
+        operations:  ["CREATE", "UPDATE"]
+        resources:   ["pods"]
+    clientConfig:
+      service:
+        namespace: {{ .Release.Namespace }}
+        name: {{ include "admission-controller.fullname" . }}
+        path: "/validate"
+      {{- if ne .Values.certs.certsProvider "cert-manager" }}
+      caBundle: {{ $caCrt }}
+      {{- end }}
+    admissionReviewVersions: ["v1", "v1beta1"]
+    sideEffects: None
+    timeoutSeconds: {{ .Values.webhook.timeoutSeconds }}
+---
+{{- if and (ne .Values.certs.certsProvider "cert-manager") (not .Values.certs.secretName) }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Values.certs.name }}
+  annotations:
+    # Using helm hook to create certs only for chart install
+    "helm.sh/hook": "pre-install, pre-upgrade"
+    "helm.sh/hook-delete-policy": "before-hook-creation"
+      {{- with .Values.certs.annotations }}
+        {{- toYaml . | nindent 4 }}
+      {{- end }}
+type: kubernetes.io/tls
+data:
+  ca.crt: {{ $caCrt }}
+  tls.crt: {{ $tlsCrt }}
+  tls.key: {{ $tlsKey }}
+{{- end }}

@@ -1,0 +1,2 @@
+Please run following command to check the admission-controller POD status:
+kubectl get pods -n {{ .Release.Namespace}}

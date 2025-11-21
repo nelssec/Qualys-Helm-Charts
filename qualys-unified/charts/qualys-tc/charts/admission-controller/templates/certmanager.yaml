@@ -1,0 +1,35 @@
+{{ if eq .Values.certs.certsProvider "cert-manager" }}
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: "selfsigned-issuer"
+  namespace: {{ .Release.Namespace | quote }}
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ .Values.certs.name }}
+  namespace: {{ .Release.Namespace | quote }}
+spec:
+  subject:
+    organizations:
+    - qualys-self-signed
+  dnsNames:
+  - {{ printf "%s.%s" (include "admission-controller.fullname" .) .Release.Namespace | quote }}
+  - {{ printf "%s.%s.svc" (include "admission-controller.fullname" .) .Release.Namespace | quote }}
+  - {{ printf "%s.%s.svc.cluster.local" (include "admission-controller.fullname" .) .Release.Namespace | quote }}
+  duration: "87600h0m0s"
+  renewBefore: "360h0m0s"
+  secretName: {{ .Values.certs.name }}
+  secretTemplate:
+    {{- with .Values.certs.annotations }}
+    annotations:
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+  issuerRef:
+    name: "selfsigned-issuer"
+    kind: "Issuer"
+    group: "cert-manager.io"
+{{ end }}

@@ -1,0 +1,47 @@
+global:
+  customerId:
+  activationId:
+  gatewayUrl:
+  cmsqagPublicUrl:
+  imagePullSecret:
+  clusterInfoArgs:
+    # valid values of cloud provider(AWS,AZURE,GCP,OCI,SELF_MANAGED_K8S)
+    cloudProvider: 
+    AWS:
+        arn:
+    AZURE:
+        id:
+        region:
+    GCP:
+        krn:
+    OCI:
+        ocid:
+        clusterName: 
+    SELF_MANAGED_K8S:
+        clusterName: 
+  rootCA:
+    certificate: #certificate in base64 encoded format
+  proxy:
+    value:   #"<proxy FQDN or Ip address>:<port#>"
+    # if proxy(with CA cert) required to connect Qualys Cloud
+    certificate: #certificate in base64 encoded format
+    skipVerifyTLS: false
+  openshift: false
+  gkeAutopilot:
+    enabled: false
+    allowlistLabelForQcsSensor:
+
+clusterSensor:
+  enabled: true
+
+admissionController:
+  enabled: false
+
+runtimeSensor:
+  enabled: false
+
+qcsSensor:
+  enabled: false
+  qualys:
+    args:
+      concurrentScan: "2" # A valid range is between 1-20

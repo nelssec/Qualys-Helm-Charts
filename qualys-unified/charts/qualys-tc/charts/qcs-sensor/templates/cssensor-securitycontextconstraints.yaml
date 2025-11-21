@@ -1,0 +1,21 @@
+# OpenShift
+
+{{- if or .Values.openshift (and .Values.global .Values.global.openshift) }}
+kind: SecurityContextConstraints
+apiVersion: security.openshift.io/v1
+metadata:
+  name: scc-qualys-sensor
+allowHostDirVolumePlugin: true
+allowHostNetwork: true
+allowHostIPC: false
+allowHostPID: false
+allowHostPorts: false
+allowPrivilegedContainer: true
+readOnlyRootFilesystem: false
+runAsUser:
+  type: RunAsAny
+seLinuxContext:
+  type: RunAsAny
+users:
+- system:serviceaccount:qualys:qualys-service-account
+{{- end }}

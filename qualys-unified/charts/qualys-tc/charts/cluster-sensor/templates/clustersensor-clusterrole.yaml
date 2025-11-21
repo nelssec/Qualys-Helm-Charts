@@ -1,0 +1,22 @@
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: qualys-clustersensor-cluster-reader-role
+rules:
+- apiGroups: [""]
+  resources: ["pods", "namespaces", "nodes", "services", "serviceaccounts"]
+  verbs: ["watch"]
+- apiGroups: [ "discovery.k8s.io" ]
+  resources: [ "endpointslices" ]
+  verbs: ["watch"]
+- apiGroups: [ "networking.k8s.io" ]
+  resources: [ "ingresses" ]
+  verbs: ["watch"]
+- apiGroups: ["*"]
+  resources: ["*"]
+  verbs: ["get", "list"]
+{{- if .Values.global.openshift }}
+- apiGroups: ["security.openshift.io"]
+  resources: ["securitycontextconstraints"]
+  verbs: ["create", "get", "list", "watch", "update", "patch", "delete"]
+{{- end }}

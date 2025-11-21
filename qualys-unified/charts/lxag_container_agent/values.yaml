@@ -1,0 +1,44 @@
+# Default values for lxagent-chart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+containerd:
+  enabled: true
+
+crio:
+  enabled: false
+
+docker:
+  enabled: false
+  # Set this to true, if using Docker HTTP socket with TLS
+  tlsVerify:
+    enabled: false
+    # provide the cert path for Docker HTTP socket with TLS
+    certPath:
+
+openshift: false
+
+qualys:
+  namespace:
+  image:
+    repository:
+    tag:   # or specify a specific tag like "v1.0.0"
+    #secrets: "" # provide image pull secret here
+    pullPolicy: Always
+      #image: "qualys/linux-cloud-agent:latest" #Qualys cloud agent image location
+      #imagePullPolicy: "IfNotPresent"
+  resources:
+    limits:
+      cpu: "0.2"
+  # Additional arguments for Qualys cloud agent
+  args:
+    #Provide ACTIVATIONID
+    activationId:
+    #Provide CUSTOMERID
+    customerId:
+    providerName:
+    logLevel: "3" # Add log level if you want to override default value which is "1"
+    serverUri:
+  hostNetwork: true
+  hostIPC: true
+  hostPID: true
