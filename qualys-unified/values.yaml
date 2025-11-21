@@ -69,6 +69,7 @@ global:
 # Requires cloud provider specification: AWS, GCP, or COREOS
 hostsensor:
   enabled: false
+  openshift: false  # Inherits from global.openshift if not specified
 
   qualys:
     namespace: "qualys"
@@ -154,13 +155,137 @@ qualysTc:
   # ---------------------------------------------------------------------------
   # GENERAL SENSOR (Container Security Sensor)
   # Scans container images for vulnerabilities
+  # For full documentation see: https://artifacthub.io/packages/helm/qualys-helm-chart/qcs-sensor
   # ---------------------------------------------------------------------------
   qcsSensor:
     enabled: false
+
+    # Container runtime settings
+    containerd:
+      enabled: true
+      socketPath: "/var/run/containerd/containerd.sock"
+      storageDriverPath: "/var/lib/containerd"
+      secret: false
+
+    crio:
+      enabled: false
+      socketPath: "/var/run/crio/crio.sock"
+      containerPath: "/var/lib/containers/storage"
+      storageConfigPath: "/etc/containers/storage.conf"
+      storageDriverType: "overlay"
+
+    docker:
+      enabled: false
+      socketPath: "/var/run/docker.sock"
+      tlsVerify:
+        enabled: false
+        tlsCertPath: ""
+        dockerHost: false
+        dockerHostValue: ""
+      storageDriverPath: "/var/lib/docker"
+      storageDriverType: "overlay2"
+
+    openshift: false
+
     qualys:
+      createNamespace: false
+      namespace: ""
+      customerID: ""  # Inherited from global if not specified
+      activationID: ""  # Inherited from global if not specified
+      pod_url: ""  # Inherited from global.gatewayUrl if not specified
+      containerLaunchTimeout: "10"
+      image: "docker.io/qualys/qcs-sensor:1.40.1-0"
+      imagePullPolicy: "Always"
+      cpu: "500m"
+
+      # Sensor configuration arguments
       args:
-        # Number of concurrent scans (valid range: 1-20)
-        concurrentScan: "2"
+        withoutPersistentStorage: false
+        enableConsoleLogs: false
+        cicdDeployedSensor: false
+        registrySensor: false
+        concurrentScan: "4"  # Valid range: 1-20
+        disableLog4jScanning: false
+        disableLog4jStaticDetection: false
+        logFilePurgeCount: "5"
+        logFileSize: "10M"
+        logLevel: "3"
+        maskEnvVariable: false
+        optimizeImageScans: true
+        disableImageScan: false
+        performScaScan: false
+        disallowInternetAccessForSca: false
+        scaScanTimeoutInSeconds: "900"
+        performSecretDetection: false
+        performMalwareDetection: false
+        limitResourceUsage: false
+        insecureRegistry: false
+        enableStorageDriver: true
+        storageDriverType: "overlay"
+        scanningPolicy: ""  # DynamicWithStaticScanningAsFallback, DynamicScanningOnly, StaticScanningOnly
+        tagSensorProfile: ""  # Comma-separated tags
+        disableContainerScan: false
+        enableDiskSpaceCheck: false
+        disableFeatures: ""  # SBOM
+        populateK8sMetadata: false
+        ignoreExclusionListForImages: false
+        disableProcessEnvCollection: false
+        disableDefaultLoggingToFile: false
+
+      readOnly: false
+
+      tolerations:
+        enabled: false
+        toleration: []
+
+      proxy:
+        enabled: false
+        proxyvalue: ""
+        proxycertpath: ""
+
+      registryProxy:
+        enabled: false
+        proxyvalue: ""
+        proxycertpath: ""
+
+      sensorContResources:
+        enabled: false
+        limits:
+          cpu: "500m"
+          memory: "500Mi"
+          gkeAutoEphemeralStorage: "500Mi"
+        requests:
+          cpu: "100m"
+          memory: "300Mi"
+          gkeAutoEphemeralStorage: "100Mi"
+
+      scanningContResources:
+        enabled: false
+        limits:
+          cpu: "200m"
+          memory: "800Mi"
+        requests:
+          cpu: "100m"
+          memory: "300Mi"
+
+      persistentvolhostpath: "/usr/local/qualys/sensor/data"
+
+      persistentVolumeClaim:
+        enabled: false
+        storageClassName: ""
+        storage: ""
+
+      priorityClass:
+        enabled: false
+        priorityClassName: ""
+        priorityClassValue: ""
+        preemptionPolicy: ""
+
+      hostNetwork: true
+
+    tolerations: []
+    nodeSelector: {}
+    affinity: {}
 
   # ---------------------------------------------------------------------------
   # ADMISSION CONTROLLER
