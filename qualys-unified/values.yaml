@@ -91,7 +91,7 @@ global:
 # - GCP → qualys/qagent_googlecos
 # - Other providers (Azure, OCI, SELF_MANAGED_K8S non-OpenShift) → NOT SUPPORTED
 #
-hostsensor:
+host:
   enabled: false
   openshift: false  # Inherits from global.openshift if not specified
 
@@ -145,7 +145,7 @@ hostsensor:
 # The following sensors are part of the qualys-tc unified chart
 # =============================================================================
 
-qualysTc:
+container:
   # Enable/disable the entire qualys-tc chart
   # Set to false if you only want the host-based sensor
   enabled: true
@@ -330,12 +330,12 @@ qualysTc:
 #   customerId: "your-customer-id"
 #   cloudProvider: "AWS"
 #   gatewayUrl: "https://gateway.qg2.apps.qualys.com"
-# hostsensor:
+# host:
 #   enabled: true
 #   qualys:
 #     args:
 #       activationId: "host-sensor-activation-id"
-# qualysTc:
+# container:
 #   enabled: false
 #
 # Example 2: Cluster + General Sensors only (Azure)
@@ -350,9 +350,9 @@ qualysTc:
 #     AZURE:
 #       id: "your-cluster-id"
 #       region: "eastus"
-# hostsensor:
+# host:
 #   enabled: false
-# qualysTc:
+# container:
 #   enabled: true
 #   clusterSensor:
 #     enabled: true
@@ -376,12 +376,12 @@ qualysTc:
 #   clusterInfoArgs:
 #     AWS:
 #       arn: "arn:aws:eks:us-east-1:123456789:cluster/prod"
-# hostsensor:
+# host:
 #   enabled: true
 #   qualys:
 #     args:
 #       activationId: "host-sensor-activation-id"  # Different activation ID
-# qualysTc:
+# container:
 #   enabled: true
 #   clusterSensor:
 #     enabled: true

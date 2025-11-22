@@ -3,24 +3,24 @@ entries:
   qualys-unified:
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2025-11-21T22:22:24.497578-08:00"
+    created: "2025-11-21T22:34:36.369118-08:00"
     dependencies:
-    - alias: hostsensor
-      condition: hostsensor.enabled
+    - alias: host
+      condition: host.enabled
       name: lxag_container_agent
       repository: file://../lxag_container_agent
       version: 1.0.0
-    - alias: qualysTc
-      condition: qualysTc.enabled
+    - alias: container
+      condition: container.enabled
       name: qualys-tc
       repository: file://../qualys-tc
       version: 2.6.1
     description: A unified Helm chart to deploy Qualys sensors - Host Sensor, Cluster
       Sensor, Runtime Sensor, and General Sensor
-    digest: 0c3de1eedc1e31deb5897d3da9c5a2206f5251786ed7601b7ea2b1c440673f69
+    digest: 20a27c25a33ad30258e0818fa00e3c8ed5388e00a9d624be1e78f3af4dd46bf4
     name: qualys-unified
     type: application
     urls:
-    - https://nelssec.github.io/Qualys-Helm-Charts/qualys-unified-1.1.7.tgz
-    version: 1.1.7
-generated: "2025-11-21T22:22:24.495217-08:00"
+    - https://nelssec.github.io/Qualys-Helm-Charts/qualys-unified-1.2.0.tgz
+    version: 1.2.0
+generated: "2025-11-21T22:34:36.36714-08:00"

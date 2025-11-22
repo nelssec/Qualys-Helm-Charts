@@ -47,7 +47,7 @@ hostsensor:
     args:
       activationId: "host-sensor-activation-id"  # Different activation ID
 
-qualysTc:
+container:
   enabled: true
   clusterSensor:
     enabled: true
@@ -78,12 +78,12 @@ helm install qualys-sensors qualys-helm-chart/qualys-unified \
   --set global.clusterInfoArgs.cloudProvider=AWS \
   --set global.clusterInfoArgs.AWS.arn="arn:aws:eks:region:account:cluster/name" \
   --set hostsensor.enabled=false \
-  --set qualysTc.enabled=true \
-  --set qualysTc.clusterSensor.enabled=true \
-  --set qualysTc.qcsSensor.enabled=true \
-  --set qualysTc.qcsSensor.qualys.args.performScaScan=true \
-  --set qualysTc.qcsSensor.qualys.args.enableConsoleLogs=true \
-  --set qualysTc.qcsSensor.qualys.args.withoutPersistentStorage=true \
+  --set container.enabled=true \
+  --set container.clusterSensor.enabled=true \
+  --set container.qcsSensor.enabled=true \
+  --set container.qcsSensor.qualys.args.performScaScan=true \
+  --set container.qcsSensor.qualys.args.enableConsoleLogs=true \
+  --set container.qcsSensor.qualys.args.withoutPersistentStorage=true \
   --namespace qualys --create-namespace
 
 # Example: Host Sensor only
@@ -93,7 +93,7 @@ helm install qualys-sensors qualys-helm-chart/qualys-unified \
   --set global.clusterInfoArgs.cloudProvider=AWS \
   --set hostsensor.enabled=true \
   --set hostsensor.qualys.args.activationId=HOST_SENSOR_ACTIVATION_ID \
-  --set qualysTc.enabled=false \
+  --set container.enabled=false \
   --namespace qualys --create-namespace
 
 # Example: All Sensors (with different activation IDs)
@@ -105,10 +105,10 @@ helm install qualys-sensors qualys-helm-chart/qualys-unified \
   --set global.clusterInfoArgs.AWS.arn="arn:aws:eks:region:account:cluster/name" \
   --set hostsensor.enabled=true \
   --set hostsensor.qualys.args.activationId=HOST_SENSOR_ACTIVATION_ID \
-  --set qualysTc.enabled=true \
-  --set qualysTc.clusterSensor.enabled=true \
-  --set qualysTc.qcsSensor.enabled=true \
-  --set qualysTc.qcsSensor.qualys.args.performScaScan=true \
+  --set container.enabled=true \
+  --set container.clusterSensor.enabled=true \
+  --set container.qcsSensor.enabled=true \
+  --set container.qcsSensor.qualys.args.performScaScan=true \
   --namespace qualys --create-namespace
 ```
 
@@ -242,7 +242,7 @@ hostsensor:
 Discovers and monitors Kubernetes cluster resources:
 
 ```yaml
-qualysTc:
+container:
   enabled: true
   clusterSensor:
     enabled: true
@@ -255,7 +255,7 @@ Requires `global.clusterInfoArgs.cloudProvider` to be set.
 Monitors container runtime behavior:
 
 ```yaml
-qualysTc:
+container:
   enabled: true
   runtimeSensor:
     enabled: true
@@ -266,7 +266,7 @@ qualysTc:
 Scans container images for vulnerabilities:
 
 ```yaml
-qualysTc:
+container:
   enabled: true
   qcsSensor:
     enabled: true
@@ -280,7 +280,7 @@ qualysTc:
 Controls which images can be deployed:
 
 ```yaml
-qualysTc:
+container:
   enabled: true
   admissionController:
     enabled: true
@@ -372,7 +372,7 @@ hostsensor:
       activationId: "host-sensor-activation"
   # Image: qualys/qagent_bottlerocket (auto-selected)
 
-qualysTc:
+container:
   enabled: true
   clusterSensor:
     enabled: true
@@ -401,7 +401,7 @@ hostsensor:
       activationId: "host-sensor-activation"
   # Image: qualys/qagent_googlecos (auto-selected)
 
-qualysTc:
+container:
   enabled: false
 ```
 
@@ -422,7 +422,7 @@ global:
 hostsensor:
   enabled: false
 
-qualysTc:
+container:
   enabled: true
   clusterSensor:
     enabled: true
@@ -451,7 +451,7 @@ global:
 hostsensor:
   enabled: false  # Azure not supported for host sensor
 
-qualysTc:
+container:
   enabled: true
   clusterSensor:
     enabled: true
