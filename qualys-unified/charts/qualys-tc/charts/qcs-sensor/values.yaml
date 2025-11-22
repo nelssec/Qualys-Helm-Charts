@@ -45,10 +45,10 @@ qualys:
   imagePullPolicy: "Always"
   cpu: "500m"
 
-  # Additional arguments for CS sensor 
+  # Additional arguments for CS sensor
   args:
-    withoutPersistentStorage: false # Peristent volume configuration
-    enableConsoleLogs: false
+    withoutPersistentStorage: true # Default: true for easier deployment
+    enableConsoleLogs: true # Default: true for easier troubleshooting
     cicdDeployedSensor: false
     registrySensor: false
     concurrentScan: "4" # A valid range is between 1-20
@@ -60,7 +60,7 @@ qualys:
     maskEnvVariable: false
     optimizeImageScans: true # Applicable only for general sensor
     disableImageScan: false
-    performScaScan: false
+    performScaScan: true # Default: true to enable SCA scanning
     disallowInternetAccessForSca: false
     scaScanTimeoutInSeconds: "900"
     performSecretDetection: false
