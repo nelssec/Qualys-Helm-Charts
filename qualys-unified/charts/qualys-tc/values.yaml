@@ -45,3 +45,8 @@ qcsSensor:
   qualys:
     args:
       concurrentScan: "2" # A valid range is between 1-20
+      performScaScan: true
+      withoutPersistentStorage: true
+      enableConsoleLogs: true
+      enableStorageDriver: true  # Set to false for OpenShift (when crio.enabled=true)
+      storageDriverType: "overlay"  # Not used for OpenShift
