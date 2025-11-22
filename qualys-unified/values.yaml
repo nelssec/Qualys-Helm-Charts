@@ -6,11 +6,18 @@
 # These settings apply to all Qualys sensors
 # =============================================================================
 global:
-  # Qualys account credentials (required for all sensors)
-  customerId: ""
-  activationId: ""
+  # Qualys account credentials (shared by all sensors)
+  customerId: ""           # REQUIRED: Same customer ID for all sensors
 
-  # Qualys gateway URL (required for all sensors)
+  # Activation IDs (different for different sensor types)
+  activationId: ""         # REQUIRED: For cluster/runtime/general/admission sensors
+
+  # Cloud Provider (shared by all sensors in the same cluster)
+  # Valid values: AWS, AZURE, GCP, OCI, SELF_MANAGED_K8S
+  # For host sensor: Only AWS, GCP, COREOS are supported
+  cloudProvider: ""        # REQUIRED: Used by all sensors
+
+  # Qualys gateway URL (required for cluster sensors)
   # Examples:
   #   US Platform 1: https://gateway.qg1.apps.qualys.com
   #   US Platform 2: https://gateway.qg2.apps.qualys.com
@@ -19,14 +26,14 @@ global:
   #   EU Platform 2: https://gateway.qg2.apps.qualys.eu
   gatewayUrl: ""
 
+  # CMS QAG Public URL (for container sensors)
+  cmsqagPublicUrl: ""
+
   # Image pull secret (if using private registry)
   imagePullSecret: ""
 
-  # Cluster identification - required for cluster sensor, runtime sensor
+  # Cluster identification arguments (cloud-specific)
   clusterInfoArgs:
-    # Cloud provider: AWS, AZURE, GCP, OCI, SELF_MANAGED_K8S
-    cloudProvider: ""
-
     AWS:
       arn: ""
 
@@ -84,15 +91,14 @@ hostsensor:
         cpu: "0.2"
 
     args:
-      # Cloud Provider - REQUIRED when hostsensor.enabled is true
-      # Valid values: AWS, GCP, COREOS
-      providerName: ""
+      # IMPORTANT: Host sensor uses DIFFERENT activation ID than cluster sensors
+      # Separate activation ID is REQUIRED for host sensor
+      activationId: ""  # REQUIRED: Host sensor-specific activation ID
 
-      # IMPORTANT: Host sensor typically uses DIFFERENT credentials than other sensors
-      # If not specified, these inherit from global values
-      activationId: ""  # Override with host sensor-specific activation ID
-      customerId: ""    # Override with host sensor-specific customer ID
-      serverUri: ""     # Override with host sensor-specific server URI (or use global.gatewayUrl)
+      # Optional overrides (inherit from global if not specified)
+      customerId: ""    # Inherits from global.customerId if not set
+      providerName: ""  # Inherits from global.cloudProvider if not set (converted to AWS/GCP/COREOS)
+      serverUri: ""     # Inherits from global.gatewayUrl if not set
 
       # Log level (1-5, default: 1)
       logLevel: "3"
@@ -301,26 +307,27 @@ qualysTc:
 #
 # Example 1: Host Sensor only (AWS)
 # --------------------------------------------------
+# global:
+#   customerId: "your-customer-id"
+#   cloudProvider: "AWS"
+#   gatewayUrl: "https://gateway.qg2.apps.qualys.com"
 # hostsensor:
 #   enabled: true
 #   qualys:
 #     args:
-#       providerName: "AWS"
 #       activationId: "host-sensor-activation-id"
-#       customerId: "host-sensor-customer-id"
-#       serverUri: "https://gateway.qg2.apps.qualys.com"
 # qualysTc:
 #   enabled: false
 #
 # Example 2: Cluster + General Sensors only (Azure)
 # --------------------------------------------------
 # global:
-#   customerId: "cluster-sensor-customer-id"
-#   activationId: "cluster-sensor-activation-id"
+#   customerId: "your-customer-id"
+#   activationId: "container-sensor-activation-id"
+#   cloudProvider: "AZURE"
 #   gatewayUrl: "https://gateway.qg2.apps.qualys.com"
 #   cmsqagPublicUrl: "https://cmsqagpublic.qg2.apps.qualys.com/ContainerSensor"
 #   clusterInfoArgs:
-#     cloudProvider: "AZURE"
 #     AZURE:
 #       id: "your-cluster-id"
 #       region: "eastus"
@@ -338,28 +345,23 @@ qualysTc:
 #         enableConsoleLogs: true
 #         withoutPersistentStorage: true
 #
-# Example 3: All Sensors with Separate Credentials (AWS)
-# --------------------------------------------------------
-# IMPORTANT: Host sensor and cluster sensors use DIFFERENT credentials
+# Example 3: All Sensors with Separate Activation IDs (AWS)
+# ----------------------------------------------------------
+# IMPORTANT: Host sensor uses DIFFERENT activation ID than container sensors
 # global:
-#   # Credentials for cluster/runtime/general sensors
-#   customerId: "dd6ac00f-cac2-5630-82f9-44cb9fcee66c"
-#   activationId: "be2bcfe0-21dd-4108-ab9f-26976c435ed7"
+#   customerId: "your-customer-id"        # Shared by all sensors
+#   activationId: "container-sensor-activation-id"  # For cluster/runtime/general sensors
+#   cloudProvider: "AWS"                  # Shared by all sensors
 #   gatewayUrl: "https://gateway.qg2.apps.qualys.com"
 #   cmsqagPublicUrl: "https://cmsqagpublic.qg2.apps.qualys.com/ContainerSensor"
 #   clusterInfoArgs:
-#     cloudProvider: "AWS"
 #     AWS:
 #       arn: "arn:aws:eks:us-east-1:123456789:cluster/prod"
 # hostsensor:
 #   enabled: true
 #   qualys:
 #     args:
-#       # Separate credentials for host sensor
-#       providerName: "AWS"
-#       activationId: "host-sensor-activation-id"
-#       customerId: "host-sensor-customer-id"
-#       serverUri: "https://gateway.qg2.apps.qualys.com"
+#       activationId: "host-sensor-activation-id"  # Different activation ID
 # qualysTc:
 #   enabled: true
 #   clusterSensor:
