@@ -1,5 +1,18 @@
 # Artifact Hub repository metadata file
 repositoryID: 0966e120-2052-4050-b60a-3c9aedc7eebb
+
+# Repository display information
+displayName: Qualys Helm Charts
+description: Official Helm charts for deploying Qualys security sensors on Kubernetes
+
+# Repository owners (for verification and notifications)
 owners:
   - name: Andrew Nelson
     email: anelson@qualys.com
+
+# Links to additional resources
+links:
+  - name: Source Code
+    url: https://github.com/nelssec/Qualys-Helm-Charts
+  - name: Qualys Documentation
+    url: https://www.qualys.com/docs/
