@@ -3,48 +3,48 @@ entries:
   lxag_container_agent:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2025-11-17T11:43:34.44541794Z"
+    created: "2025-11-21T21:34:21.147629-08:00"
     description: A Helm chart for Kubernetes
     digest: b303474e0fb4e88a20bdc6d1aa045ad5c7078e26995b4a646307d4b4d58f8ee9
     name: lxag_container_agent
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/lxag_container_agent-1.0.0.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/lxag_container_agent-1.0.0.tgz
     version: 1.0.0
   qcs-sensor:
   - apiVersion: v2
     appVersion: 1.40.1-0
-    created: "2025-11-17T11:43:34.467548371Z"
+    created: "2025-11-21T21:34:21.158257-08:00"
     description: A Helm chart for Kubernetes
     digest: 1b23493f22c5493ca6a967a81a3d34923be73a897eb5be6d1c09956a612dd432
     name: qcs-sensor
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.19.0.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qcs-sensor-1.19.0.tgz
     version: 1.19.0
   - apiVersion: v2
     appVersion: 1.39.0-1
-    created: "2025-11-17T11:43:34.466443524Z"
+    created: "2025-11-21T21:34:21.157885-08:00"
     description: A Helm chart for Kubernetes
     digest: 4467b383e13c0d1bd7eb72fc94dd41f13aba447042c8e26626e44504533542b7
     name: qcs-sensor
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.18.1.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qcs-sensor-1.18.1.tgz
     version: 1.18.1
   - apiVersion: v2
     appVersion: 1.39.0-1
-    created: "2025-11-17T11:43:34.465333414Z"
+    created: "2025-11-21T21:34:21.157492-08:00"
     description: A Helm chart for Kubernetes
     digest: 6379cfd51b2fa5eb550278950bdea48ae3dc3840864d17c156b9b93eb10a50c9
     name: qcs-sensor
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.18.0.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qcs-sensor-1.18.0.tgz
     version: 1.18.0
   - apiVersion: v2
     appVersion: 1.38.0-1
-    created: "2025-11-17T11:43:34.464121458Z"
+    created: "2025-11-21T21:34:21.156929-08:00"
     dependencies:
     - name: common
       repository: file://../common
@@ -54,11 +54,11 @@ entries:
     name: qcs-sensor
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.17.0.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qcs-sensor-1.17.0.tgz
     version: 1.17.0
   - apiVersion: v2
     appVersion: 1.37.0-0
-    created: "2025-11-17T11:43:34.46294839Z"
+    created: "2025-11-21T21:34:21.156355-08:00"
     dependencies:
     - name: common
       repository: file://../common
@@ -68,11 +68,11 @@ entries:
     name: qcs-sensor
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.16.0.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qcs-sensor-1.16.0.tgz
     version: 1.16.0
   - apiVersion: v2
     appVersion: 1.36.1-0
-    created: "2025-11-17T11:43:34.461786821Z"
+    created: "2025-11-21T21:34:21.155471-08:00"
     dependencies:
     - name: common
       repository: file://../common
@@ -82,11 +82,11 @@ entries:
     name: qcs-sensor
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.15.1.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qcs-sensor-1.15.1.tgz
     version: 1.15.1
   - apiVersion: v2
     appVersion: 1.36.1-0
-    created: "2025-11-17T11:43:34.46067441Z"
+    created: "2025-11-21T21:34:21.155084-08:00"
     dependencies:
     - name: common
       repository: file://../common
@@ -96,11 +96,11 @@ entries:
     name: qcs-sensor
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.15.0.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qcs-sensor-1.15.0.tgz
     version: 1.15.0
   - apiVersion: v2
     appVersion: 1.35.0-0
-    created: "2025-11-17T11:43:34.459555837Z"
+    created: "2025-11-21T21:34:21.154684-08:00"
     dependencies:
     - name: common
       repository: file://../common
@@ -110,11 +110,11 @@ entries:
     name: qcs-sensor
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.14.0.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qcs-sensor-1.14.0.tgz
     version: 1.14.0
   - apiVersion: v2
     appVersion: 1.34.3-0
-    created: "2025-11-17T11:43:34.458060281Z"
+    created: "2025-11-21T21:34:21.154262-08:00"
     dependencies:
     - name: common
       repository: file://../common
@@ -124,11 +124,11 @@ entries:
     name: qcs-sensor
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.13.2.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qcs-sensor-1.13.2.tgz
     version: 1.13.2
   - apiVersion: v2
     appVersion: 1.34.1-1
-    created: "2025-11-17T11:43:34.45661068Z"
+    created: "2025-11-21T21:34:21.15386-08:00"
     dependencies:
     - name: common
       repository: file://../common
@@ -138,11 +138,11 @@ entries:
     name: qcs-sensor
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.13.1.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qcs-sensor-1.13.1.tgz
     version: 1.13.1
   - apiVersion: v2
     appVersion: 1.34.1-0
-    created: "2025-11-17T11:43:34.455596172Z"
+    created: "2025-11-21T21:34:21.153206-08:00"
     dependencies:
     - name: common
       repository: file://../common
@@ -152,11 +152,11 @@ entries:
     name: qcs-sensor
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.13.0.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qcs-sensor-1.13.0.tgz
     version: 1.13.0
   - apiVersion: v2
     appVersion: 1.33.2-0
-    created: "2025-11-17T11:43:34.454140273Z"
+    created: "2025-11-21T21:34:21.152605-08:00"
     dependencies:
     - name: common
       repository: file://../common
@@ -166,11 +166,11 @@ entries:
     name: qcs-sensor
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.12.2.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qcs-sensor-1.12.2.tgz
     version: 1.12.2
   - apiVersion: v2
     appVersion: 1.33.0-0
-    created: "2025-11-17T11:43:34.45311371Z"
+    created: "2025-11-21T21:34:21.152004-08:00"
     dependencies:
     - name: common
       repository: file://../common
@@ -180,11 +180,11 @@ entries:
     name: qcs-sensor
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.12.1.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qcs-sensor-1.12.1.tgz
     version: 1.12.1
   - apiVersion: v2
     appVersion: 1.33.0-0
-    created: "2025-11-17T11:43:34.452066324Z"
+    created: "2025-11-21T21:34:21.15136-08:00"
     dependencies:
     - name: common
       repository: file://../common
@@ -194,152 +194,152 @@ entries:
     name: qcs-sensor
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.12.0.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qcs-sensor-1.12.0.tgz
     version: 1.12.0
   - apiVersion: v2
     appVersion: 1.32.2-0
-    created: "2025-11-17T11:43:34.450977679Z"
+    created: "2025-11-21T21:34:21.150651-08:00"
     description: A Helm chart for Kubernetes
     digest: c65398a25af47369b5174a885e9240676f5740a33a70f9b10c7e839773518b02
     name: qcs-sensor
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.11.1.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qcs-sensor-1.11.1.tgz
     version: 1.11.1
   - apiVersion: v2
     appVersion: 1.32.0-0
-    created: "2025-11-17T11:43:34.45006727Z"
+    created: "2025-11-21T21:34:21.150315-08:00"
     description: A Helm chart for Kubernetes
     digest: 82f6e7c8ecd90109f42aa1074bb5c7bff4a23098df00f70a59e6e61c94fc0740
     name: qcs-sensor
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.11.0.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qcs-sensor-1.11.0.tgz
     version: 1.11.0
   - apiVersion: v2
     appVersion: 1.31.2-0
-    created: "2025-11-17T11:43:34.449169195Z"
+    created: "2025-11-21T21:34:21.149739-08:00"
     description: A Helm chart for Kubernetes
     digest: 1b542747630d5b6baa4e9b468f3501fc205ac3e57693219047ff66ad84c51fdc
     name: qcs-sensor
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.10.1.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qcs-sensor-1.10.1.tgz
     version: 1.10.1
   - apiVersion: v2
     appVersion: 1.31.0-0
-    created: "2025-11-17T11:43:34.448256218Z"
+    created: "2025-11-21T21:34:21.14922-08:00"
     description: A Helm chart for Kubernetes
     digest: b05f293f6c111523560144c8a4e9313ee052df0b600d01d706a6360209c5f43a
     name: qcs-sensor
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.10.0.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qcs-sensor-1.10.0.tgz
     version: 1.10.0
   - apiVersion: v2
     appVersion: 1.30.0-0
-    created: "2025-11-17T11:43:34.475457655Z"
+    created: "2025-11-21T21:34:21.161761-08:00"
     description: A Helm chart for Kubernetes
     digest: 84b9ae9b6e1e9db7e5b1052734a8834c060ac7d6200018da0982d202f43128e9
     name: qcs-sensor
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.9.0.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qcs-sensor-1.9.0.tgz
     version: 1.9.0
   - apiVersion: v2
     appVersion: 1.29.0-0
-    created: "2025-11-17T11:43:34.474664553Z"
+    created: "2025-11-21T21:34:21.161404-08:00"
     description: A Helm chart for Kubernetes
     digest: 3511cf34f8c1c97ed229674742c0882f97d82f18c0772ba94e514547c076a961
     name: qcs-sensor
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.8.0.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qcs-sensor-1.8.0.tgz
     version: 1.8.0
   - apiVersion: v2
     appVersion: 1.28.0-0
-    created: "2025-11-17T11:43:34.473845329Z"
+    created: "2025-11-21T21:34:21.161018-08:00"
     description: A Helm chart for Kubernetes
     digest: 720b55ced11cf2cbfd4f15676e19b1b59ba3dc520051c030d73844c2491ca17c
     name: qcs-sensor
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.7.0.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qcs-sensor-1.7.0.tgz
     version: 1.7.0
   - apiVersion: v2
     appVersion: 1.27.0-0
-    created: "2025-11-17T11:43:34.472798648Z"
+    created: "2025-11-21T21:34:21.16044-08:00"
     description: A Helm chart for Kubernetes
     digest: 3d8c390a0d1fd032dec33b9d0704b7952b1ed0284dc34d690d601ee732e00d46
     name: qcs-sensor
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.6.0.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qcs-sensor-1.6.0.tgz
     version: 1.6.0
   - apiVersion: v2
     appVersion: 1.26.0-0
-    created: "2025-11-17T11:43:34.470870749Z"
+    created: "2025-11-21T21:34:21.160156-08:00"
     description: A Helm chart for Kubernetes
     digest: 089c7b52f5f1e4465926f9ed892115e1d3279b1f36e4fe52248bc26d183a4281
     name: qcs-sensor
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.5.0.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qcs-sensor-1.5.0.tgz
     version: 1.5.0
   - apiVersion: v2
     appVersion: 1.25.0-0
-    created: "2025-11-17T11:43:34.47007224Z"
+    created: "2025-11-21T21:34:21.159507-08:00"
     description: A Helm chart for Kubernetes
     digest: 4c83c0c425b22e43432c981a78687f39d7942f8081893ed6e6be66fba08dc684
     name: qcs-sensor
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.4.0.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qcs-sensor-1.4.0.tgz
     version: 1.4.0
   - apiVersion: v2
     appVersion: 1.24.0-1
-    created: "2025-11-17T11:43:34.469258783Z"
+    created: "2025-11-21T21:34:21.159109-08:00"
     description: A Helm chart for Kubernetes
     digest: bee2a11ae0eb7da36aa533736e37be0bce52f25bc164357ed2c6de8248b46e6e
     name: qcs-sensor
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.3.0.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qcs-sensor-1.3.0.tgz
     version: 1.3.0
   - apiVersion: v2
     appVersion: 1.22.0-0
-    created: "2025-11-17T11:43:34.468348527Z"
+    created: "2025-11-21T21:34:21.158653-08:00"
     description: A Helm chart for Kubernetes
     digest: c9e41f513ba0861415f3d5a8e87eefc0bd1a754e2636450f4fcc24928ccc509f
     name: qcs-sensor
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.2.0.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qcs-sensor-1.2.0.tgz
     version: 1.2.0
   - apiVersion: v2
     appVersion: 1.21.0-0
-    created: "2025-11-17T11:43:34.447393197Z"
+    created: "2025-11-21T21:34:21.148613-08:00"
     description: A Helm chart for Kubernetes
     digest: 6b1c8c918777be8cf7985ceba7b691a4e24769ef343ee844408ef3cc0f2fce3c
     name: qcs-sensor
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.1.0.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qcs-sensor-1.1.0.tgz
     version: 1.1.0
   - apiVersion: v2
     appVersion: 1.19.2-0
-    created: "2025-11-17T11:43:34.446507433Z"
+    created: "2025-11-21T21:34:21.148203-08:00"
     description: A Helm chart for Kubernetes
     digest: ed55fb8391e54edcaec93fe4f6ba83016398adec34fd6e199a89df1a7160e4fd
     name: qcs-sensor
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qcs-sensor-1.0.0.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qcs-sensor-1.0.0.tgz
     version: 1.0.0
   qualys-scanner:
   - apiVersion: v1
     appVersion: 4.6.0-4
-    created: "2025-11-17T11:43:34.477422258Z"
+    created: "2025-11-21T21:34:21.162519-08:00"
     description: Harbor scanner adapter for QScanner
     digest: 4a6a61c5548cc6358aa5dc0dc0d6bcff524be3977ce8d8c6a78ed10878f16034
     keywords:
@@ -349,11 +349,11 @@ entries:
     - vulnerability
     name: qualys-scanner
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qualys-scanner-1.2.0.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qualys-scanner-1.2.0.tgz
     version: 1.2.0
   - apiVersion: v1
     appVersion: 4.5.0-2
-    created: "2025-11-17T11:43:34.476768887Z"
+    created: "2025-11-21T21:34:21.162259-08:00"
     description: Harbor scanner adapter for QScanner
     digest: 0100efaba308e61f063be96dad649b565d558076e1425a52fccd26860b3366ec
     keywords:
@@ -363,11 +363,11 @@ entries:
     - vulnerability
     name: qualys-scanner
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qualys-scanner-1.1.0.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qualys-scanner-1.1.0.tgz
     version: 1.1.0
   - apiVersion: v1
     appVersion: 4.4.0-3
-    created: "2025-11-17T11:43:34.476105507Z"
+    created: "2025-11-21T21:34:21.16201-08:00"
     description: Harbor scanner adapter for QScanner
     digest: 7ea564c546fb717c0d4a6a75368f15429474708a57dedf7b52b91ac6d1bfc563
     keywords:
@@ -377,11 +377,11 @@ entries:
     - vulnerability
     name: qualys-scanner
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qualys-scanner-1.0.0.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qualys-scanner-1.0.0.tgz
     version: 1.0.0
   qualys-tc:
   - apiVersion: v2
-    created: "2025-11-17T11:43:34.581274509Z"
+    created: "2025-11-21T21:34:21.197646-08:00"
     dependencies:
     - alias: clusterSensor
       condition: clusterSensor.enabled
@@ -411,10 +411,10 @@ entries:
     name: qualys-tc
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qualys-tc-2.6.1.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qualys-tc-2.6.1.tgz
     version: 2.6.1
   - apiVersion: v2
-    created: "2025-11-17T11:43:34.574442244Z"
+    created: "2025-11-21T21:34:21.196244-08:00"
     dependencies:
     - alias: clusterSensor
       condition: clusterSensor.enabled
@@ -444,10 +444,10 @@ entries:
     name: qualys-tc
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qualys-tc-2.6.0.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qualys-tc-2.6.0.tgz
     version: 2.6.0
   - apiVersion: v2
-    created: "2025-11-17T11:43:34.569832848Z"
+    created: "2025-11-21T21:34:21.194432-08:00"
     dependencies:
     - alias: clusterSensor
       condition: clusterSensor.enabled
@@ -477,10 +477,10 @@ entries:
     name: qualys-tc
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qualys-tc-2.5.1.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qualys-tc-2.5.1.tgz
     version: 2.5.1
   - apiVersion: v2
-    created: "2025-11-17T11:43:34.564260536Z"
+    created: "2025-11-21T21:34:21.192905-08:00"
     dependencies:
     - alias: clusterSensor
       condition: clusterSensor.enabled
@@ -510,10 +510,10 @@ entries:
     name: qualys-tc
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qualys-tc-2.5.0.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qualys-tc-2.5.0.tgz
     version: 2.5.0
   - apiVersion: v2
-    created: "2025-11-17T11:43:34.55947148Z"
+    created: "2025-11-21T21:34:21.191184-08:00"
     dependencies:
     - alias: clusterSensor
       condition: clusterSensor.enabled
@@ -540,10 +540,10 @@ entries:
     name: qualys-tc
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qualys-tc-2.4.1.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qualys-tc-2.4.1.tgz
     version: 2.4.1
   - apiVersion: v2
-    created: "2025-11-17T11:43:34.553709192Z"
+    created: "2025-11-21T21:34:21.189737-08:00"
     dependencies:
     - alias: clusterSensor
       condition: clusterSensor.enabled
@@ -570,10 +570,10 @@ entries:
     name: qualys-tc
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qualys-tc-2.4.0.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qualys-tc-2.4.0.tgz
     version: 2.4.0
   - apiVersion: v2
-    created: "2025-11-17T11:43:34.549328656Z"
+    created: "2025-11-21T21:34:21.188103-08:00"
     dependencies:
     - alias: clusterSensor
       condition: clusterSensor.enabled
@@ -600,10 +600,10 @@ entries:
     name: qualys-tc
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qualys-tc-2.3.2.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qualys-tc-2.3.2.tgz
     version: 2.3.2
   - apiVersion: v2
-    created: "2025-11-17T11:43:34.543503418Z"
+    created: "2025-11-21T21:34:21.186878-08:00"
     dependencies:
     - alias: clusterSensor
       condition: clusterSensor.enabled
@@ -630,10 +630,10 @@ entries:
     name: qualys-tc
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qualys-tc-2.3.1.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qualys-tc-2.3.1.tgz
     version: 2.3.1
   - apiVersion: v2
-    created: "2025-11-17T11:43:34.5390712Z"
+    created: "2025-11-21T21:34:21.185593-08:00"
     dependencies:
     - alias: clusterSensor
       condition: clusterSensor.enabled
@@ -660,10 +660,10 @@ entries:
     name: qualys-tc
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qualys-tc-2.3.0.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qualys-tc-2.3.0.tgz
     version: 2.3.0
   - apiVersion: v2
-    created: "2025-11-17T11:43:34.534449589Z"
+    created: "2025-11-21T21:34:21.183694-08:00"
     dependencies:
     - alias: clusterSensor
       condition: clusterSensor.enabled
@@ -690,10 +690,10 @@ entries:
     name: qualys-tc
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qualys-tc-2.2.1.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qualys-tc-2.2.1.tgz
     version: 2.2.1
   - apiVersion: v2
-    created: "2025-11-17T11:43:34.529106598Z"
+    created: "2025-11-21T21:34:21.182251-08:00"
     dependencies:
     - alias: clusterSensor
       condition: clusterSensor.enabled
@@ -720,10 +720,10 @@ entries:
     name: qualys-tc
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qualys-tc-2.2.0.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qualys-tc-2.2.0.tgz
     version: 2.2.0
   - apiVersion: v2
-    created: "2025-11-17T11:43:34.525064795Z"
+    created: "2025-11-21T21:34:21.180546-08:00"
     dependencies:
     - alias: clusterSensor
       condition: clusterSensor.enabled
@@ -750,10 +750,10 @@ entries:
     name: qualys-tc
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qualys-tc-2.1.1.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qualys-tc-2.1.1.tgz
     version: 2.1.1
   - apiVersion: v2
-    created: "2025-11-17T11:43:34.51991292Z"
+    created: "2025-11-21T21:34:21.17916-08:00"
     dependencies:
     - alias: clusterSensor
       condition: clusterSensor.enabled
@@ -780,10 +780,10 @@ entries:
     name: qualys-tc
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qualys-tc-2.1.0.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qualys-tc-2.1.0.tgz
     version: 2.1.0
   - apiVersion: v2
-    created: "2025-11-17T11:43:34.515698209Z"
+    created: "2025-11-21T21:34:21.17779-08:00"
     dependencies:
     - alias: clusterSensor
       condition: clusterSensor.enabled
@@ -810,10 +810,10 @@ entries:
     name: qualys-tc
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qualys-tc-2.0.4.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qualys-tc-2.0.4.tgz
     version: 2.0.4
   - apiVersion: v2
-    created: "2025-11-17T11:43:34.511790408Z"
+    created: "2025-11-21T21:34:21.175946-08:00"
     dependencies:
     - alias: clusterSensor
       condition: clusterSensor.enabled
@@ -840,10 +840,10 @@ entries:
     name: qualys-tc
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qualys-tc-2.0.3.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qualys-tc-2.0.3.tgz
     version: 2.0.3
   - apiVersion: v2
-    created: "2025-11-17T11:43:34.506615119Z"
+    created: "2025-11-21T21:34:21.174551-08:00"
     dependencies:
     - alias: clusterSensor
       condition: clusterSensor.enabled
@@ -870,10 +870,10 @@ entries:
     name: qualys-tc
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qualys-tc-2.0.2.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qualys-tc-2.0.2.tgz
     version: 2.0.2
   - apiVersion: v2
-    created: "2025-11-17T11:43:34.502629421Z"
+    created: "2025-11-21T21:34:21.17289-08:00"
     dependencies:
     - alias: clusterSensor
       condition: clusterSensor.enabled
@@ -900,10 +900,10 @@ entries:
     name: qualys-tc
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qualys-tc-2.0.1.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qualys-tc-2.0.1.tgz
     version: 2.0.1
   - apiVersion: v2
-    created: "2025-11-17T11:43:34.498441954Z"
+    created: "2025-11-21T21:34:21.171313-08:00"
     dependencies:
     - alias: clusterSensor
       condition: clusterSensor.enabled
@@ -930,10 +930,10 @@ entries:
     name: qualys-tc
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qualys-tc-2.0.0.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qualys-tc-2.0.0.tgz
     version: 2.0.0
   - apiVersion: v2
-    created: "2025-11-17T11:43:34.493554455Z"
+    created: "2025-11-21T21:34:21.169469-08:00"
     dependencies:
     - alias: clusterSensor
       condition: clusterSensor.enabled
@@ -955,10 +955,10 @@ entries:
     name: qualys-tc
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qualys-tc-1.0.4.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qualys-tc-1.0.4.tgz
     version: 1.0.4
   - apiVersion: v2
-    created: "2025-11-17T11:43:34.490468397Z"
+    created: "2025-11-21T21:34:21.16819-08:00"
     dependencies:
     - alias: clusterSensor
       condition: clusterSensor.enabled
@@ -980,10 +980,10 @@ entries:
     name: qualys-tc
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qualys-tc-1.0.3.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qualys-tc-1.0.3.tgz
     version: 1.0.3
   - apiVersion: v2
-    created: "2025-11-17T11:43:34.487364661Z"
+    created: "2025-11-21T21:34:21.166845-08:00"
     dependencies:
     - alias: clusterSensor
       condition: clusterSensor.enabled
@@ -1005,10 +1005,10 @@ entries:
     name: qualys-tc
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qualys-tc-1.0.2.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qualys-tc-1.0.2.tgz
     version: 1.0.2
   - apiVersion: v2
-    created: "2025-11-17T11:43:34.483675822Z"
+    created: "2025-11-21T21:34:21.165365-08:00"
     dependencies:
     - alias: clusterSensor
       condition: clusterSensor.enabled
@@ -1030,10 +1030,10 @@ entries:
     name: qualys-tc
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qualys-tc-1.0.1.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qualys-tc-1.0.1.tgz
     version: 1.0.1
   - apiVersion: v2
-    created: "2025-11-17T11:43:34.480500239Z"
+    created: "2025-11-21T21:34:21.163849-08:00"
     dependencies:
     - alias: clusterSensor
       condition: clusterSensor.enabled
@@ -1055,6 +1055,95 @@ entries:
     name: qualys-tc
     type: application
     urls:
-    - https://qualys.github.io/Qualys-Helm-Charts/qualys-tc-1.0.0.tgz
+    - https://nelssec.github.io/Qualys-Helm-Charts/qualys-tc-1.0.0.tgz
     version: 1.0.0
-generated: "2025-11-17T11:43:34.444299163Z"
+  qualys-unified:
+  - apiVersion: v2
+    appVersion: "1.0"
+    created: "2025-11-21T21:34:21.207173-08:00"
+    dependencies:
+    - alias: hostsensor
+      condition: hostsensor.enabled
+      name: lxag_container_agent
+      repository: file://../lxag_container_agent
+      version: 1.0.0
+    - alias: qualysTc
+      condition: qualysTc.enabled
+      name: qualys-tc
+      repository: file://../qualys-tc
+      version: 2.6.1
+    description: A unified Helm chart to deploy Qualys sensors - Host Sensor, Cluster
+      Sensor, Runtime Sensor, and General Sensor
+    digest: 07bad7aba29c56ac75ef595f76ae33068714dfd15cb7cfccd9a01f382a6fffef
+    name: qualys-unified
+    type: application
+    urls:
+    - https://nelssec.github.io/Qualys-Helm-Charts/qualys-unified-1.1.5.tgz
+    version: 1.1.5
+  - apiVersion: v2
+    appVersion: "1.0"
+    created: "2025-11-21T21:34:21.204895-08:00"
+    dependencies:
+    - alias: hostsensor
+      condition: hostsensor.enabled
+      name: lxag_container_agent
+      repository: file://../lxag_container_agent
+      version: 1.0.0
+    - alias: qualysTc
+      condition: qualysTc.enabled
+      name: qualys-tc
+      repository: file://../qualys-tc
+      version: 2.6.1
+    description: A unified Helm chart to deploy Qualys sensors - Host Sensor, Cluster
+      Sensor, Runtime Sensor, and General Sensor
+    digest: 83f349c46d753682ba916e262a0269484d1b878496f95c10ba9ef806c56a1fc0
+    name: qualys-unified
+    type: application
+    urls:
+    - https://nelssec.github.io/Qualys-Helm-Charts/qualys-unified-1.1.4.tgz
+    version: 1.1.4
+  - apiVersion: v2
+    appVersion: "1.0"
+    created: "2025-11-21T21:34:21.202516-08:00"
+    dependencies:
+    - alias: hostsensor
+      condition: hostsensor.enabled
+      name: lxag_container_agent
+      repository: file://../lxag_container_agent
+      version: 1.0.0
+    - alias: qualysTc
+      condition: qualysTc.enabled
+      name: qualys-tc
+      repository: file://../qualys-tc
+      version: 2.6.1
+    description: A unified Helm chart to deploy Qualys sensors - Host Sensor, Cluster
+      Sensor, Runtime Sensor, and General Sensor
+    digest: 17eb18079ac4233bf29992b735d6dd97c41520845b9db51c16ebea808bb253cf
+    name: qualys-unified
+    type: application
+    urls:
+    - https://nelssec.github.io/Qualys-Helm-Charts/qualys-unified-1.1.3.tgz
+    version: 1.1.3
+  - apiVersion: v2
+    appVersion: "1.0"
+    created: "2025-11-21T21:34:21.200192-08:00"
+    dependencies:
+    - alias: hostsensor
+      condition: hostsensor.enabled
+      name: lxag_container_agent
+      repository: file://../lxag_container_agent
+      version: 1.0.0
+    - alias: qualysTc
+      condition: qualysTc.enabled
+      name: qualys-tc
+      repository: file://../qualys-tc
+      version: 2.6.1
+    description: A unified Helm chart to deploy Qualys sensors - Host Sensor, Cluster
+      Sensor, Runtime Sensor, and General Sensor
+    digest: 46106d37a23b69e6577817f2759c1333a4e6a7f553a35397bf56d25a44f1d089
+    name: qualys-unified
+    type: application
+    urls:
+    - https://nelssec.github.io/Qualys-Helm-Charts/qualys-unified-1.1.2.tgz
+    version: 1.1.2
+generated: "2025-11-21T21:34:21.147121-08:00"

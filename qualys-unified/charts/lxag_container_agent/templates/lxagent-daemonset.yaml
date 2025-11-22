@@ -1,0 +1,184 @@
+{{- $providerName := include "lxagent.providerName" . }}
+{{- $imageRepo := include "lxagent.imageRepository" . }}
+{{- $customerId := include "lxagent.customerId" . }}
+{{- $serverUri := include "lxagent.serverUri" . }}
+kind: List
+apiVersion: v1
+items:
+  - apiVersion: apps/v1
+    kind: DaemonSet
+    metadata:
+      name: qualys-cloud-agent
+      namespace: {{.Values.qualys.namespace}}
+      labels:
+        k8s-app: qualys-cloud-agent
+    spec:
+      selector:
+        matchLabels:
+          name: qualys-cloud-agent
+      updateStrategy:
+        type: RollingUpdate
+      template:
+        metadata:
+          labels:
+            name: qualys-cloud-agent
+        spec:
+          # if node architecture is intel, then only deploy the agent
+          nodeSelector:
+            kubernetes.io/arch: "amd64"
+# if cluster contains a mix of Linux flavors along with Bottlerocket OS,
+# then create a label with below key and value for Bottlerocket nodes to deploy Agent only on Bottlerocket
+# and uncomment below line (and indent properly)
+#           bottlerocket: "true"
+          # toleration is to have the daemonset runnable on master nodes
+          tolerations:
+            - key: node-role.kubernetes.io/master
+              effect: NoSchedule
+          # toleration is to have the daemonset runnable on master nodes
+          hostNetwork: {{.Values.qualys.hostNetwork}}
+          hostPID: {{.Values.qualys.hostPID}}
+          hostIPC: {{.Values.qualys.hostIPC}}
+          {{- if eq $providerName "COREOS" }}
+          serviceAccount: qualys-agent-sa
+          {{- end }}
+          containers:
+            - name: qualys-cloud-agent-container
+              image: {{ $imageRepo }}:{{ .Values.qualys.image.tag }}
+              imagePullPolicy: {{.Values.qualys.image.imagePullPolicy}}
+              resources:
+                limits:
+                  cpu: {{ .Values.qualys.resources.limits.cpu }} # Default CPU usage limit on each node for cloud-agent.
+              # uncomment(and indent properly) below section if proxy(with CA cert) required to connect Qualys Cloud
+              #   env:
+              #     - name: qualys_https_proxy
+              #       value: <proxy FQDN or Ip address>:<port#>
+              args:
+                - "--activation-id={{ .Values.qualys.args.activationId }}"
+                - "--customer-id={{ $customerId }}"
+                - "--provider-name=AUTO"
+                - "--log-level={{ .Values.qualys.args.logLevel }}"
+                - "--server-uri={{ $serverUri }}"
+              volumeMounts:
+                {{- if eq $providerName "GCP" }}
+                - mountPath: /host_root
+                  name: lxag-root
+                - mountPath: /usr/local/qualys/cloud-agent/data
+                  name: lxag-data
+                - mountPath: /etc/qualys/cloud-agent
+                  name: lxag-config
+                - mountPath: /var/log/qualys
+                  name: lxag-log
+                {{- else if eq $providerName "AWS" }}
+                - mountPath: /host_root
+                  name: root-host-path
+                - mountPath: /usr/local/qualys/cloud-agent/data
+                  name: data-host-path
+                - mountPath: /etc/qualys/cloud-agent
+                  name: config-host-path
+                - mountPath: /var/log/qualys
+                  name: log-host-path
+                {{- else if eq $providerName "COREOS" }}
+                - mountPath: /host_root
+                  name: root-host-path
+                - mountPath: /usr/local/qualys/cloud-agent/data
+                  name: data-host-path
+                - mountPath: /etc/qualys/cloud-agent
+                  name: config-host-path
+                - mountPath: /var/log/qualys
+                  name: log-host-path
+                {{- end }}
+              # uncomment(and indent properly) below section if proxy(with CA cert) required to connect Qualys Cloud and you are using secret method to provide cert file
+              #                - name: cert-secret-volume
+              #                  mountPath: /etc/qualys/cloud-agent/cert/custom-ca.crt
+              #                  subPath: qualys-cert.crt
+              # uncomment(and indent properly) below section if proxy(with CA cert) required to connect Qualys Cloud and you are using configMap method to provide cert file
+              #                - name: cert-configmap-volume
+              #                  mountPath: /etc/qualys/cloud-agent/cert/custom-ca.crt
+              #                  subPath: qualys-cert.crt
+              # uncomment(and indent properly) below section if proxy(with CA cert) required to connect Qualys Cloud
+              #                - mountPath: /etc/qualys/cloud-agent/cert/custom-ca.crt
+              #                  name: proxy-cert-host-path
+              {{- if or (eq $providerName "AWS") (eq $providerName "GCP") }}
+              securityContext:
+                capabilities:
+                  add:
+                    - SYS_PTRACE
+                    - NET_ADMIN
+                seLinuxOptions:
+                  user: system_u
+                  role: system_r
+                  type: super_t
+                  level: s0
+              {{- else if eq .Values.qualys.args.providerName "COREOS" }}
+              securityContext:
+                capabilities:
+                  add:
+                    - SYS_CHROOT
+              {{- end }}
+
+          volumes:
+             {{- if eq $providerName "GCP" }}
+             - hostPath:
+                 path: /
+                 type: Directory
+               name: lxag-root
+             - hostPath:
+                 path: /var/lib/docker/volumes/lxag-data/_data
+                 type: DirectoryOrCreate
+               name: lxag-data
+             - hostPath:
+                 path: /var/lib/docker/volumes/lxag-config/_data
+                 type: DirectoryOrCreate
+               name: lxag-config
+             - hostPath:
+                 path: /var/lib/docker/volumes/lxag-log/_data
+                 type: DirectoryOrCreate
+               name: lxag-log
+             {{- else if eq .Values.qualys.args.providerName "AWS" }}
+             - hostPath:
+                  path: /
+                  type: Directory
+               name: root-host-path
+             - hostPath:
+                  path: /opt/qualys/cloud-agent/data
+                  type: DirectoryOrCreate
+               name: data-host-path
+             - hostPath:
+                  path: /opt/qualys/cloud-agent/config
+                  type: DirectoryOrCreate
+               name: config-host-path
+             - hostPath:
+                  path: /var/log/qualys
+                  type: DirectoryOrCreate
+               name: log-host-path
+             {{- else if eq .Values.qualys.args.providerName "COREOS" }}
+             - name: root-host-path
+               hostPath:
+                 path: /
+                 type: Directory
+             - name: data-host-path
+               hostPath:
+                 path: /usr/local/qualys/cloud-agent/data
+                 type: DirectoryOrCreate
+             - name: config-host-path
+               hostPath:
+                 path: /etc/qualys/cloud-agent
+                 type: DirectoryOrCreate
+             - name: log-host-path
+               hostPath:
+                 path: /var/log/qualys
+                 type: DirectoryOrCreate
+             {{- end }}
+# uncomment(and indent properly) below section if proxy(with CA cert) required to connect Qualys Cloud
+#             - hostPath:
+#                 path: <proxy certificate path>
+#                 type: File
+#               name: proxy-cert-host-path
+# uncomment(and indent properly) below section if proxy(with CA cert) required to connect Qualys Cloud and you are using secret method to provide cert file
+#             - name: cert-secret-volume
+#               secret:
+#                  secretName: qualys-cert
+# uncomment(and indent properly) below section if proxy(with CA cert) required to connect Qualys Cloud and you are using configMap method to provide cert file
+#             - name: cert-configmap-volume
+#               configMap:
+#                 name: qualys-configmap

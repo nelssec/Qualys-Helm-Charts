@@ -1,0 +1,71 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ .Values.config.name }}
+  namespace: {{ .Release.Namespace }}
+data:
+  {{ .Values.configFile }}: |
+    ---
+    clusterMetadata:
+      {{- if .Values.global.clusterInfoArgs.cloudProvider}}
+        cloudProvider: {{.Values.global.clusterInfoArgs.cloudProvider | quote | required ".Values.global.clusterInfoArgs.cloudProvider is required."}}
+      {{- end }}
+      {{- if eq .Values.global.clusterInfoArgs.cloudProvider "AWS"}}
+        clusterId: {{.Values.global.clusterInfoArgs.AWS.arn | quote | required ".Values.global.clusterInfoArgs.AWS.arn is required."}}
+      {{- else if eq .Values.global.clusterInfoArgs.cloudProvider "AZURE"}}
+        clusterId: {{.Values.global.clusterInfoArgs.AZURE.id | quote | required ".Values.global.clusterInfoArgs.AZURE.id is required."}}
+        region: {{.Values.global.clusterInfoArgs.AZURE.region | quote | required ".Values.global.clusterInfoArgs.AZURE.region is required."}}
+      {{- else if eq .Values.global.clusterInfoArgs.cloudProvider "GCP"}}
+        clusterId: {{.Values.global.clusterInfoArgs.GCP.krn | quote | required ".Values.global.clusterInfoArgs.GCP.krn is required."}}
+      {{- else if eq .Values.global.clusterInfoArgs.cloudProvider "OCI"}}
+        clusterId: {{.Values.global.clusterInfoArgs.OCI.ocid | quote | required ".Values.global.clusterInfoArgs.OCI.ocid is required."}}
+        clusterName: {{.Values.global.clusterInfoArgs.OCI.clusterName | quote | required ".Values.global.clusterInfoArgs.OCI.clusterName is required."}}
+      {{- else if eq .Values.global.clusterInfoArgs.cloudProvider "SELF_MANAGED_K8S"}}
+        clusterName: {{.Values.global.clusterInfoArgs.SELF_MANAGED_K8S.clusterName | quote | required ".Values.global.clusterInfoArgs.SELF_MANAGED_K8S.clusterName is required."}}
+      {{- else }}
+      {{- fail "Invalid cloud provider value. Valid values are AWS/AZURE/GCP/OCI/SELF_MANAGED_K8S " }}
+      {{- end }}
+
+    qualysGatewayUrl: {{ required "QualysGateway Url is required. Pass --set global.gatewayUrl='https://<qualys-gateway-url>/" .Values.global.gatewayUrl}}
+    customerUuid: {{ required "CustomerId is required. Pass --set global.customerId=<customerId> ." .Values.global.customerId}}
+    activationId: {{ required "ActivationId is required. Pass --set global.activationId=<activationId> ." .Values.global.activationId}}
+    logging: {{ toYaml .Values.logging | nindent 8 }}
+
+    server:
+      version: {{ (split ":" .Values.image)._1 | quote }}
+      port: {{ .Values.port }}
+      certFilePath: {{ .Values.certificateFilePath }}
+      certKeyPath: {{ .Values.certificateKeyPath }}
+
+    policy:
+      failurePolicy: {{ .Values.webhook.failurePolicy }}
+
+    syncInterval: {{ .Values.syncInterval }}
+    platformSyncInterval: {{ .Values.platformSyncInterval }}
+
+    dataRetention:
+      inDays: {{ .Values.dataRetention.inDays }}
+      scheduleInMillis: {{ mul .Values.dataRetention.scheduleInDays 86400000 }}
+
+    httpConfig:
+      inbound:
+        debug: false
+      outbound:
+        skipVerifyTLS: {{ .Values.global.proxy.skipVerifyTLS }}
+        certPath: {{ .Values.global.proxy.certPath }}
+        proxy: {{ .Values.global.proxy.value }}
+    enforcementAction: {{ .Values.enforcementAction }}
+    imageDigestCacheTTL: {{ .Values.imageDigestCacheTTL }}
+---
+
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ .Values.registry.config.name }}
+  namespace: {{ .Release.Namespace }}
+data:
+  {{ .Values.registry.config.filename }}: |
+    ---
+    {{- if .Values.registry.config.fileContent }}
+    {{- b64dec .Values.registry.config.fileContent | nindent 4 }}
+    {{- end }}

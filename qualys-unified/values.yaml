@@ -1,0 +1,398 @@
+# Qualys Unified Helm Chart Values
+# This chart allows you to selectively install Qualys sensors based on your needs
+
+# =============================================================================
+# GLOBAL CONFIGURATION
+# These settings apply to all Qualys sensors
+# =============================================================================
+global:
+  # Qualys account credentials (shared by all sensors)
+  customerId: ""           # REQUIRED: Same customer ID for all sensors
+
+  # Activation IDs (different for different sensor types)
+  activationId: ""         # REQUIRED: For cluster/runtime/general/admission sensors
+
+  # Qualys Platform Pod Identifier (RECOMMENDED - auto-fills gatewayUrl and cmsqagPublicUrl)
+  # Specify your Qualys platform instead of manually entering URLs
+  # Valid values: US1, US2, US3, US4, GOV1, EU1, EU2, EU3, IN1, CA1, AE1, UK1, AU1, KSA1
+  # Example: "US2" automatically sets:
+  #   - gatewayUrl: https://gateway.qg2.apps.qualys.com
+  #   - cmsqagPublicUrl: https://cmsqagpublic.qg2.apps.qualys.com/ContainerSensor
+  # See: https://www.qualys.com/platform-identification/
+  qualysPod: ""            # RECOMMENDED: e.g., "US2", "EU1", "GOV1"
+
+  # Qualys gateway URL (auto-filled if qualysPod is set)
+  # Only specify this if you need to override the auto-selected URL
+  # Examples:
+  #   US Platform 1: https://gateway.qg1.apps.qualys.com
+  #   US Platform 2: https://gateway.qg2.apps.qualys.com
+  #   US Platform 3: https://gateway.qg3.apps.qualys.com
+  #   EU Platform 1: https://gateway.qg1.apps.qualys.eu
+  #   EU Platform 2: https://gateway.qg2.apps.qualys.eu
+  gatewayUrl: ""           # Optional if qualysPod is set
+
+  # CMS QAG Public URL (auto-filled if qualysPod is set)
+  # Only specify this if you need to override the auto-selected URL
+  cmsqagPublicUrl: ""      # Optional if qualysPod is set
+
+  # Image pull secret (if using private registry)
+  imagePullSecret: ""
+
+  # Cluster identification arguments (cloud-specific)
+  clusterInfoArgs:
+    # Cloud Provider (shared by all sensors in the same cluster)
+    # Valid values: AWS, AZURE, GCP, OCI, SELF_MANAGED_K8S
+    # For host sensor: Only AWS, GCP are supported (or use openshift: true for COREOS)
+    cloudProvider: ""      # REQUIRED: Used by all sensors
+
+    AWS:
+      arn: ""
+
+    AZURE:
+      id: ""
+      region: ""
+
+    GCP:
+      krn: ""
+
+    OCI:
+      ocid: ""
+      clusterName: ""
+
+    SELF_MANAGED_K8S:
+      clusterName: ""
+
+  # Root CA certificate for custom CAs (base64 encoded)
+  rootCA:
+    certificate: ""
+
+  # Proxy configuration (if required)
+  proxy:
+    value: ""  # Format: "<proxy FQDN or IP address>:<port>"
+    certificate: ""  # CA certificate in base64 encoded format
+    skipVerifyTLS: false
+
+  # Set to true if running on OpenShift
+  openshift: false
+
+  # GKE Autopilot specific settings
+  gkeAutopilot:
+    enabled: false
+    allowlistLabelForQcsSensor: ""
+
+# =============================================================================
+# HOST SENSOR (Linux Agent for Containers)
+# =============================================================================
+# This sensor runs on host nodes and scans containers/images
+#
+# IMPORTANT: Host sensor image is automatically selected based on cloud provider:
+# - OpenShift (global.openshift=true) → qualys/qagent-rhcos (COREOS)
+# - AWS → qualys/qagent_bottlerocket
+# - GCP → qualys/qagent_googlecos
+# - Other providers (Azure, OCI, SELF_MANAGED_K8S non-OpenShift) → NOT SUPPORTED
+#
+hostsensor:
+  enabled: false
+  openshift: false  # Inherits from global.openshift if not specified
+
+  qualys:
+    namespace: "qualys"
+
+    # Image is automatically selected based on global.cloudProvider and global.openshift
+    # Override only if you need a specific image/tag
+    image:
+      repository: ""  # Auto-selected: qualys/qagent-rhcos, qualys/qagent_bottlerocket, or qualys/qagent_googlecos
+      tag: "latest"
+      pullPolicy: "Always"
+
+    resources:
+      limits:
+        cpu: "0.2"
+
+    args:
+      # IMPORTANT: Host sensor uses DIFFERENT activation ID than cluster sensors
+      # Separate activation ID is REQUIRED for host sensor
+      activationId: ""  # REQUIRED: Host sensor-specific activation ID
+
+      # Optional overrides (auto-inherit if not specified)
+      customerId: ""    # Inherits from global.customerId
+      providerName: ""  # Auto-derived from global.cloudProvider/global.openshift (AWS/GCP/COREOS)
+      serverUri: ""     # Inherits from global.gatewayUrl
+
+      # Log level (1-5, default: 1)
+      logLevel: "3"
+
+    # Host access settings (required for container scanning)
+    hostNetwork: true
+    hostIPC: true
+    hostPID: true
+
+  # Container runtime settings
+  containerd:
+    enabled: true
+
+  crio:
+    enabled: false
+
+  docker:
+    enabled: false
+    tlsVerify:
+      enabled: false
+      certPath: ""
+
+# =============================================================================
+# QUALYS TC SENSORS
+# The following sensors are part of the qualys-tc unified chart
+# =============================================================================
+
+qualysTc:
+  # Enable/disable the entire qualys-tc chart
+  # Set to false if you only want the host-based sensor
+  enabled: true
+
+  # Inherit global settings
+  global:
+    customerId: ""  # Inherits from root global.customerId
+    activationId: ""  # Inherits from root global.activationId
+    gatewayUrl: ""  # Inherits from root global.gatewayUrl
+    cmsqagPublicUrl: ""
+    imagePullSecret: ""  # Inherits from root global.imagePullSecret
+    clusterInfoArgs: {}  # Inherits from root global.clusterInfoArgs
+    rootCA:
+      certificate: ""  # Inherits from root global.rootCA.certificate
+    proxy: {}  # Inherits from root global.proxy
+    openshift: false  # Inherits from root global.openshift
+    gkeAutopilot: {}  # Inherits from root global.gkeAutopilot
+
+  # ---------------------------------------------------------------------------
+  # CLUSTER SENSOR
+  # Discovers and monitors Kubernetes cluster resources
+  # ---------------------------------------------------------------------------
+  clusterSensor:
+    enabled: true
+
+  # ---------------------------------------------------------------------------
+  # RUNTIME SENSOR
+  # Monitors runtime behavior and detects anomalies
+  # ---------------------------------------------------------------------------
+  runtimeSensor:
+    enabled: false
+
+  # ---------------------------------------------------------------------------
+  # GENERAL SENSOR (Container Security Sensor)
+  # Scans container images for vulnerabilities
+  # For full documentation see: https://artifacthub.io/packages/helm/qualys-helm-chart/qcs-sensor
+  # ---------------------------------------------------------------------------
+  qcsSensor:
+    enabled: false
+
+    # Container runtime settings
+    containerd:
+      enabled: true
+      socketPath: "/var/run/containerd/containerd.sock"
+      storageDriverPath: "/var/lib/containerd"
+      secret: false
+
+    crio:
+      enabled: false
+      socketPath: "/var/run/crio/crio.sock"
+      containerPath: "/var/lib/containers/storage"
+      storageConfigPath: "/etc/containers/storage.conf"
+      storageDriverType: "overlay"
+
+    docker:
+      enabled: false
+      socketPath: "/var/run/docker.sock"
+      tlsVerify:
+        enabled: false
+        tlsCertPath: ""
+        dockerHost: false
+        dockerHostValue: ""
+      storageDriverPath: "/var/lib/docker"
+      storageDriverType: "overlay2"
+
+    openshift: false
+
+    qualys:
+      createNamespace: false
+      namespace: ""
+      customerID: ""  # Inherited from global if not specified
+      activationID: ""  # Inherited from global if not specified
+      pod_url: ""  # Inherited from global.gatewayUrl if not specified
+      containerLaunchTimeout: "10"
+      image: "docker.io/qualys/qcs-sensor:1.40.1-0"
+      imagePullPolicy: "Always"
+      cpu: "500m"
+
+      # Sensor configuration arguments
+      args:
+        withoutPersistentStorage: false
+        enableConsoleLogs: false
+        cicdDeployedSensor: false
+        registrySensor: false
+        concurrentScan: "4"  # Valid range: 1-20
+        disableLog4jScanning: false
+        disableLog4jStaticDetection: false
+        logFilePurgeCount: "5"
+        logFileSize: "10M"
+        logLevel: "3"
+        maskEnvVariable: false
+        optimizeImageScans: true
+        disableImageScan: false
+        performScaScan: false
+        disallowInternetAccessForSca: false
+        scaScanTimeoutInSeconds: "900"
+        performSecretDetection: false
+        performMalwareDetection: false
+        limitResourceUsage: false
+        insecureRegistry: false
+        enableStorageDriver: true
+        storageDriverType: "overlay"
+        scanningPolicy: ""  # DynamicWithStaticScanningAsFallback, DynamicScanningOnly, StaticScanningOnly
+        tagSensorProfile: ""  # Comma-separated tags
+        disableContainerScan: false
+        enableDiskSpaceCheck: false
+        disableFeatures: ""  # SBOM
+        populateK8sMetadata: false
+        ignoreExclusionListForImages: false
+        disableProcessEnvCollection: false
+        disableDefaultLoggingToFile: false
+
+      readOnly: false
+
+      tolerations:
+        enabled: false
+        toleration: []
+
+      proxy:
+        enabled: false
+        proxyvalue: ""
+        proxycertpath: ""
+
+      registryProxy:
+        enabled: false
+        proxyvalue: ""
+        proxycertpath: ""
+
+      sensorContResources:
+        enabled: false
+        limits:
+          cpu: "500m"
+          memory: "500Mi"
+          gkeAutoEphemeralStorage: "500Mi"
+        requests:
+          cpu: "100m"
+          memory: "300Mi"
+          gkeAutoEphemeralStorage: "100Mi"
+
+      scanningContResources:
+        enabled: false
+        limits:
+          cpu: "200m"
+          memory: "800Mi"
+        requests:
+          cpu: "100m"
+          memory: "300Mi"
+
+      persistentvolhostpath: "/usr/local/qualys/sensor/data"
+
+      persistentVolumeClaim:
+        enabled: false
+        storageClassName: ""
+        storage: ""
+
+      priorityClass:
+        enabled: false
+        priorityClassName: ""
+        priorityClassValue: ""
+        preemptionPolicy: ""
+
+      hostNetwork: true
+
+    tolerations: []
+    nodeSelector: {}
+    affinity: {}
+
+  # ---------------------------------------------------------------------------
+  # ADMISSION CONTROLLER
+  # Controls which container images can be deployed based on policy
+  # ---------------------------------------------------------------------------
+  admissionController:
+    enabled: false
+
+# =============================================================================
+# DEPLOYMENT EXAMPLES
+# =============================================================================
+#
+# Example 1: Host Sensor only (AWS)
+# --------------------------------------------------
+# global:
+#   customerId: "your-customer-id"
+#   cloudProvider: "AWS"
+#   gatewayUrl: "https://gateway.qg2.apps.qualys.com"
+# hostsensor:
+#   enabled: true
+#   qualys:
+#     args:
+#       activationId: "host-sensor-activation-id"
+# qualysTc:
+#   enabled: false
+#
+# Example 2: Cluster + General Sensors only (Azure)
+# --------------------------------------------------
+# global:
+#   customerId: "your-customer-id"
+#   activationId: "container-sensor-activation-id"
+#   cloudProvider: "AZURE"
+#   gatewayUrl: "https://gateway.qg2.apps.qualys.com"
+#   cmsqagPublicUrl: "https://cmsqagpublic.qg2.apps.qualys.com/ContainerSensor"
+#   clusterInfoArgs:
+#     AZURE:
+#       id: "your-cluster-id"
+#       region: "eastus"
+# hostsensor:
+#   enabled: false
+# qualysTc:
+#   enabled: true
+#   clusterSensor:
+#     enabled: true
+#   qcsSensor:
+#     enabled: true
+#     qualys:
+#       args:
+#         performScaScan: true
+#         enableConsoleLogs: true
+#         withoutPersistentStorage: true
+#
+# Example 3: All Sensors with Separate Activation IDs (AWS)
+# ----------------------------------------------------------
+# IMPORTANT: Host sensor uses DIFFERENT activation ID than container sensors
+# global:
+#   customerId: "your-customer-id"        # Shared by all sensors
+#   activationId: "container-sensor-activation-id"  # For cluster/runtime/general sensors
+#   cloudProvider: "AWS"                  # Shared by all sensors
+#   gatewayUrl: "https://gateway.qg2.apps.qualys.com"
+#   cmsqagPublicUrl: "https://cmsqagpublic.qg2.apps.qualys.com/ContainerSensor"
+#   clusterInfoArgs:
+#     AWS:
+#       arn: "arn:aws:eks:us-east-1:123456789:cluster/prod"
+# hostsensor:
+#   enabled: true
+#   qualys:
+#     args:
+#       activationId: "host-sensor-activation-id"  # Different activation ID
+# qualysTc:
+#   enabled: true
+#   clusterSensor:
+#     enabled: true
+#   runtimeSensor:
+#     enabled: true
+#   qcsSensor:
+#     enabled: true
+#     qualys:
+#       args:
+#         performScaScan: true
+#         enableStorageDriver: true
+#         storageDriverType: "overlay"
+#   admissionController:
+#     enabled: false

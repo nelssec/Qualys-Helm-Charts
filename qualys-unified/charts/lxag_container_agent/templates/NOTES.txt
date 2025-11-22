@@ -1,0 +1,3 @@
+
+Please run following command to check the Qualys Cloud Agent POD status:
+kubectl get pods -n {{ .Values.qualys.namespace }}

@@ -1,0 +1,99 @@
+
+image: "qualys/admission-controller:1.1.1-0"
+syncInterval: 15 #mins backend sync interval.
+platformSyncInterval: 5 #mins platform information sync interval.
+imagePullPolicy: Always
+persistentStorage:
+  enabled: false # Whether to enable persistent storage or not.
+persistentVolumeHostPath: "/usr/local/qualys/admission-controller/data" #fallback to Host volume if persistentVolumeClaim is not enabled.
+persistentVolumeClaim:
+  enabled: false
+  storageClassName:  #storage class name used by k8s PersistentVolume
+  storageSize:  #storage size required.
+  accessModes:
+    - ReadWriteOnce
+  name: qualys-admission-controller-pv-claim
+
+network:
+  hostNetwork: false
+
+dataRetention:
+  inDays: 30
+  scheduleInDays: 1
+enforcementAction: Audit # Audit / Block
+  # This is the admission policy action.
+  # This is the action that is taken for failed admission review requests.
+  #
+  # Setting this to AUDIT would cause all policies
+  # to audit the admission review requests.
+  # Setting this to BLOCK would cause failed policies
+  # to deny the admission review requests.
+  #
+  # Valid values are AUDIT or BLOCK.
+
+serviceAccount:
+  name: admission-controller-qualys-sa
+  create: true
+
+registry:
+  config:
+    name: qualys-registry-config
+    filename: registry-config.yaml
+    fileContent: # registry configuration file must be provided by the user
+
+certificateFilePath: /etc/certs/tls.crt
+certificateKeyPath: /etc/certs/tls.key
+port: 8443
+configPathDir: /etc/config
+configFile: config.yaml
+
+# ref: https://pkg.go.dev/time#ParseDuration
+imageDigestCacheTTL: 1m # 1min. Example value: 2h30m15s for 2hours+30mins+15secs.This is the expiration duration for the image digest cache. 0s disables caching image digests.
+
+certs:
+  certsProvider: helm # Available options: helm, cert-manager, self. cert-manager requires cert-manager be pre-installed. self requires providing serverCertificate, serverKey and webhook.
+  secretName: # optional, name of kubernetes secret containing the cert
+  annotations: {} # Annotations of the Certificate secret.
+  name: admission-controller-certs
+  serverCertificate: # server certificate in base64 format must be provided by the user if certsProvider is self.
+  serverKey: # server certificate key in base64 format must be provided by the user if certsProvider is self.
+
+webhook:
+  caBundle: # ca must be provided by the user
+  failurePolicy: Ignore
+  timeoutSeconds: 30
+
+config:
+  name: admission-controller-config
+
+resources:
+  replicas: 1
+  limits:
+    enabled: true
+    cpu: 200m
+    memory: 256Mi
+  requests:
+    enabled: true
+    cpu: 100m
+    memory: 256Mi
+
+logging:
+  level: info
+  file:
+    directory: /usr/local/qualys/admission-controller/data/logs
+    name: admission-controller.log
+    rotation:
+      enabled: true
+      maxSize: 100 #in MB
+      maxBackups: 4 # (4 + 1) * 100 = 500MB total log file size.
+      maxAge: 180 #in Days
+      compress: true #compresses archived log files.
+
+# Set tolerations here
+tolerations:
+
+# add nodeselector here
+nodeSelector:
+
+# set nodeAffinity,podAffinity under affinity
+affinity:

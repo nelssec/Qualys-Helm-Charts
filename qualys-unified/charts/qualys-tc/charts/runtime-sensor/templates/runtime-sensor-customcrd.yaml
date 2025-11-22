@@ -1,0 +1,96 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  creationTimestamp: null
+  name: policies.qualys.com
+spec:
+  group: qualys.com
+  names:
+    kind: FimPolicy
+    plural: policies
+    shortNames:
+    - fim
+    singular: policy
+  scope: Cluster
+  versions:
+  - name: v1
+    schema:
+      openAPIV3Schema:
+        properties:
+          spec:
+            description: "\n\t\t------ BEGIN README ---------------------\n\t\tFollowing
+              is the process of creating, applying, and deleting File Integrity Monitoring
+              (FIM) policies. \n\t\tSample policies (modify as per the requirement
+              and apply) - \n\t\t1) Monitor file open action\n\t\t-----------------------------------------\n\t\t\tapiVersion:
+              qualys.com/v1\n\t\t\tkind: FimPolicy\n\t\t\tmetadata:\n\t\t\t\tname:
+              monitor-file-open\n\t\t\tspec:\n\t\t\t\tbase-policy: \"file-open\"\n\t\t\t\taction:
+              \"audit\"\n\t\t\t\tmonitor-paths:\n\t\t\t\t\t- \"/var/log/\"\n\t\t\t\t\t-
+              \"/etc/nginx/\"\n\t\t-----------------------------------------\n\t\t2)
+              Monitor file read action\n\t\t-----------------------------------------\n\t\t\tapiVersion:
+              qualys.com/v1\n\t\t\tkind: FimPolicy\n\t\t\tmetadata:\n\t\t\t\tname:
+              monitor-file-read\n\t\t\tspec:\n\t\t\t\tbase-policy: \"file-read\"\n\t\t\t\taction:
+              \"audit\"\n\t\t\t\tmonitor-paths:\n\t\t\t\t\t- \"/etc/passwd\"\n\t\t-----------------------------------------\n\t\t3)
+              Monitor file write action\n\t\t-----------------------------------------\n\t\t\tapiVersion:
+              qualys.com/v1\n\t\t\tkind: FimPolicy\n\t\t\tmetadata:\n\t\t\t\tname:
+              monitor-file-write\n\t\t\tspec:\n\t\t\t\tbase-policy: \"file-write\"\n\t\t\t\taction:
+              \"audit\"\n\t\t\t\tmonitor-paths:\n\t\t\t\t\t- \"/etc/passwd\"\n\t\t-----------------------------------------\n\t\t4)
+              Monitor file write with diff action\n\t\t-----------------------------------------\n\t\t\tapiVersion:
+              qualys.com/v1\n\t\t\tkind: FimPolicy\n\t\t\tmetadata:\n\t\t\t\tname:
+              monitor-file-write-diff\n\t\t\tspec:\n\t\t\t\tbase-policy: \"file-write-diff\"\n\t\t\t\taction:
+              \"audit\"\n\t\t\t\tmonitor-paths:\n\t\t\t\t\t- \"/etc/\"\n\t\t-----------------------------------------\n\t\t5)
+              Monitor file rename action\n\t\t-----------------------------------------\n\t\t\tapiVersion:
+              qualys.com/v1\n\t\t\tkind: FimPolicy\n\t\t\tmetadata:\n\t\t\t\tname:
+              monitor-file-rename\n\t\t\tspec:\n\t\t\t\tbase-policy: \"file-rename\"\n\t\t\t\taction:
+              \"audit\"\n\t\t\t\tmonitor-paths:\n\t\t\t\t\t- \"/etc/\"\n\t\t-----------------------------------------\n\t\t6)
+              Monitor file delete action\n\t\t-----------------------------------------\n\t\t\tapiVersion:
+              qualys.com/v1\n\t\t\tkind: FimPolicy\n\t\t\tmetadata:\n\t\t\t\tname:
+              monitor-file-delete\n\t\t\tspec:\n\t\t\t\tbase-policy: \"file-delete\"\n\t\t\t\taction:
+              \"audit\"\n\t\t\t\tmonitor-paths:\n\t\t\t\t\t- \"/etc/\"\n\t\t-----------------------------------------\n\t\t7)
+              Monitor file create action\n\t\t-----------------------------------------\n\t\t\tapiVersion:
+              qualys.com/v1\n\t\t\tkind: FimPolicy\n\t\t\tmetadata:\n\t\t\t\tname:
+              monitor-file-create\n\t\t\tspec:\n\t\t\t\tbase-policy: \"file-create\"\n\t\t\t\taction:
+              \"audit\"\n\t\t\t\tmonitor-paths:\n\t\t\t\t\t- \"/etc/\"\n\t\t-----------------------------------------\n\t\tApply
+              policy -\n\t\t\tsh# kubectl apply -f <filename>\n\t\t\tEx: kubectl apply
+              -f fim-policy-file-open.yaml\n\t\tView active policies -\n\t\t\tsh#
+              kubectl get policies.qualys.com\n\t\tView Policies details -\n\t\t\tsh#
+              kubectl describe policies.qualys.com <policy-name>\n\t\t\tEx: kubectl
+              describe policies.qualys.com fim-policy-open\n\t\tDelete policy -\n\t\t\tsh#
+              kubectl delete policies.qualys.com <policy-name>\n\t\t\tEx: kubectl
+              delete policies.qualys.com fim-policy-open\n\t\t------END README -------------------------"
+            properties:
+              action:
+                enum:
+                - audit
+                type: string
+              base-policy:
+                enum:
+                - file-open
+                - file-read
+                - file-write
+                - file-write-diff
+                - file-rename
+                - file-delete
+                - file-create
+                type: string
+              monitor-paths:
+                items:
+                  maxLength: 64
+                  minLength: 2
+                  pattern: ^/.*
+                  type: string
+                minItems: 1
+                type: array
+            required:
+            - base-policy
+            - action
+            - monitor-paths
+            type: object
+        type: object
+    served: true
+    storage: true
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: null
+  storedVersions: null

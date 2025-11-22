@@ -1,0 +1,45 @@
+suite: Test Qualys clusterRole for k8s admission controller
+values:
+  - ../values.yaml
+templates:
+  - cluster-role.yaml
+tests:
+  - it: Should pass all kinds of assertions for clusterrole
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: ClusterRole
+      - equal:
+          path: apiVersion
+          value: "rbac.authorization.k8s.io/v1"
+      - equal:
+          path: metadata.name
+          value: admission-controller
+      - equal:
+          path: rules[0].verbs
+          value: [ "get", "list", "watch", "create" ]
+      - equal:
+          path: rules[0].resources
+          value: ["admission-controller"]
+      - equal:
+          path: rules[0].apiGroups
+          value: ["cs.qualys.com"]
+      - equal:
+          path: rules[1].verbs
+          value: [ "get", "list" ]
+      - equal:
+          path: rules[1].resources
+          value: [ "namespaces" ]
+      - equal:
+          path: rules[1].apiGroups
+          value: [""]
+      - equal:
+          path: rules[2].verbs
+          value: [ "get", "list" ]
+      - equal:
+          path: rules[2].resources
+          value: ["nodes"]
+      - equal:
+          path: rules[2].apiGroups
+          value: [""]

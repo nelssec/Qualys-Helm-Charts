@@ -1,0 +1,14 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: qualys-runtime-sensor
+subjects:
+  - kind: ServiceAccount
+    name: qualys-runtimesensor-sa
+    namespace: {{ .Release.Namespace }}
+roleRef:
+    apiGroup: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: qualys-runtime-sensor-cluster-role
+
+

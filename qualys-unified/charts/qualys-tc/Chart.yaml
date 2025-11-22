@@ -1,0 +1,29 @@
+apiVersion: v2
+dependencies:
+- alias: clusterSensor
+  condition: clusterSensor.enabled
+  name: cluster-sensor
+  repository: file://../cluster-sensor
+  version: 1.3.0
+- alias: admissionController
+  condition: admissionController.enabled
+  name: admission-controller
+  repository: file://../admission-controller
+  version: 1.0.5
+- alias: runtimeSensor
+  condition: runtimeSensor.enabled
+  name: runtime-sensor
+  repository: file://../runtime-sensor
+  version: 1.3.0
+- alias: qcsSensor
+  condition: qcsSensor.enabled
+  name: qcs-sensor
+  repository: file://../qcs-sensor
+  version: 1.19.0
+- name: common
+  repository: file://../common
+  version: 1.0.0
+description: Unified helm chart to deploy all sensor
+name: qualys-tc
+type: application
+version: 2.6.1

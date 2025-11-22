@@ -1,0 +1,150 @@
+# Default values for sensor-chart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+containerd:
+  enabled: true
+  socketPath: "/var/run/containerd/containerd.sock"
+  storageDriverPath: "/var/lib/containerd"
+  secret: false
+
+crio:
+  enabled: false
+  socketPath: "/var/run/crio/crio.sock"
+  containerPath: "/var/lib/containers/storage"
+  storageConfigPath: "/etc/containers/storage.conf"
+  storageDriverType: "overlay"
+
+docker:
+  enabled: false
+  socketPath: "/var/run/docker.sock"
+  # Set this to true, if using Docker HTTP socket with TLS
+  tlsVerify: 
+    enabled: false 
+    # provide the cert path for Docker HTTP socket with TLS
+    tlsCertPath: "<Path of directory of client certificates>"
+    # if need to set DOCKER_HOST yourself, set the below value to true
+    dockerHost: false
+    dockerHostValue: "<loopback IPv4 address or hostname>:<port#>"
+  storageDriverPath: "/var/lib/docker"
+  storageDriverType: "overlay2"
+
+openshift: false
+
+qualys:
+  createNamespace: false
+  namespace:
+  #Provide CUSTOMERID
+  customerID: 
+  #Provide ACTIVATIONID
+  activationID: 
+  # <POD_URL_from_sensor_deployment_guide_page_13_include_https://>
+  pod_url: 
+  containerLaunchTimeout: "10"
+  image: "docker.io/qualys/qcs-sensor:1.40.1-0"  #Qualys sensor image location
+  imagePullPolicy: "Always"
+  cpu: "500m"
+
+  # Additional arguments for CS sensor 
+  args:
+    withoutPersistentStorage: false # Peristent volume configuration
+    enableConsoleLogs: false
+    cicdDeployedSensor: false
+    registrySensor: false
+    concurrentScan: "4" # A valid range is between 1-20
+    disableLog4jScanning: false
+    disableLog4jStaticDetection: false
+    logFilePurgeCount: "5"
+    logFileSize: "10M"
+    logLevel: "3" # Add log level if you want to override default value which is "3"
+    maskEnvVariable: false
+    optimizeImageScans: true # Applicable only for general sensor
+    disableImageScan: false
+    performScaScan: false
+    disallowInternetAccessForSca: false
+    scaScanTimeoutInSeconds: "900"
+    performSecretDetection: false
+    performMalwareDetection: false
+    limitResourceUsage: false
+    insecureRegistry: false
+    enableStorageDriver: true
+    storageDriverType: "overlay"
+    scanningPolicy: # Valid values of scanningPolicy are: "DynamicWithStaticScanningAsFallback", "DynamicScanningOnly", "StaticScanningOnly"
+    tagSensorProfile: # Provide valid tags for sensor profile assignment: "tag1,tag2"
+    disableContainerScan: false
+    enableDiskSpaceCheck: false
+    disableFeatures: # Valid values for DisableFeatures are: "SBOM"
+    populateK8sMetadata: false
+    ignoreExclusionListForImages: false
+    disableProcessEnvCollection: false
+    disableDefaultLoggingToFile: false
+
+  readOnly: false
+  # this toleration is to have the daemonset runnable on master nodes
+  # set it to true it if want your masters to run sensor pod
+  tolerations:
+    enabled: false
+    toleration:
+    - key: 
+      operator: 
+      value: 
+      effect: 
+
+  # if proxy is required to connect Qualys Cloud, set the below value to true
+  proxy:
+    enabled: false
+    proxyvalue:   #"<proxy FQDN or Ip address>:<port#>"
+    # if proxy(with CA cert) required to connect Qualys Cloud
+    proxycertpath:  #<proxy certificate path>"
+
+  # For registry sensor (public registry only) v1.21.0 and above
+  registryProxy:
+    enabled: false
+    proxyvalue:   #"<proxy FQDN or Ip address>:<port#>"
+    # if proxy(with CA cert) required
+    proxycertpath:  #<proxy certificate path>"
+
+  # Parameters to set sensor container memory limit. Please change values of parameters
+  sensorContResources:
+    enabled: false
+    limits:
+      cpu: "500m"
+      memory: "500Mi"
+      gkeAutoEphemeralStorage: "500Mi"
+    requests:
+      cpu: "100m"
+      memory: "300Mi"
+      gkeAutoEphemeralStorage: "100Mi"
+  scanningContResources:
+    enabled: false
+    limits:
+      cpu: "200m"
+      memory: "800Mi"
+    requests:
+      cpu: "100m"
+      memory: "300Mi"
+
+  persistentvolhostpath: "/usr/local/qualys/sensor/data"
+
+  persistentVolumeClaim:
+    enabled: false 
+    storageClassName:  #storage class name used by k8s PersistentVolume
+    storage:  #storage memory required. E.g 1Gi for general/cicd sensor & 10Gi for registry sensor
+
+  priorityClass:
+    enabled: false
+    priorityClassName:  #priority class name used in daemonset
+    priorityClassValue:  #value determines the priority e.g. "1000000"
+    preemptionPolicy:  #preemption policy for pod
+
+  hostNetwork: true
+
+# Set tolerations here
+tolerations:
+
+# add nodeselector here
+nodeSelector:
+
+# set nodeAffinity,podAffinity under affinity
+affinity:
+

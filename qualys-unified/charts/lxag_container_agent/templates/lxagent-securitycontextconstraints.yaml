@@ -1,0 +1,24 @@
+{{- $providerName := include "lxagent.providerName" . }}
+{{- if eq $providerName "COREOS" }}
+apiVersion: security.openshift.io/v1
+kind: SecurityContextConstraints
+metadata:
+  name: qualys-agent-scc
+allowHostDirVolumePlugin: true
+allowHostNetwork: true
+allowHostIPC: true
+allowHostPID: true
+allowHostPorts: true
+allowPrivilegedContainer: false
+readOnlyRootFilesystem: false
+runAsUser:
+  type: RunAsAny
+seLinuxContext:
+  type: RunAsAny
+users:
+  - system:serviceaccount:{{ .Values.qualys.namespace }}:qualys-agent-sa  # Corrected to use namespace from values.yaml
+allowedCapabilities:
+  - SYS_CHROOT
+  - CHOWN
+  - NET_ADMIN
+{{- end }}

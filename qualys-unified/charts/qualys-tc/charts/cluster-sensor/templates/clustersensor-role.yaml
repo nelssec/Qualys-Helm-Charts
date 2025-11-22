@@ -1,0 +1,13 @@
+{{- if eq .Values.hostScanner.enable true }}
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: qualys-clustersensor-role
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    helm.sh/resource-policy: keep
+rules:
+  - apiGroups: ["apps"]
+    resources: ["daemonsets","pods"]
+    verbs: ["create", "get", "update", "watch", "list", "patch", "delete"]
+{{- end }}

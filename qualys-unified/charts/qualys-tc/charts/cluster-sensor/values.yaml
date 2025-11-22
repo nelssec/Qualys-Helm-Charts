@@ -1,0 +1,41 @@
+# Default values for cluster-sensor chart.
+
+image: "qualys/cluster-sensor:1.3.0-0"
+imagePullPolicy: "Always"
+persistentStorage:
+  enabled: false
+  hostPath: "/usr/local/qualys/clustersensor/data"
+logConfig:
+  # valid values of loglevel(debug, info, error, warn, fatal)
+  logLevel: info
+  logFileSize: 100
+  logPurgeCount: 5
+resources:
+  limits:
+    cpu: 500m
+    memory: 750Mi
+  requests:
+    cpu: 200m
+    memory: 256Mi
+maskEnvVariable: false
+hostNetwork: true
+k8sCompliance:
+  enable: true
+hostScanner:
+  enable: true
+  runOnMaster: true
+  resources:
+    limits:
+      cpu: 100m
+      memory: 256Mi
+
+# Set tolerations here
+tolerations:
+
+# add nodeselector here
+nodeSelector:
+
+# set nodeAffinity,podAffinity under affinity
+affinity:
+
+  

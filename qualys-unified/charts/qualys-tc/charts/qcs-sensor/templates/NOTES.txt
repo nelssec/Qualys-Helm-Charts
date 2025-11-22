@@ -1,0 +1,4 @@
+
+Please run following command to check the Qualys Sensor POD status:
+kubectl get pods -n {{ .Release.Namespace}}
+{{ include "warning.message" . }}

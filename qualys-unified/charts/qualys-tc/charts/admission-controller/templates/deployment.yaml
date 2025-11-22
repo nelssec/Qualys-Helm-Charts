@@ -1,0 +1,144 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ include "admission-controller.fullname" . }}
+    cs.qualys.com/webhook: ignore
+  name: {{ include "admission-controller.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.resources.replicas}}
+  selector:
+    matchLabels:
+      app: {{ include "admission-controller.fullname" . }}
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: {{ include "admission-controller.fullname" . }}
+      annotations:
+        rollme/uponProxyUpdate: {{ include "admission-controller.proxyHash" . }}
+        rollme/uponApiConfigUpdate: {{ include "admission-controller.apiConfigHash" . }}
+        rollme/uponWebhookUpdate: {{ include (print $.Template.BasePath "/validating-webhook-configuration.yaml") . | sha256sum }}
+        checksum/config: {{ include (print $.Template.BasePath "/config-map.yaml") . | sha256sum }}
+    spec:
+{{- if .Values.tolerations }}
+      tolerations:
+      {{- toYaml .Values.tolerations | nindent 6 }}
+{{- end }}
+{{- if .Values.nodeSelector }}
+      nodeSelector:
+      {{- toYaml .Values.nodeSelector | nindent 8 }}
+{{- end }}
+{{- if or .Values.affinity }}
+      affinity:
+      {{- toYaml .Values.affinity | nindent 8 }}
+{{- end }}
+      {{- if .Values.network.hostNetwork }}
+      hostNetwork: true
+      {{- end }}
+      serviceAccountName: {{ .Values.serviceAccount.name }}
+      containers:
+        - name: admission-controller
+          ports:
+            - containerPort: {{ .Values.port }}
+              name: adm-ctrl-port
+          env:
+            - name: CONFIG_PATH
+              value: "{{ printf "%s/%s" .Values.configPathDir .Values.configFile }}"
+            - name: REGISTRY_CONFIG_PATH
+              value: "{{ printf "%s/%s" .Values.configPathDir .Values.registry.config.filename }}"
+          livenessProbe:
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            httpGet:
+              scheme: HTTPS
+              path: /healthz
+              port: {{ .Values.port }}
+          volumeMounts:
+          {{- if .Values.persistentStorage.enabled }}
+            - name: persistent-volume
+              mountPath: /usr/local/qualys/admission-controller/data
+          {{- end }}
+            - name: "certs"
+              mountPath: "/etc/certs"
+              readOnly: true
+          {{- if .Values.global.rootCA.certificate }}
+            - name: "root-ca"
+              mountPath: /etc/ssl/certs/custom-root-ca.crt
+              subPath: custom-root-ca.crt
+              readOnly: true
+          {{- end }}
+          {{- if .Values.global.proxy.certificate }}
+            - mountPath: /etc/ssl/certs/custom-proxy-ca.crt
+              name: proxy-cert-path
+              subPath: custom-proxy-ca.crt
+              readOnly: true
+          {{- end }}
+            - name: "admission-controller-volume"
+              mountPath: "{{ printf "%s/%s" .Values.configPathDir .Values.configFile }}"
+              subPath: "{{ .Values.configFile }}"
+              readOnly: true
+            - name: "qualys-registry-config-volume"
+              mountPath: "{{ printf "%s/%s" .Values.configPathDir .Values.registry.config.filename }}"
+              subPath: "{{ .Values.registry.config.filename }}"
+              readOnly: true
+          image: "{{ .Values.image }}"
+          imagePullPolicy: {{.Values.imagePullPolicy}}
+          resources:
+            {{- if .Values.resources.limits.enabled }}
+            limits:
+              cpu: {{.Values.resources.limits.cpu}} # Default CPU usage limit.
+              memory: {{.Values.resources.limits.memory}}
+            {{- end}}
+            {{- if .Values.resources.requests.enabled }}
+            requests:
+              cpu: {{.Values.resources.requests.cpu}}
+              memory: {{.Values.resources.requests.memory }}
+            {{- end }}
+      volumes:
+      {{- if .Values.persistentStorage.enabled }}
+        - name: persistent-volume
+      {{- if .Values.persistentVolumeClaim.enabled }}
+          persistentVolumeClaim:
+            claimName: {{.Values.persistentVolumeClaim.name}}
+      {{- else }}
+          hostPath:
+            path: {{.Values.persistentVolumeHostPath}}
+            type: DirectoryOrCreate
+      {{- end }}
+      {{- end }}
+        - name: "certs"
+          secret:
+      {{- if .Values.certs.secretName }}
+            secretName: {{ .Values.certs.secretName }}
+      {{- else }}
+            secretName: {{ .Values.certs.name }}
+      {{- end }}
+      {{- if .Values.global.rootCA.certificate }}
+        - name: "root-ca"
+          secret:
+            secretName: root-ca-secret
+      {{- end }}
+      {{- if .Values.global.proxy.certificate }}
+        - name: proxy-cert-path
+          secret:
+            secretName: proxy-ca-secret
+      {{- end }}
+        - name: "admission-controller-volume"
+          configMap:
+            name: {{ .Values.config.name }}
+            items:
+              - key: "{{ .Values.configFile }}"
+                path: "{{ .Values.configFile }}"
+        - name: "qualys-registry-config-volume"
+          configMap:
+            name: {{ .Values.registry.config.name }}
+            items:
+              - key: "{{ .Values.registry.config.filename }}"
+                path: "{{.Values.registry.config.filename }}"
+      {{- if .Values.global.imagePullSecret }}
+      imagePullSecrets:
+        - name: {{ .Values.global.imagePullSecret }}
+      {{- end }}
