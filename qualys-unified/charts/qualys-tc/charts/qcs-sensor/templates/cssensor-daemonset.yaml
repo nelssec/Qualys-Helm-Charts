@@ -1,0 +1,408 @@
+# Qualys Container Sensor DaemonSet pod
+
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: qualys-container-sensor
+{{- if .Values.qualys.namespace }}
+  namespace: {{.Values.qualys.namespace}}
+{{- else }}
+  namespace: {{ .Release.Namespace }}
+{{- end }}
+  labels:
+    k8s-app: qualys-cs-sensor
+spec:
+  selector:
+    matchLabels:
+      name: qualys-container-sensor
+  updateStrategy:
+      type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        name: qualys-container-sensor
+        {{- if and .Values.global .Values.global.gkeAutopilot .Values.global.gkeAutopilot.enabled .Values.global.gkeAutopilot.allowlistLabelForQcsSensor }}
+        cloud.google.com/matching-allowlist: {{ .Values.global.gkeAutopilot.allowlistLabelForQcsSensor }}
+        {{- end }}
+    spec:
+{{- if .Values.nodeSelector }}
+      nodeSelector:
+      {{- toYaml .Values.nodeSelector | nindent 8 }}
+{{- end }}
+{{- if or .Values.affinity }}
+      affinity:
+      {{- toYaml .Values.affinity | nindent 8 }}
+{{- end }}
+{{- if .Values.tolerations }}
+      tolerations:
+      {{- toYaml .Values.tolerations | nindent 6 }}
+{{- else if .Values.qualys.tolerations.enabled }}
+      tolerations:
+      {{- range $toleration := .Values.qualys.tolerations.toleration }}
+      - key: {{ $toleration.key }}
+        operator: {{ $toleration.operator }}
+        value: {{ $toleration.value | quote }}
+        effect: {{ $toleration.effect }}
+      {{- end }}
+{{- end }}
+{{- if .Values.qualys.priorityClass.enabled }}
+      priorityClassName: {{.Values.qualys.priorityClass.priorityClassName}}
+{{- end }}
+      serviceAccountName: qualys-service-account
+{{- if and .Values.global .Values.global.imagePullSecret }}
+      imagePullSecrets:
+      - name: {{ .Values.global.imagePullSecret }}
+{{- end }}
+      containers:
+      - name: qualys-container-sensor
+        image: {{.Values.qualys.image}}
+        imagePullPolicy: {{.Values.qualys.imagePullPolicy}}
+        resources:
+          limits:
+            {{- if .Values.qualys.cpu }}
+            cpu: {{.Values.qualys.cpu }}
+            {{- else if .Values.qualys.sensorContResources.enabled }}
+            cpu: "{{.Values.qualys.sensorContResources.limits.cpu}}"
+            {{- end }}
+            {{- if .Values.qualys.sensorContResources.enabled }}
+            memory: "{{.Values.qualys.sensorContResources.limits.memory}}"
+            {{- end }}
+            {{- if and .Values.global .Values.global.gkeAutopilot .Values.global.gkeAutopilot.enabled }}
+            ephemeral-storage: "{{.Values.qualys.sensorContResources.limits.gkeAutoEphemeralStorage}}"
+            {{- end }}
+          requests:
+            {{- if .Values.qualys.sensorContResources.enabled }}
+            cpu: "{{.Values.qualys.sensorContResources.requests.cpu}}"
+            memory: "{{.Values.qualys.sensorContResources.requests.memory}}"
+            {{- end }}
+            {{- if and .Values.global .Values.global.gkeAutopilot .Values.global.gkeAutopilot.enabled }}
+            ephemeral-storage: "{{.Values.qualys.sensorContResources.requests.gkeAutoEphemeralStorage}}"
+            {{- end }}
+        args:
+        - "--k8s-mode"
+{{- if .Values.crio.enabled }}
+        - "--container-runtime"
+        - "cri-o"
+{{- else if .Values.docker.enabled }}
+        - "--use-kubectl"
+{{- else }}
+        - "--container-runtime"
+        - "containerd"
+{{- end }}
+{{- if .Values.qualys.args.withoutPersistentStorage }}
+        - "--sensor-without-persistent-storage"
+{{- end }}
+{{- if .Values.qualys.args.enableConsoleLogs }}
+        - "--enable-console-logs"
+{{- end }}
+{{- if .Values.qualys.args.cicdDeployedSensor }}
+        - "--cicd-deployed-sensor"
+{{- end }}
+{{- if .Values.qualys.args.registrySensor }}
+        - "--registry-sensor"
+{{- end }}
+{{- if .Values.qualys.args.disableLog4jScanning }}
+        - "--disable-log4j-scanning"
+{{- end }}
+{{- if .Values.qualys.args.disableLog4jStaticDetection }}
+        - "--disable-log4j-static-detection"
+{{- end }}
+{{- if .Values.qualys.args.maskEnvVariable }}
+        - "--mask-env-variable"
+{{- end }}
+{{- if .Values.qualys.args.optimizeImageScans }}
+        - "--optimize-image-scans"
+{{- end }}
+{{- if .Values.qualys.args.disableImageScan }}
+        - "--disableImageScan"
+{{- end }}
+        - "--scan-thread-pool-size"
+        - {{.Values.qualys.args.concurrentScan | quote }}
+        - "--log-filepurgecount"
+        - {{.Values.qualys.args.logFilePurgeCount | quote }}
+        - "--log-filesize"
+        - {{.Values.qualys.args.logFileSize | quote }}
+        - "--log-level"
+        - {{.Values.qualys.args.logLevel | quote }}
+        {{- range $v := .Values.qualys.add_args }}
+        - {{ $v | quote }}
+        {{- end }}
+{{- if .Values.qualys.args.scanningPolicy }}
+        - "--scanning-policy"
+        - {{.Values.qualys.args.scanningPolicy }}
+{{- end }}
+{{- if .Values.qualys.args.performScaScan }}
+        - "--perform-sca-scan"
+{{- end }}
+{{- if .Values.qualys.args.performSecretDetection}}
+        - "--perform-secret-detection"
+{{- end}}
+{{- if .Values.qualys.args.performMalwareDetection}}
+        - "--perform-malware-detection"
+{{- end}}
+{{- if .Values.qualys.args.disableFeatures }}
+        - "--disable-features"
+        - {{.Values.qualys.args.disableFeatures }}
+{{- end}}
+{{- if .Values.qualys.args.limitResourceUsage}}
+        - "--limit-resource-usage"
+{{- end}}
+{{- if and .Values.containerd.enabled .Values.qualys.args.insecureRegistry}}
+        - "--insecure-registry"
+{{- end}}
+{{- if .Values.qualys.args.disallowInternetAccessForSca }}
+        - "--disallow-internet-access-for-sca"
+{{- end }}
+        - "--sca-scan-timeout-in-seconds"
+        - {{.Values.qualys.args.scaScanTimeoutInSeconds | quote }}
+{{- if and .Values.containerd.enabled .Values.qualys.args.enableStorageDriver }}
+        - "--storage-driver-type"
+        - {{.Values.qualys.args.storageDriverType | quote }}
+{{- end }}
+{{- if and .Values.docker.enabled .Values.docker.storageDriverType }}
+        - "--storage-driver-type"
+        - {{.Values.docker.storageDriverType | quote }}
+{{- end }}
+{{- if and .Values.crio.enabled .Values.crio.storageDriverType }}
+        - "--storage-driver-type"
+        - {{.Values.crio.storageDriverType | quote }}
+{{- end }}
+{{- if .Values.qualys.args.tagSensorProfile }}
+        - "--tag-sensor-profile"
+        - {{.Values.qualys.args.tagSensorProfile }}
+{{- end }}
+{{- if .Values.qualys.args.disableContainerScan }}
+        - "--disableContainerScan"
+{{- end }}
+{{- if .Values.qualys.args.enableDiskSpaceCheck }}
+        - "--enable-disk-space-check"
+{{- end }}
+{{- if .Values.qualys.args.populateK8sMetadata }}
+        - "--populate-k8smetadata"
+{{- end }}
+{{- if .Values.qualys.args.ignoreExclusionListForImages }}
+        - "--ignore-exclusion-list-for-images"
+{{- end }}
+{{- if .Values.qualys.args.disableProcessEnvCollection }}
+        - "--qlys-disable-process-env-collection"
+{{- end }}
+{{- if .Values.qualys.args.javaDBUpdateIntervalInDays }}
+        - "--qlys-java-db-update-interval-in-days"
+        - {{.Values.qualys.args.javaDBUpdateIntervalInDays | quote }}
+{{- end }}
+{{- if .Values.qualys.args.assetTrackingFlushDurationInSeconds }}
+        - "--qlys-asset-tracking-flush-duration-in-seconds"
+        - {{.Values.qualys.args.assetTrackingFlushDurationInSeconds | quote }}
+{{- end }}
+{{- if .Values.qualys.args.assetTrackingFlushThresholdCount }}
+        - "--qlys-asset-tracking-flush-threshold-count"
+        - {{.Values.qualys.args.assetTrackingFlushThresholdCount | quote }}
+{{- end }}
+{{- if .Values.qualys.args.disableDefaultLoggingToFile }}
+        - "--qlys-disable-default-logging-to-file"
+{{- end }}
+        env:
+        - name: CUSTOMERID
+{{- if and .Values.global .Values.global.customerId }}
+          value: {{.Values.global.customerId | quote | required ".Values.global.customerId is required."}}
+{{- else }}
+          value: {{.Values.qualys.customerID | quote | required ".Values.qualys.customerID is required."}}
+{{- end }}
+        - name: ACTIVATIONID
+{{- if and .Values.global .Values.global.activationId }}
+          value: {{.Values.global.activationId | quote | required ".Values.global.activationId is required."}}
+{{- else }}
+          value: {{.Values.qualys.activationID | quote | required ".Values.qualys.activationID  is required."}}
+{{- end }}
+{{- if and .Values.global .Values.global.pod }}
+        - name: POD_NAME
+          value: {{.Values.global.pod | quote }}
+{{- else if .Values.qualys.pod_name }}
+        - name: POD_NAME
+          value: {{.Values.qualys.pod_name | quote }}
+{{- else }}
+        - name: POD_URL
+{{- if and .Values.global .Values.global.cmsqagPublicUrl  }}
+          value: {{.Values.global.cmsqagPublicUrl  | quote | required ".Values.global.cmsqagPublicUrl is required."}}
+{{- else }}
+          value: {{.Values.qualys.pod_url | quote | required ".Values.qualys.pod_url  is required."}}
+{{- end }}
+{{- end }}
+        - name: QUALYS_SCANNING_CONTAINER_LAUNCH_TIMEOUT
+          value: "{{.Values.qualys.containerLaunchTimeout}}"
+{{- if .Values.docker.tlsVerify.enabled }}
+        - name: DOCKER_TLS_VERIFY
+          value: "1"
+{{- end }}
+{{- if .Values.qualys.dockerHost }}
+        - name: DOCKER_HOST
+          value: "{{.Values.qualys.dockerHostValue}}"
+{{- end }}
+{{- if and .Values.global .Values.global.proxy .Values.global.proxy.value}}
+        - name: qualys_https_proxy
+          value: {{.Values.global.proxy.value}}
+{{- else if .Values.qualys.proxy.enabled }}
+        - name: qualys_https_proxy
+          value: {{.Values.qualys.proxy.proxyvalue}}
+{{- end }}
+{{- if .Values.qualys.registryProxy.enabled }}
+        - name: https_proxy
+          value: {{.Values.qualys.registryProxy.proxyvalue}}
+{{- end }}
+        - name: QUALYS_POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: QUALYS_POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+{{- if not (and .Values.global .Values.global.gkeAutopilot .Values.global.gkeAutopilot.enabled) }}
+        - name: QUALYS_SENSOR_HOST_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+{{- end }}
+{{- if .Values.qualys.scanningContResources.enabled }}
+        - name: QUALYS_SCANNING_CONTAINER_MEMORYREQUESTMB
+          value: "{{.Values.qualys.scanningContResources.requests.memory}}"
+        - name: QUALYS_SCANNING_CONTAINER_MEMORYLIMITMB
+          value: "{{.Values.qualys.scanningContResources.limits.memory}}"
+        - name: QUALYS_SCANNING_CONTAINER_CPUREQUEST
+          value: "{{.Values.qualys.scanningContResources.requests.cpu}}"
+        - name: QUALYS_SCANNING_CONTAINER_CPULIMIT
+          value: "{{.Values.qualys.scanningContResources.limits.cpu}}"
+{{- end }}
+        volumeMounts:
+{{- if .Values.crio.enabled }}
+        - mountPath: "/var/run/crio/crio.sock"
+{{- else if .Values.docker.enabled }}
+        - mountPath: "/var/run/docker.sock"
+{{- else }}
+        - mountPath: "/var/run/containerd/containerd.sock"
+{{- end }}
+          name: socket-volume
+          readOnly: true
+{{- if not .Values.qualys.args.withoutPersistentStorage }}
+        - mountPath: /usr/local/qualys/qpa/data
+          name: persistent-volume
+{{- end }}
+        - mountPath: /usr/local/qualys/qpa/data/conf/agent-data
+          name: agent-volume
+{{- if .Values.crio.enabled }}
+        - mountPath: "/var/lib/containers/storage"
+          name: container-storage
+{{- if .Values.crio.storageDriverType }}
+          readOnly: true
+{{- end }}
+        - mountPath: {{.Values.crio.storageConfigPath}}
+          name: storage-config-volume
+          readOnly: true
+{{- end }}
+{{- if and .Values.containerd.enabled .Values.qualys.args.enableStorageDriver }}
+        - mountPath: "/var/lib/containerd"
+          name: containerd-root-dir
+          readOnly: true
+{{- end }}
+{{- if and .Values.docker.enabled .Values.docker.storageDriverType }}
+        - mountPath: {{.Values.docker.storageDriverPath }}
+          name: docker-root-dir
+          readOnly: true
+{{- end }}
+{{- if and .Values.global .Values.global.proxy .Values.global.proxy.certificate }}
+        - mountPath: /etc/qualys/qpa/cert/custom-ca.crt
+          name: proxy-cert-path
+          subPath: custom-proxy-ca.crt
+          readOnly: true
+{{- else if .Values.qualys.proxy.proxycertpath }}
+        - mountPath: /etc/qualys/qpa/cert/custom-ca.crt
+          name: proxy-cert-path
+{{- end }}
+{{- if .Values.docker.tlsVerify.enabled }}
+        - mountPath: /root/.docker
+          name: tls-cert-path
+{{- end }}
+{{- if .Values.containerd.secret }}
+        - mountPath: /etc/containerd/certs.d/hostIP/ca.crt
+          name: registry-cert-volume
+          subPath: ca.crt
+          readOnly: true
+{{- end }}
+        securityContext:
+{{- if .Values.crio.enabled }}
+          privileged: true
+{{- else }}
+          allowPrivilegeEscalation: false
+{{- end }}
+{{- if .Values.qualys.readOnly }}
+          readOnlyRootFilesystem: true
+{{- end }}
+      volumes:
+        - name: socket-volume
+          hostPath:
+{{- if .Values.crio.enabled }}
+            path: {{.Values.crio.socketPath}}
+{{- else if .Values.docker.enabled }}
+            path: {{.Values.docker.socketPath}}
+{{- else }}
+            path: {{.Values.containerd.socketPath}}
+{{- end }}
+            type: Socket
+{{- if not .Values.qualys.args.withoutPersistentStorage }}
+        - name: persistent-volume
+{{- if .Values.qualys.persistentVolumeClaim.enabled }}
+          persistentVolumeClaim:
+            claimName: qualys-sensor-pv-claim
+{{- else }}
+          hostPath:
+            path: {{.Values.qualys.persistentvolhostpath}}
+            type: DirectoryOrCreate
+{{- end }}
+{{- end }}
+        - name: agent-volume
+          hostPath:
+            path: /etc/qualys
+            type: DirectoryOrCreate
+{{- if .Values.crio.enabled }}
+        - name: container-storage
+          hostPath:
+            path: {{.Values.crio.containerPath}}
+{{- end }}
+{{- if .Values.crio.enabled }}
+        - name: storage-config-volume
+          hostPath:
+            path: {{.Values.crio.storageConfigPath}}
+            type: File
+{{- end }}
+{{- if and .Values.containerd.enabled .Values.qualys.args.enableStorageDriver }}
+        - name: containerd-root-dir
+          hostPath:
+            path: {{.Values.containerd.storageDriverPath }}
+{{- end }}
+{{- if and .Values.docker.enabled .Values.docker.storageDriverType }}
+        - name: docker-root-dir
+          hostPath:
+            path: {{.Values.docker.storageDriverPath }}
+{{- end }}
+{{- if and .Values.global .Values.global.proxy .Values.global.proxy.certificate }}
+        - name: proxy-cert-path
+          secret:
+            secretName: proxy-ca-secret
+{{- else if .Values.qualys.proxy.proxycertpath }}
+        - name: proxy-cert-path
+          hostPath:
+            path: {{.Values.qualys.proxy.proxycertpath}}
+            type: File
+{{- end }}
+{{- if .Values.docker.tlsVerify.enabled }}
+        - name: tls-cert-path
+          hostPath:
+            path: {{.Values.docker.tlsVerify.tlsCertPath}}
+            type: Directory
+{{- end }}
+{{- if .Values.containerd.secret }}
+        - name: registry-cert-volume
+          secret:
+            secretName: containerd-cert-config
+{{- end }}
+      hostNetwork: {{.Values.qualys.hostNetwork}}

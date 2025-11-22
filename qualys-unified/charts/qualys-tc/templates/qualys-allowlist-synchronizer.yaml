@@ -1,0 +1,12 @@
+# GKE Autopilot AllowlistSynchronizer
+{{- if .Values.global.gkeAutopilot.enabled }}
+apiVersion: auto.gke.io/v1
+kind: AllowlistSynchronizer
+metadata:
+  name: qualys-container-security 
+  annotations:
+    "helm.sh/hook": pre-install
+spec:
+  allowlistPaths:
+  - Qualys/qcs-sensor/* 
+{{- end }}

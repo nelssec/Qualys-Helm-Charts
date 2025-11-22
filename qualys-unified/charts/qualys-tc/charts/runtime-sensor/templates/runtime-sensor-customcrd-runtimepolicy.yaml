@@ -1,0 +1,277 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  creationTimestamp: null
+  name: runtimepolicies.qualys.com
+spec:
+  group: qualys.com
+  names:
+    kind: RuntimePolicy
+    plural: runtimepolicies
+    shortNames:
+    - rp
+    singular: runtimepolicy
+  scope: Cluster
+  versions:
+  - name: v1
+    schema:
+      openAPIV3Schema:
+        properties:
+          spec:
+            description: |
+                          ------ BEGIN README ---------------------
+
+                            This document provides the workflow for creating, applying, viewing, and deleting
+                            Runtime policies using Kubernetes custom resources.
+
+                            These `RuntimePolicy` resources allow fine-grained control over file system monitoring,
+                            with support for specifying which paths, IPs, ports, or protocols should be monitored or skipped.
+
+                            Each RuntimePolicy must define:
+                            - `base-policy`: A predefined action category like `file-open`, `file-read`, etc.
+                            - `action`: The operation type, e.g., `audit` or `block`.
+                            - Optional filters to narrow down scope:
+                              - `monitor-paths`
+                              - `monitor-src-ips`
+                              - `monitor-dest-ips`
+                              - `monitor-src-ports`
+                              - `monitor-dest-ports`
+                              - `monitor-protocols`
+                              - `skip-src-ips`
+                              - `skip-dest-ips`
+                              - `skip-src-ports`
+                              - `skip-dest-ports`
+
+                            Below are some sample policies (modify as per requirement before applying):
+
+                            1) Monitor file open action
+                            -----------------------------------------
+                              apiVersion: qualys.com/v1
+                              kind: RuntimePolicy
+                              metadata:
+                                name: monitor-file-open
+                              spec:
+                                base-policy: "file-open"
+                                action: "audit"
+                                monitor-paths:
+                                  - "/var/log/"
+                                  - "/etc/nginx/"
+
+                            2) Monitor file read action
+                            -----------------------------------------
+                              apiVersion: qualys.com/v1
+                              kind: RuntimePolicy
+                              metadata:
+                                name: monitor-file-read
+                              spec:
+                                base-policy: "file-read"
+                                action: "audit"
+                                monitor-paths:
+                                  - "/etc/passwd"
+
+                            3) Monitor file write action
+                            -----------------------------------------
+                              apiVersion: qualys.com/v1
+                              kind: RuntimePolicy
+                              metadata:
+                                name: monitor-file-write
+                              spec:
+                                base-policy: "file-write"
+                                action: "audit"
+                                monitor-paths:
+                                  - "/etc/passwd"
+
+                            4) Monitor file create action
+                            -----------------------------------------
+                              apiVersion: qualys.com/v1
+                              kind: RuntimePolicy
+                              metadata:
+                                name: monitor-file-create
+                              spec:
+                                base-policy: "file-create"
+                                action: "audit"
+                                monitor-paths:
+                                  - "/etc/"
+
+                            5) Monitor file write with diff action
+                            -----------------------------------------
+                              apiVersion: qualys.com/v1
+                              kind: RuntimePolicy
+                              metadata:
+                                name: monitor-file-write-diff
+                              spec:
+                                base-policy: "file-write-diff"
+                                action: "audit"
+                                monitor-paths:
+                                  - "/etc/passwd"
+
+                            6) Monitor file rename action
+                            -----------------------------------------
+                              apiVersion: qualys.com/v1
+                              kind: RuntimePolicy
+                              metadata:
+                                name: monitor-file-rename
+                              spec:
+                                base-policy: "file-rename"
+                                action: "audit"
+                                monitor-paths:
+                                  - "/etc/"
+
+                            7) Monitor file delete action
+                            -----------------------------------------
+                              apiVersion: qualys.com/v1
+                              kind: RuntimePolicy
+                              metadata:
+                                name: monitor-file-delete
+                              spec:
+                                base-policy: "file-delete"
+                                action: "audit"
+                                monitor-paths:
+                                  - "/etc/passwd"
+                                  - "/etc/shadow"
+
+                            8) Monitor tcp open connection requests
+                            -----------------------------------------
+                              apiVersion: qualys.com/v1
+                              kind: RuntimePolicy
+                              metadata:
+                                name: monitor-net-tcp-open
+                              spec:
+                                base-policy: "net-tcp-open"
+                                action: "audit"
+                                rate-limit: "1m"
+                                rate-limit-scope: "pod" 
+                                skip-dest-ips:
+                                  - "10.0.0.0/8"
+                                  - "172.16.0.0/12"
+                                  - "192.168.0.0/16"
+                                  - "127.0.0.0/8"
+
+                            Apart from skip-dest-ips 
+                            there are following more options to apply for 
+                              - `monitor-src-ips`
+                              - `monitor-dest-ips`
+                              - `monitor-src-ports`
+                              - `monitor-dest-ports`
+                              - `monitor-protocols`
+                              - `skip-src-ips`
+                              - `skip-dest-ips`
+                              - `skip-src-ports`
+                              - `skip-dest-ports`
+
+                            ------
+                            Common Commands:
+                            ----------------
+                            Apply a policy:
+                              $ kubectl apply -f <filename.yaml>
+                              Ex: kubectl apply -f monitor-file-open.yaml
+
+                            View all active runtime policies:
+                              $ kubectl get runtimepolicies.qualys.com
+
+                            Describe a specific policy:
+                              $ kubectl describe policies.qualys.com <policy-name>
+                              Ex: kubectl describe runtimepolicies.qualys.com monitor-file-open
+
+                            Delete a policy:
+                              $ kubectl delete runtimepolicies.qualys.com <policy-name>
+                              Ex: kubectl delete runtimepolicies.qualys.com monitor-file-open
+                              $ kubectl delete -f <filename.yaml>
+                              Ex: kubectl delete -f monitor-file-open.yaml
+
+                            ------ END README ------------------------
+            properties:
+              rate-limit:
+                description: |-
+                  A time period within which repeated messages will not be posted. Can be
+                  specified in seconds (default or with 's' suffix), minutes ('m' suffix)
+                  or hours ('h' suffix). To disable set the value to 0s or 0.
+                type: string
+              rate-limit-scope:
+                description: |-
+                    The scope of the provided rate limit argument. Can be "process" or "pod". 
+                    if "process" is selected then rate limiting applies per process; 
+                    if "pod" is selected then rate limiting applies regardless of which process caused the action.
+                type: string
+              action:
+                enum:
+                - audit
+                type: string
+              base-policy:
+                enum:
+                - file-open
+                - file-read
+                - file-write
+                - file-write-diff
+                - file-rename
+                - file-delete
+                - file-create
+                - net-tcp-open
+                type: string
+              monitor-paths:
+                items:
+                  maxLength: 64
+                  minLength: 2
+                  pattern: ^/.*
+                  type: string
+                minItems: 1
+                type: array
+              monitor-src-ips:
+                items:
+                  type: string
+                minItems: 1
+                type: array
+              monitor-dest-ips:
+                items:
+                  type: string
+                minItems: 1
+                type: array
+              monitor-src-ports:
+                items:
+                  type: string
+                minItems: 1
+                type: array
+              monitor-dest-ports:
+                items:
+                  type: string
+                minItems: 1
+                type: array
+              monitor-protocols:
+                items:
+                  type: string
+                minItems: 1
+                type: array
+              skip-src-ips:
+                items:
+                  type: string
+                minItems: 1
+                type: array
+              skip-dest-ips:
+                items:
+                  type: string
+                minItems: 1
+                type: array
+              skip-src-ports:
+                items:
+                  type: string
+                minItems: 1
+                type: array
+              skip-dest-ports:
+                items:
+                  type: string
+                minItems: 1
+                type: array
+            required:
+            - base-policy
+            - action
+            type: object
+        type: object
+    served: true
+    storage: true
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: null
+  storedVersions: null
+

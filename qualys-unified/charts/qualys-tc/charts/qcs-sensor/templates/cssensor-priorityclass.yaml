@@ -1,0 +1,11 @@
+# PriorityClass
+
+{{- if .Values.qualys.priorityClass.enabled }}
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: {{.Values.qualys.priorityClass.priorityClassName}}
+value: {{.Values.qualys.priorityClass.priorityClassValue}}
+preemptionPolicy: {{.Values.qualys.priorityClass.preemptionPolicy}}
+description: "Priority class for daemonset."
+{{- end }}

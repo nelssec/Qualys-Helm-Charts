@@ -1,0 +1,207 @@
+suite: Test Qualys validation webhook Map for k8s
+values:
+  - ../values.yaml
+templates:
+  - validating-webhook-configuration.yaml
+tests:
+  # Testing Webhook for Helm based auto cert generation
+  - it: helm based auto cert generation tests for webhook
+    documentSelector:
+      path: kind
+      value: ValidatingWebhookConfiguration
+    asserts:
+      - isKind:
+          of: ValidatingWebhookConfiguration
+      - equal:
+          path: apiVersion
+          value: admissionregistration.k8s.io/v1
+      - equal:
+          path: metadata.name
+          value: admission-controller
+      - equal:
+          path: webhooks[?(@.name == "cs.qualys.com")].failurePolicy
+          value: Ignore
+      - equal:
+          path: webhooks[?(@.name == "cs.qualys.com")].namespaceSelector.matchExpressions[?(@.key == "cs.qualys.com/webhook")].operator
+          value: NotIn
+      - equal:
+          path: webhooks[?(@.name == "cs.qualys.com")].namespaceSelector.matchExpressions[?(@.key == "cs.qualys.com/webhook")].values[0]
+          value: ignore
+      - equal:
+          path: webhooks[?(@.name == "cs.qualys.com")].namespaceSelector.matchExpressions[?(@.key == "kubernetes.io/metadata.name")].operator
+          value: NotIn
+      - equal:
+          path: webhooks[?(@.name == "cs.qualys.com")].namespaceSelector.matchExpressions[?(@.key == "kubernetes.io/metadata.name")].values[0]
+          value: NAMESPACE
+      - equal:
+          path: webhooks[?(@.name == "cs.qualys.com")].rules[0].apiGroups
+          value: ["apps", "", "v1", "batch"]
+      - equal:
+          path: webhooks[?(@.name == "cs.qualys.com")].rules[0].operations
+          value: ["CREATE", "UPDATE"]
+      - equal:
+          path: webhooks[?(@.name == "cs.qualys.com")].rules[0].resources
+          value: ["pods"]
+      - equal:
+          path: webhooks[?(@.name == "cs.qualys.com")].rules[0].apiVersions
+          value: [ "*" ]
+      - equal:
+          path: webhooks[?(@.name == "cs.qualys.com")].clientConfig.service.namespace
+          value: NAMESPACE
+      - equal:
+          path: webhooks[?(@.name == "cs.qualys.com")].clientConfig.service.name
+          value: admission-controller
+      - equal:
+          path: webhooks[?(@.name == "cs.qualys.com")].clientConfig.service.path
+          value: "/validate"
+      - isNotNullOrEmpty:
+          path: webhooks[?(@.name == "cs.qualys.com")].clientConfig.caBundle
+      - matchRegex:
+          path: webhooks[?(@.name == "cs.qualys.com")].clientConfig.caBundle
+          pattern: ^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$
+      - equal:
+          path: webhooks[?(@.name == "cs.qualys.com")].admissionReviewVersions
+          value: ["v1", "v1beta1"]
+      - equal:
+          path: webhooks[?(@.name == "cs.qualys.com")].sideEffects
+          value: None
+      - equal:
+          path: webhooks[?(@.name == "cs.qualys.com")].timeoutSeconds
+          value: 30
+  # Testing Webhook for Customer provided certs
+  - it: customer provided certs tests for webhook
+    set:
+      certs:
+        certsProvider: none
+      webhook:
+        caBundle: TestBundle
+    documentSelector:
+      path: kind
+      value: ValidatingWebhookConfiguration
+    asserts:
+      - isKind:
+          of: ValidatingWebhookConfiguration
+      - equal:
+          path: apiVersion
+          value: admissionregistration.k8s.io/v1
+      - equal:
+          path: metadata.name
+          value: admission-controller
+      - equal:
+          path: webhooks[?(@.name == "cs.qualys.com")].failurePolicy
+          value: Ignore
+      - equal:
+          path: webhooks[?(@.name == "cs.qualys.com")].namespaceSelector.matchExpressions[?(@.key == "cs.qualys.com/webhook")].operator
+          value: NotIn
+      - equal:
+          path: webhooks[?(@.name == "cs.qualys.com")].namespaceSelector.matchExpressions[?(@.key == "cs.qualys.com/webhook")].values[0]
+          value: ignore
+      - equal:
+          path: webhooks[?(@.name == "cs.qualys.com")].namespaceSelector.matchExpressions[?(@.key == "kubernetes.io/metadata.name")].operator
+          value: NotIn
+      - equal:
+          path: webhooks[?(@.name == "cs.qualys.com")].namespaceSelector.matchExpressions[?(@.key == "kubernetes.io/metadata.name")].values[0]
+          value: NAMESPACE
+      - equal:
+          path: webhooks[?(@.name == "cs.qualys.com")].rules[0].apiGroups
+          value: [ "apps", "", "v1", "batch" ]
+      - equal:
+          path: webhooks[?(@.name == "cs.qualys.com")].rules[0].operations
+          value: [ "CREATE", "UPDATE" ]
+      - equal:
+          path: webhooks[?(@.name == "cs.qualys.com")].rules[0].resources
+          value: [ "pods" ]
+      - equal:
+          path: webhooks[?(@.name == "cs.qualys.com")].rules[0].apiVersions
+          value: [ "*" ]
+      - equal:
+          path: webhooks[?(@.name == "cs.qualys.com")].clientConfig.service.namespace
+          value: NAMESPACE
+      - equal:
+          path: webhooks[?(@.name == "cs.qualys.com")].clientConfig.service.name
+          value: admission-controller
+      - equal:
+          path: webhooks[?(@.name == "cs.qualys.com")].clientConfig.service.path
+          value: "/validate"
+      - isNotNullOrEmpty:
+          path: webhooks[?(@.name == "cs.qualys.com")].clientConfig.caBundle
+      - equal:
+          path: webhooks[?(@.name == "cs.qualys.com")].clientConfig.caBundle
+          value: TestBundle
+      - equal:
+          path: webhooks[?(@.name == "cs.qualys.com")].admissionReviewVersions
+          value: [ "v1", "v1beta1" ]
+      - equal:
+          path: webhooks[?(@.name == "cs.qualys.com")].sideEffects
+          value: None
+      - equal:
+          path: webhooks[?(@.name == "cs.qualys.com")].timeoutSeconds
+          value: 30
+  # Testing Secret for Helm based auto cert generation
+  - it: helm based auto cert generation tests for secret
+    documentSelector:
+      path: kind
+      value: Secret
+    asserts:
+      - isKind:
+          of: Secret
+      - isNotNullOrEmpty:
+          path: data["tls.crt"]
+      - matchRegex:
+          path: data["tls.crt"]
+          pattern: ^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$
+      - equal:
+          path: metadata.name
+          value: admission-controller-certs
+      - isNotNullOrEmpty:
+          path: data["tls.key"]
+      - matchRegex:
+          path: data["tls.key"]
+          pattern: ^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$
+      - isNotNullOrEmpty:
+          path: data["ca.crt"]
+      - matchRegex:
+          path: data["ca.crt"]
+          pattern: ^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$
+      - equal:
+          path: type
+          value: kubernetes.io/tls
+      - equal:
+          path: apiVersion
+          value: v1
+  # Testing Secret for Customer provided certs
+  - it: customer provided certs tests for secret
+    set:
+      certs:
+        certsProvider: none
+        serverCertificate: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURpakNDQW5LZ0F3SUJBZ0lVSWZDS2JLZ0M5MnZDVk9WSjlVcHJzaHVoY3owd0RRWUpLb1pJaHZjTkFRRUwKQlFBd0d6RVpNQmNHQTFVRUF3d1FjV2RoZEdVdWNYVmhiSGx6TG5OMll6QWdGdzB5TkRBeU1EY3lNak0xTVRSYQpHQTh5TWprM01URXlNakl5TXpVeE5Gb3dZREVMTUFrR0ExVUVCaE1DVlZNeEV6QVJCZ05WQkFnTUNrTmhiR2xtCmIzSnVhV0V4RkRBU0JnTlZCQWNNQzBadmMzUmxjaUJEYVhSNU1Rc3dDUVlEVlFRS0RBSkRVekVaTUJjR0ExVUUKQXd3UWNXZGhkR1V1Y1hWaGJIbHpMbk4yWXpDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQwpnZ0VCQUxxQXZGTnNIM0ErWitKQXdLbTFDQ2hXQjM3aTdqSk8wMjlyVi9xaFdEcWZ1ZWY1ME8zamwxRzFmSnIvCnF6RWRUdFlvSlgwN21PaGZsY2xPczNqaVV4RVMzelU1b2dra1lVOHA0TU5ZTGwwblFlZzZPUkh6dFhXYzNHZ1UKUDBobWVBTS9zWFZYVFlFbW9RSDVVMjZrSXF0cjZ3Y2JZWnVsRk5xZWZHZW5QdzJscVh4NVh1SFJLR3lla2V5SQpUODlZa1puNDZxYXYxYjM0bHhabnZLbFF3NWxyeUY4ZWlFYWVMNHlCZGU5aERZTXI3bWRLVUhpclQzNkVRMm5hCnhmMHlOR3AzWEpwYnl2cDVQVGdkT3lIZENpS09UekRhWTM4eVBaTzhxSjVkb25pcGF1QUJkQTVPdUxqOXF6enUKTkUzVityaWdpS3BjbGVOVHgrZ1R6L3RYTW5rQ0F3RUFBYU4vTUgwd093WURWUjBSQkRRd01vSVFjV2RoZEdVdQpjWFZoYkhsekxuTjJZNEllY1dkaGRHVXVjWFZoYkhsekxuTjJZeTVqYkhWemRHVnlMbXh2WTJGc01CMEdBMVVkCkRnUVdCQlJQM3dqZ08yTCtPTTdOSEM4SGlreUNIaW1VVURBZkJnTlZIU01FR0RBV2dCUm9raDhJV0laM3VjVUsKaDFwMWVKWHRBYkp1d0RBTkJna3Foa2lHOXcwQkFRc0ZBQU9DQVFFQVVJSHZ0dVFHd0IzMHRLOGFFOEwzd3AwVApEU255RlNUbVByTit3NWtnZEtTeW1XSDUzZEFxcTJkSnQvamFxbjJmY3YyUHBsSkFxV09hUXo3cXQwckU5UGQyClQ1Zm1oOCtOanZoOTZGeHNpeVBHbWJwaHpXWWRtODdXSVBuV3NMOWh1YlY3UUlKU2tDQnJWYytDUFZVd2VqWE0KLzdEM3orQ2I2Sy9tUyt1K2xSeml1ZE5IWFVVWFRxT3BKK2lXZlE1M3N5aUJWVGw1V1ROS090S0pJdVN4dHhYegpXM0pYRjNsam1OSzRpbnVkV3p5NWZKQldDcVpaNnJWVEh0NGN2cjJaeit5NEo3NU9PVEl1YW5HckM2MC84bHVjCi94SGFIQ0lhV0szdHpmZ1p3TkE3K3Ftbk1YdGw0R044bmsrL2p0SXpzVlNYVkYvY0hWbjgwUHA4VFN4L1ZRPT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=
+        serverKey: LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JSUV2UUlCQURBTkJna3Foa2lHOXcwQkFRRUZBQVNDQktjd2dnU2pBZ0VBQW9JQkFRQzZnTHhUYkI5d1BtZmkKUU1DcHRRZ29WZ2QrNHU0eVR0TnZhMWY2b1ZnNm43bm4rZER0NDVkUnRYeWEvNnN4SFU3V0tDVjlPNWpvWDVYSgpUck40NGxNUkV0ODFPYUlKSkdGUEtlRERXQzVkSjBIb09qa1I4N1Yxbk54b0ZEOUlabmdEUDdGMVYwMkJKcUVCCitWTnVwQ0tyYStzSEcyR2JwUlRhbm54bnB6OE5wYWw4ZVY3aDBTaHNucEhzaUUvUFdKR1orT3FtcjlXOStKY1cKWjd5cFVNT1phOGhmSG9oR25pK01nWFh2WVEyREsrNW5TbEI0cTA5K2hFTnAyc1g5TWpScWQxeWFXOHI2ZVQwNApIVHNoM1FvaWprOHcybU4vTWoyVHZLaWVYYUo0cVdyZ0FYUU9Ucmk0L2FzODdqUk4xZnE0b0lpcVhKWGpVOGZvCkU4LzdWeko1QWdNQkFBRUNnZ0VBQm91V0VHZHZBd1Z0cCtjVjI5N2FsbS9PZTRtRFNvaXhxdXRkZnhKQ2dtd3cKbmcrS1lZN25OSnJsOEpxZ2Eyelg0M1F0UEtQbXplRHM1TSs2UkxmTXFvQzdES2NsSktUK05VVUcrbFFSN0hzQQpPU0l4OW90VEJ2bW1VcEREVjhzZzB4eGRJZjBhWHpuMzFKWG5jNjZXK09Va3JtOHJrY2JOWUk3SFZ1dnJycExlClhRYTBtelh4MWk1WXVJd2ZuOTNKWU5DbGdMVnNCbUhwMWIwR1I2OXFtWFBHZDF1cXRkbCtwY21zZS8rNDVDVVEKOGRGcThENitTd3ZJV28wbGppT0IwV2pRcS9HMUR1TWxyQ0RsRFhHVm1IdHdUYWZ5UEM5cTlCZ0t6TTBud0JpeQpqd3BqcmtTV1dBNWl1a2FkUzZFMHovVWE2MzJhTFRUa1FEL0xodzIrTVFLQmdRRDBXYUlqRWNldzVzdjhLbXRDCnlGMklJUFc4Z1MzcEErcmdlaFFHK1VDcSt0QW1qL0hFSm9BaG5WckFsS3dFRUh3QXl4SDNSbnR4UWJheW0zbkQKZjhTTlBNRkVlZUlFbjh0U0lwWTdhNTgvQ3pzNTJnL2kvblplY1AydFJzM0NuamlrREFXRU44WWJ5S3pQL1NSQgo3ZmdZYUpMd3VnR3hUdzh1QUswYms2S0FEd0tCZ1FERFpROG1PcHJ2dDZxalBPWkZJRE53NnpVN1dpbXdwT21nClkzZFROemhiVGpSWng5QmdPbHpHVllQemY2TWhEeStWbE5WdEM3WUtqMkhqelZKT1FhYWxTN0ZwRW1pK3VDYjAKZzZmUVFqRDlLN0I5MStCVWFXWUtZRXc5SSt2NUYyS3Q3TStPdFJ6TlpWT3B3YVNZb3REc2JGVm1BaHNLamlOKwpMR2VldDdRYzl3S0JnQlR2WlF2YUp5REo5V29xZkR3aGpKbndNUDJ3bDYxaUw0cUNDeHM1MmNlTWE2OFNJQ1d0CklzYytneHNDNGVZTFA0U1Y0WGt0S2NCZlgvYlhpVXd0c3pwaW5UQnZ2T1NtaURZR1RwYlN0cmNoRURiNXJ1akUKNG9GZTd1MGNwdDVvemZPSU1DVE8zb05jNHltQ3g4dDZSd3BZVTFhYXFUQjIxSmNkYWJkMkk3TVRBb0dCQUoxSgorTXY1V1VlblBnRnh3SnZjdEF3dUN3ZmdLTGM5eWFPRzdrTmFyRTh6d1FpVXhMVHh4a1VTQ2NvMThRZG54aEpQCllROEs0bHZWMkNNYzRTaUZ5TFEvSG0xS21HOE9wcTBtWGl4VFhFUXdxejVpVFA4bWFUSHBHdllNdUtRbm94UUgKRVgzN1pWZ2lQUnJsK3EyMFF5Sk9ndUEreWEzUmhkakh2aElTSnpjNUFvR0FZWVVWbUs4T3lnak5vdnNBY1ZHOQphcms2YWZQY3FWKzFkbE01dEtzVjNCSlE5bHBHVitxdmVYSit2TEFKOStuT2N6emM0Y3h0SUpUNVBlcVh2RXZOClRXa1REbUwvY2p0RkhqNk1lY0twOWxjSE5iNG5vcHIvcmdmSTVmVVM1UlhBVWlGQzNndzloVFc5ZWdrdi9HNFgKUzZnQmRaQmJIaVlPNW1ReWZ3Z0hsem89Ci0tLS0tRU5EIFBSSVZBVEUgS0VZLS0tLS0K
+      webhook:
+        caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURHVENDQWdHZ0F3SUJBZ0lVS0Nud0J6VEZNSklVaFlmWDc5b1lIZ2dNZkU0d0RRWUpLb1pJaHZjTkFRRUwKQlFBd0d6RVpNQmNHQTFVRUF3d1FjV2RoZEdVdWNYVmhiSGx6TG5OMll6QWdGdzB5TkRBeU1EY3lNak0xTVRSYQpHQTh5TWprM01URXlNakl5TXpVeE5Gb3dHekVaTUJjR0ExVUVBd3dRY1dkaGRHVXVjWFZoYkhsekxuTjJZekNDCkFTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUJBSitqVnRPMzhsaUdVbkR1QTY1UjBWNmQKNEVuVTR5V3huR1Z5VUUyc09vTlBTSGxrTzRINjFqMTVBN3UrVVVDT1hjODVaWEpGbVFNWDFEMGhLbmJjeTZDWgoyT3JXam1tVy9acEtucGJTSDJVVS92Z2d2NmVKK3FZdFlHVC82YytjRUJ6Rm5rWTQ0Q0RNMndqeU03b0h6djV6CngzSHhQSnhadDZTR25paENEUFloZVFSSS9TcXZHR0tnSnlDeFhYS0E0MWVSeGhyWXhjWUlrYmxUb0ljZEdPRXEKS2NJdGJGT2lLbFVHVnAvcDVDMkVMVFI2VDRyR1VjSytCQ2NneFYzejgxSG9VS0NKa3ViYUNEVkh1THBMa2NMdwpvWmpSTzRuREpuMDFHTUE5Mkt6aURqT2h0Y0NHU2lUZnd3N2tQZ1JaRU14d0gyQmNqbExjTk9zcTIzanFkYjBDCkF3RUFBYU5UTUZFd0hRWURWUjBPQkJZRUZHaVNId2hZaG5lNXhRcUhXblY0bGUwQnNtN0FNQjhHQTFVZEl3UVkKTUJhQUZHaVNId2hZaG5lNXhRcUhXblY0bGUwQnNtN0FNQThHQTFVZEV3RUIvd1FGTUFNQkFmOHdEUVlKS29aSQpodmNOQVFFTEJRQURnZ0VCQUdaK2hBaExZN0RnUTJvOS96Um9PS0NVRkQ0ZXZXZnZZYUZMenliOG9EQ2ZxTGlqCmV0cWFDR1RLUi9KU0xLTlVERFZnZFlFdmNzNWJELzdkV2M4R25KSkNtWVhHRTJSUG8yeHZ5N1RMNFRmOTBsdmEKTFdqZWpLalJ3TlQ1cFJqcGRwaGF6c0V5eE9HZnRRK3QvTWdzaUlMdkwrYUtoMWVCeUlzamZGb1NzVmZQZDhaSApLT1JieHFyYnNpZG5lMU9ONFpzUTV2QTM2Zjc2TVVzWmNJY3I4aTd4U21RMGkxb0I3TzVCZzhBM3liUlZPZDRBCkpnMm5WT0JmYlFaRHQ4V3YzNVpjakVFMXJWb1dyL080K21BQWlUbVVSSnBIUW1UMlFDbWo1RlBlZ1pDRTJOVGMKRHZ0WUF2QVFiRXR4L3lNKzF6M25TRG1QQndoM0tlYmxyZVBhREVVPQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+    documentSelector:
+      path: kind
+      value: Secret
+    asserts:
+      - isKind:
+          of: Secret
+      - equal:
+          path: data["tls.crt"]
+          value: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURpakNDQW5LZ0F3SUJBZ0lVSWZDS2JLZ0M5MnZDVk9WSjlVcHJzaHVoY3owd0RRWUpLb1pJaHZjTkFRRUwKQlFBd0d6RVpNQmNHQTFVRUF3d1FjV2RoZEdVdWNYVmhiSGx6TG5OMll6QWdGdzB5TkRBeU1EY3lNak0xTVRSYQpHQTh5TWprM01URXlNakl5TXpVeE5Gb3dZREVMTUFrR0ExVUVCaE1DVlZNeEV6QVJCZ05WQkFnTUNrTmhiR2xtCmIzSnVhV0V4RkRBU0JnTlZCQWNNQzBadmMzUmxjaUJEYVhSNU1Rc3dDUVlEVlFRS0RBSkRVekVaTUJjR0ExVUUKQXd3UWNXZGhkR1V1Y1hWaGJIbHpMbk4yWXpDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQwpnZ0VCQUxxQXZGTnNIM0ErWitKQXdLbTFDQ2hXQjM3aTdqSk8wMjlyVi9xaFdEcWZ1ZWY1ME8zamwxRzFmSnIvCnF6RWRUdFlvSlgwN21PaGZsY2xPczNqaVV4RVMzelU1b2dra1lVOHA0TU5ZTGwwblFlZzZPUkh6dFhXYzNHZ1UKUDBobWVBTS9zWFZYVFlFbW9RSDVVMjZrSXF0cjZ3Y2JZWnVsRk5xZWZHZW5QdzJscVh4NVh1SFJLR3lla2V5SQpUODlZa1puNDZxYXYxYjM0bHhabnZLbFF3NWxyeUY4ZWlFYWVMNHlCZGU5aERZTXI3bWRLVUhpclQzNkVRMm5hCnhmMHlOR3AzWEpwYnl2cDVQVGdkT3lIZENpS09UekRhWTM4eVBaTzhxSjVkb25pcGF1QUJkQTVPdUxqOXF6enUKTkUzVityaWdpS3BjbGVOVHgrZ1R6L3RYTW5rQ0F3RUFBYU4vTUgwd093WURWUjBSQkRRd01vSVFjV2RoZEdVdQpjWFZoYkhsekxuTjJZNEllY1dkaGRHVXVjWFZoYkhsekxuTjJZeTVqYkhWemRHVnlMbXh2WTJGc01CMEdBMVVkCkRnUVdCQlJQM3dqZ08yTCtPTTdOSEM4SGlreUNIaW1VVURBZkJnTlZIU01FR0RBV2dCUm9raDhJV0laM3VjVUsKaDFwMWVKWHRBYkp1d0RBTkJna3Foa2lHOXcwQkFRc0ZBQU9DQVFFQVVJSHZ0dVFHd0IzMHRLOGFFOEwzd3AwVApEU255RlNUbVByTit3NWtnZEtTeW1XSDUzZEFxcTJkSnQvamFxbjJmY3YyUHBsSkFxV09hUXo3cXQwckU5UGQyClQ1Zm1oOCtOanZoOTZGeHNpeVBHbWJwaHpXWWRtODdXSVBuV3NMOWh1YlY3UUlKU2tDQnJWYytDUFZVd2VqWE0KLzdEM3orQ2I2Sy9tUyt1K2xSeml1ZE5IWFVVWFRxT3BKK2lXZlE1M3N5aUJWVGw1V1ROS090S0pJdVN4dHhYegpXM0pYRjNsam1OSzRpbnVkV3p5NWZKQldDcVpaNnJWVEh0NGN2cjJaeit5NEo3NU9PVEl1YW5HckM2MC84bHVjCi94SGFIQ0lhV0szdHpmZ1p3TkE3K3Ftbk1YdGw0R044bmsrL2p0SXpzVlNYVkYvY0hWbjgwUHA4VFN4L1ZRPT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=
+      - equal:
+          path: metadata.name
+          value: admission-controller-certs
+      - equal:
+          path: metadata.name
+          value: admission-controller-certs
+      - matchRegex:
+          path: data["tls.key"]
+          pattern: LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JSUV2UUlCQURBTkJna3Foa2lHOXcwQkFRRUZBQVNDQktjd2dnU2pBZ0VBQW9JQkFRQzZnTHhUYkI5d1BtZmkKUU1DcHRRZ29WZ2QrNHU0eVR0TnZhMWY2b1ZnNm43bm4rZER0NDVkUnRYeWEvNnN4SFU3V0tDVjlPNWpvWDVYSgpUck40NGxNUkV0ODFPYUlKSkdGUEtlRERXQzVkSjBIb09qa1I4N1Yxbk54b0ZEOUlabmdEUDdGMVYwMkJKcUVCCitWTnVwQ0tyYStzSEcyR2JwUlRhbm54bnB6OE5wYWw4ZVY3aDBTaHNucEhzaUUvUFdKR1orT3FtcjlXOStKY1cKWjd5cFVNT1phOGhmSG9oR25pK01nWFh2WVEyREsrNW5TbEI0cTA5K2hFTnAyc1g5TWpScWQxeWFXOHI2ZVQwNApIVHNoM1FvaWprOHcybU4vTWoyVHZLaWVYYUo0cVdyZ0FYUU9Ucmk0L2FzODdqUk4xZnE0b0lpcVhKWGpVOGZvCkU4LzdWeko1QWdNQkFBRUNnZ0VBQm91V0VHZHZBd1Z0cCtjVjI5N2FsbS9PZTRtRFNvaXhxdXRkZnhKQ2dtd3cKbmcrS1lZN25OSnJsOEpxZ2Eyelg0M1F0UEtQbXplRHM1TSs2UkxmTXFvQzdES2NsSktUK05VVUcrbFFSN0hzQQpPU0l4OW90VEJ2bW1VcEREVjhzZzB4eGRJZjBhWHpuMzFKWG5jNjZXK09Va3JtOHJrY2JOWUk3SFZ1dnJycExlClhRYTBtelh4MWk1WXVJd2ZuOTNKWU5DbGdMVnNCbUhwMWIwR1I2OXFtWFBHZDF1cXRkbCtwY21zZS8rNDVDVVEKOGRGcThENitTd3ZJV28wbGppT0IwV2pRcS9HMUR1TWxyQ0RsRFhHVm1IdHdUYWZ5UEM5cTlCZ0t6TTBud0JpeQpqd3BqcmtTV1dBNWl1a2FkUzZFMHovVWE2MzJhTFRUa1FEL0xodzIrTVFLQmdRRDBXYUlqRWNldzVzdjhLbXRDCnlGMklJUFc4Z1MzcEErcmdlaFFHK1VDcSt0QW1qL0hFSm9BaG5WckFsS3dFRUh3QXl4SDNSbnR4UWJheW0zbkQKZjhTTlBNRkVlZUlFbjh0U0lwWTdhNTgvQ3pzNTJnL2kvblplY1AydFJzM0NuamlrREFXRU44WWJ5S3pQL1NSQgo3ZmdZYUpMd3VnR3hUdzh1QUswYms2S0FEd0tCZ1FERFpROG1PcHJ2dDZxalBPWkZJRE53NnpVN1dpbXdwT21nClkzZFROemhiVGpSWng5QmdPbHpHVllQemY2TWhEeStWbE5WdEM3WUtqMkhqelZKT1FhYWxTN0ZwRW1pK3VDYjAKZzZmUVFqRDlLN0I5MStCVWFXWUtZRXc5SSt2NUYyS3Q3TStPdFJ6TlpWT3B3YVNZb3REc2JGVm1BaHNLamlOKwpMR2VldDdRYzl3S0JnQlR2WlF2YUp5REo5V29xZkR3aGpKbndNUDJ3bDYxaUw0cUNDeHM1MmNlTWE2OFNJQ1d0CklzYytneHNDNGVZTFA0U1Y0WGt0S2NCZlgvYlhpVXd0c3pwaW5UQnZ2T1NtaURZR1RwYlN0cmNoRURiNXJ1akUKNG9GZTd1MGNwdDVvemZPSU1DVE8zb05jNHltQ3g4dDZSd3BZVTFhYXFUQjIxSmNkYWJkMkk3TVRBb0dCQUoxSgorTXY1V1VlblBnRnh3SnZjdEF3dUN3ZmdLTGM5eWFPRzdrTmFyRTh6d1FpVXhMVHh4a1VTQ2NvMThRZG54aEpQCllROEs0bHZWMkNNYzRTaUZ5TFEvSG0xS21HOE9wcTBtWGl4VFhFUXdxejVpVFA4bWFUSHBHdllNdUtRbm94UUgKRVgzN1pWZ2lQUnJsK3EyMFF5Sk9ndUEreWEzUmhkakh2aElTSnpjNUFvR0FZWVVWbUs4T3lnak5vdnNBY1ZHOQphcms2YWZQY3FWKzFkbE01dEtzVjNCSlE5bHBHVitxdmVYSit2TEFKOStuT2N6emM0Y3h0SUpUNVBlcVh2RXZOClRXa1REbUwvY2p0RkhqNk1lY0twOWxjSE5iNG5vcHIvcmdmSTVmVVM1UlhBVWlGQzNndzloVFc5ZWdrdi9HNFgKUzZnQmRaQmJIaVlPNW1ReWZ3Z0hsem89Ci0tLS0tRU5EIFBSSVZBVEUgS0VZLS0tLS0K
+      - equal:
+          path: data["ca.crt"]
+          value: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURHVENDQWdHZ0F3SUJBZ0lVS0Nud0J6VEZNSklVaFlmWDc5b1lIZ2dNZkU0d0RRWUpLb1pJaHZjTkFRRUwKQlFBd0d6RVpNQmNHQTFVRUF3d1FjV2RoZEdVdWNYVmhiSGx6TG5OMll6QWdGdzB5TkRBeU1EY3lNak0xTVRSYQpHQTh5TWprM01URXlNakl5TXpVeE5Gb3dHekVaTUJjR0ExVUVBd3dRY1dkaGRHVXVjWFZoYkhsekxuTjJZekNDCkFTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUJBSitqVnRPMzhsaUdVbkR1QTY1UjBWNmQKNEVuVTR5V3huR1Z5VUUyc09vTlBTSGxrTzRINjFqMTVBN3UrVVVDT1hjODVaWEpGbVFNWDFEMGhLbmJjeTZDWgoyT3JXam1tVy9acEtucGJTSDJVVS92Z2d2NmVKK3FZdFlHVC82YytjRUJ6Rm5rWTQ0Q0RNMndqeU03b0h6djV6CngzSHhQSnhadDZTR25paENEUFloZVFSSS9TcXZHR0tnSnlDeFhYS0E0MWVSeGhyWXhjWUlrYmxUb0ljZEdPRXEKS2NJdGJGT2lLbFVHVnAvcDVDMkVMVFI2VDRyR1VjSytCQ2NneFYzejgxSG9VS0NKa3ViYUNEVkh1THBMa2NMdwpvWmpSTzRuREpuMDFHTUE5Mkt6aURqT2h0Y0NHU2lUZnd3N2tQZ1JaRU14d0gyQmNqbExjTk9zcTIzanFkYjBDCkF3RUFBYU5UTUZFd0hRWURWUjBPQkJZRUZHaVNId2hZaG5lNXhRcUhXblY0bGUwQnNtN0FNQjhHQTFVZEl3UVkKTUJhQUZHaVNId2hZaG5lNXhRcUhXblY0bGUwQnNtN0FNQThHQTFVZEV3RUIvd1FGTUFNQkFmOHdEUVlKS29aSQpodmNOQVFFTEJRQURnZ0VCQUdaK2hBaExZN0RnUTJvOS96Um9PS0NVRkQ0ZXZXZnZZYUZMenliOG9EQ2ZxTGlqCmV0cWFDR1RLUi9KU0xLTlVERFZnZFlFdmNzNWJELzdkV2M4R25KSkNtWVhHRTJSUG8yeHZ5N1RMNFRmOTBsdmEKTFdqZWpLalJ3TlQ1cFJqcGRwaGF6c0V5eE9HZnRRK3QvTWdzaUlMdkwrYUtoMWVCeUlzamZGb1NzVmZQZDhaSApLT1JieHFyYnNpZG5lMU9ONFpzUTV2QTM2Zjc2TVVzWmNJY3I4aTd4U21RMGkxb0I3TzVCZzhBM3liUlZPZDRBCkpnMm5WT0JmYlFaRHQ4V3YzNVpjakVFMXJWb1dyL080K21BQWlUbVVSSnBIUW1UMlFDbWo1RlBlZ1pDRTJOVGMKRHZ0WUF2QVFiRXR4L3lNKzF6M25TRG1QQndoM0tlYmxyZVBhREVVPQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+      - equal:
+          path: type
+          value: kubernetes.io/tls
+      - equal:
+          path: apiVersion
+          value: v1

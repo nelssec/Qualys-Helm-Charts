@@ -1,0 +1,20 @@
+# PersistentVolumeClaim
+
+{{- if .Values.qualys.persistentVolumeClaim.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: qualys-sensor-pv-claim
+{{- if .Values.qualys.namespace }}
+  namespace: {{.Values.qualys.namespace}}
+{{- else }}
+  namespace: {{ .Release.Namespace }}
+{{- end }}
+spec:
+  storageClassName: {{.Values.qualys.persistentVolumeClaim.storageClassName |  required ".Values.qualys.persistentVolumeClaim.storageClassName is required."}}
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{.Values.qualys.persistentVolumeClaim.storage | required ".Values.qualys.persistentVolumeClaim.storage is required."}}
+{{- end }}

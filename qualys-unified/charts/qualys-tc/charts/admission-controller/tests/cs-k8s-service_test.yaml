@@ -1,0 +1,22 @@
+suite: Test Qualys service for k8s admission controller
+values:
+  - ../values.yaml
+templates:
+  - service.yaml
+tests:
+  - it: Should pass all kinds of assertions for service
+    asserts:
+      - isKind:
+          of: Service
+      - equal:
+          path: metadata.name
+          value: admission-controller
+      - equal:
+          path: metadata.namespace
+          value: NAMESPACE
+      - equal:
+          path: spec.ports[?(@.port == 443)].targetPort
+          value: 8443
+      - equal:
+          path: spec.selector.app
+          value: admission-controller

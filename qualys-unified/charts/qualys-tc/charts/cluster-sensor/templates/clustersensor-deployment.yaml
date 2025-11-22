@@ -1,0 +1,155 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: qualys-cluster-sensor
+  namespace: {{ .Release.Namespace }}
+  labels:
+    k8s-app: qualys-cluster-sensor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: qualys-cluster-sensor
+  template:
+    metadata:
+      labels:
+        name: qualys-cluster-sensor
+    spec:
+{{- if .Values.tolerations }}
+      tolerations:
+      {{- toYaml .Values.tolerations | nindent 6 }}
+{{- end }}
+{{- if .Values.nodeSelector }}
+      nodeSelector:
+      {{- toYaml .Values.nodeSelector | nindent 8 }}
+{{- end }}
+{{- if or .Values.affinity }}
+      affinity:
+      {{- toYaml .Values.affinity | nindent 8 }}
+{{- end }}
+      terminationGracePeriodSeconds: 120
+      serviceAccountName: qualys-clustersensor-sa
+{{- if .Values.global.imagePullSecret }}
+      imagePullSecrets:
+      - name: {{ .Values.global.imagePullSecret }}
+{{- end }}
+      securityContext:
+        fsGroup: 555
+      containers:
+      - name: qualys-cluster-sensor
+        image:  {{.Values.image}}
+        imagePullPolicy : {{.Values.imagePullPolicy}}
+        securityContext:
+          runAsUser: 555
+          runAsGroup: 555
+          runAsNonRoot: true
+          allowPrivilegeEscalation: false
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+        args:
+        - "--customer-id"
+        - {{.Values.global.customerId | quote | required ".Values.global.customerId is required."}}
+        - "--activation-id"
+        - {{.Values.global.activationId | quote | required ".Values.global.activationId is required."}}
+{{- if .Values.global.pod }}
+        - "--pod"
+        - {{.Values.global.pod | quote }}
+{{- else}}
+        - "--gateway-url"
+        - {{.Values.global.gatewayUrl | quote | required ".Values.global.pod or .Values.global.gatewayUrl is required."}}
+{{- end }}
+{{- if .Values.logConfig.logLevel}}
+        - "--log-level"
+        - {{.Values.logConfig.logLevel | quote}}
+{{- end }}
+{{- if .Values.logConfig.logFileSize}}
+        - "--log-file-size"
+        - {{.Values.logConfig.logFileSize | quote }}
+{{- end }}
+{{- if .Values.logConfig.logPurgeCount}}
+        - "--log-file-purge-count"
+        - {{.Values.logConfig.logPurgeCount | quote}}
+{{- end }}
+{{- if .Values.global.clusterInfoArgs.cloudProvider}}
+        - "--cloud-provider"
+        - {{.Values.global.clusterInfoArgs.cloudProvider | quote | required ".Values.global.clusterInfoArgs.cloudProvider is required."}}
+{{- end }}
+{{- if eq .Values.global.clusterInfoArgs.cloudProvider "AWS"}}
+        - "--cluster-id"
+        - {{.Values.global.clusterInfoArgs.AWS.arn | quote | required ".Values.global.clusterInfoArgs.AWS.arn is required."}}
+{{- else if eq .Values.global.clusterInfoArgs.cloudProvider "AZURE"}}
+        - "--cluster-id"
+        - {{.Values.global.clusterInfoArgs.AZURE.id | quote | required ".Values.global.clusterInfoArgs.AZURE.id is required."}}
+        - "--cluster-region"
+        - {{.Values.global.clusterInfoArgs.AZURE.region | quote | required ".Values.global.clusterInfoArgs.AZURE.region is required."}}
+{{- else if eq .Values.global.clusterInfoArgs.cloudProvider "GCP"}}
+        - "--cluster-id"
+        - {{.Values.global.clusterInfoArgs.GCP.krn | quote | required ".Values.global.clusterInfoArgs.GCP.krn is required."}}
+{{- else if eq .Values.global.clusterInfoArgs.cloudProvider "OCI"}}
+        - "--cluster-id"
+        - {{.Values.global.clusterInfoArgs.OCI.ocid | quote | required ".Values.global.clusterInfoArgs.OCI.ocid is required."}}
+        - "--cluster-name"
+        - {{.Values.global.clusterInfoArgs.OCI.clusterName | quote | required ".Values.global.clusterInfoArgs.OCI.clusterName is required."}}
+{{- else if eq .Values.global.clusterInfoArgs.cloudProvider "SELF_MANAGED_K8S"}}
+        - "--cluster-name"
+        - {{.Values.global.clusterInfoArgs.SELF_MANAGED_K8S.clusterName | quote | required ".Values.global.clusterInfoArgs.SELF_MANAGED_K8S.clusterName is required."}}
+{{- else }}
+{{- fail "Invalid cloud provider value. Valid values are AWS/AZURE/GCP/OCI/SELF_MANAGED_K8S " }}       
+{{- end }}
+{{- if .Values.global.proxy.value}}
+        - "--proxy"
+        - {{.Values.global.proxy.value | quote}}
+{{- end }}
+        - {{printf "--enable-k8s-compliance=%t" .Values.k8sCompliance.enable }}
+        - {{printf "--host-scanner-enable=%t" .Values.hostScanner.enable }}
+        - {{printf "--host-scanner-run-on-master=%t" .Values.hostScanner.runOnMaster }}
+        - "--host-scanner-cpu-limit"
+        - {{ .Values.hostScanner.resources.limits.cpu | quote}}
+        - "--host-scanner-memory-limit"
+        - {{ .Values.hostScanner.resources.limits.memory | quote}}
+        - {{printf "--openshift=%t" .Values.global.openshift }}
+        - {{printf "--mask-env-variables=%t" .Values.maskEnvVariable }}
+        env:
+        - name: CLUSTERSENSOR_POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: CLUSTERSENSOR_POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        volumeMounts:
+{{- if .Values.persistentStorage.enabled }}
+        - mountPath: /home/qualys/clustersensor/data
+          name: persistent-volume
+{{- end }}
+{{- if .Values.global.proxy.certificate }}
+        - mountPath: /etc/ssl/certs/custom-proxy-ca.crt
+          name: proxy-cert-path
+          subPath: custom-proxy-ca.crt
+          readOnly: true
+{{- end }}
+{{- if .Values.global.rootCA.certificate }}
+        - mountPath: /etc/ssl/certs/custom-root-ca.crt
+          name: root-cert-path
+          subPath: custom-root-ca.crt
+          readOnly: true
+{{- end }}
+      volumes:
+{{- if .Values.persistentStorage.enabled }}
+        - name: persistent-volume
+          hostPath:
+            path: {{.Values.persistentStorage.hostPath}}
+            type: DirectoryOrCreate
+{{- end }}
+{{- if .Values.global.proxy.certificate }}
+        - name: proxy-cert-path
+          secret:
+            secretName: proxy-ca-secret
+{{- end }}
+{{- if .Values.global.rootCA.certificate }}
+        - name: root-cert-path
+          secret:
+            secretName: root-ca-secret
+{{- end }}
+      hostNetwork: {{.Values.hostNetwork}}
