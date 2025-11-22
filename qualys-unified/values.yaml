@@ -12,28 +12,39 @@ global:
   # Activation IDs (different for different sensor types)
   activationId: ""         # REQUIRED: For cluster/runtime/general/admission sensors
 
-  # Cloud Provider (shared by all sensors in the same cluster)
-  # Valid values: AWS, AZURE, GCP, OCI, SELF_MANAGED_K8S
-  # For host sensor: Only AWS, GCP, COREOS are supported
-  cloudProvider: ""        # REQUIRED: Used by all sensors
+  # Qualys Platform Pod Identifier (RECOMMENDED - auto-fills gatewayUrl and cmsqagPublicUrl)
+  # Specify your Qualys platform instead of manually entering URLs
+  # Valid values: US1, US2, US3, US4, GOV1, EU1, EU2, EU3, IN1, CA1, AE1, UK1, AU1, KSA1
+  # Example: "US2" automatically sets:
+  #   - gatewayUrl: https://gateway.qg2.apps.qualys.com
+  #   - cmsqagPublicUrl: https://cmsqagpublic.qg2.apps.qualys.com/ContainerSensor
+  # See: https://www.qualys.com/platform-identification/
+  qualysPod: ""            # RECOMMENDED: e.g., "US2", "EU1", "GOV1"
 
-  # Qualys gateway URL (required for cluster sensors)
+  # Qualys gateway URL (auto-filled if qualysPod is set)
+  # Only specify this if you need to override the auto-selected URL
   # Examples:
   #   US Platform 1: https://gateway.qg1.apps.qualys.com
   #   US Platform 2: https://gateway.qg2.apps.qualys.com
   #   US Platform 3: https://gateway.qg3.apps.qualys.com
   #   EU Platform 1: https://gateway.qg1.apps.qualys.eu
   #   EU Platform 2: https://gateway.qg2.apps.qualys.eu
-  gatewayUrl: ""
+  gatewayUrl: ""           # Optional if qualysPod is set
 
-  # CMS QAG Public URL (for container sensors)
-  cmsqagPublicUrl: ""
+  # CMS QAG Public URL (auto-filled if qualysPod is set)
+  # Only specify this if you need to override the auto-selected URL
+  cmsqagPublicUrl: ""      # Optional if qualysPod is set
 
   # Image pull secret (if using private registry)
   imagePullSecret: ""
 
   # Cluster identification arguments (cloud-specific)
   clusterInfoArgs:
+    # Cloud Provider (shared by all sensors in the same cluster)
+    # Valid values: AWS, AZURE, GCP, OCI, SELF_MANAGED_K8S
+    # For host sensor: Only AWS, GCP are supported (or use openshift: true for COREOS)
+    cloudProvider: ""      # REQUIRED: Used by all sensors
+
     AWS:
       arn: ""
 
@@ -73,16 +84,24 @@ global:
 # HOST SENSOR (Linux Agent for Containers)
 # =============================================================================
 # This sensor runs on host nodes and scans containers/images
-# Requires cloud provider specification: AWS, GCP, or COREOS
-hostsensor:
+#
+# IMPORTANT: Host sensor image is automatically selected based on cloud provider:
+# - OpenShift (global.openshift=true) → qualys/qagent-rhcos (COREOS)
+# - AWS → qualys/qagent_bottlerocket
+# - GCP → qualys/qagent_googlecos
+# - Other providers (Azure, OCI, SELF_MANAGED_K8S non-OpenShift) → NOT SUPPORTED
+#
+host:
   enabled: false
   openshift: false  # Inherits from global.openshift if not specified
 
   qualys:
     namespace: "qualys"
 
+    # Image is automatically selected based on global.cloudProvider and global.openshift
+    # Override only if you need a specific image/tag
     image:
-      repository: "qualys/qca"
+      repository: ""  # Auto-selected: qualys/qagent-rhcos, qualys/qagent_bottlerocket, or qualys/qagent_googlecos
       tag: "latest"
       pullPolicy: "Always"
 
@@ -95,10 +114,10 @@ hostsensor:
       # Separate activation ID is REQUIRED for host sensor
       activationId: ""  # REQUIRED: Host sensor-specific activation ID
 
-      # Optional overrides (inherit from global if not specified)
-      customerId: ""    # Inherits from global.customerId if not set
-      providerName: ""  # Inherits from global.cloudProvider if not set (converted to AWS/GCP/COREOS)
-      serverUri: ""     # Inherits from global.gatewayUrl if not set
+      # Optional overrides (auto-inherit if not specified)
+      customerId: ""    # Inherits from global.customerId
+      providerName: ""  # Auto-derived from global.cloudProvider/global.openshift (AWS/GCP/COREOS)
+      serverUri: ""     # Inherits from global.gatewayUrl
 
       # Log level (1-5, default: 1)
       logLevel: "3"
@@ -126,7 +145,7 @@ hostsensor:
 # The following sensors are part of the qualys-tc unified chart
 # =============================================================================
 
-qualysTc:
+container:
   # Enable/disable the entire qualys-tc chart
   # Set to false if you only want the host-based sensor
   enabled: true
@@ -207,8 +226,8 @@ qualysTc:
 
       # Sensor configuration arguments
       args:
-        withoutPersistentStorage: false
-        enableConsoleLogs: false
+        withoutPersistentStorage: true  # Default: true for easier deployment
+        enableConsoleLogs: true  # Default: true for easier troubleshooting
         cicdDeployedSensor: false
         registrySensor: false
         concurrentScan: "4"  # Valid range: 1-20
@@ -220,7 +239,7 @@ qualysTc:
         maskEnvVariable: false
         optimizeImageScans: true
         disableImageScan: false
-        performScaScan: false
+        performScaScan: true  # Default: true to enable SCA scanning
         disallowInternetAccessForSca: false
         scaScanTimeoutInSeconds: "900"
         performSecretDetection: false
@@ -285,7 +304,7 @@ qualysTc:
       priorityClass:
         enabled: false
         priorityClassName: ""
-        priorityClassValue: ""
+        priorityClassValue: 1000000  # Integer value for priority (not a string)
         preemptionPolicy: ""
 
       hostNetwork: true
@@ -311,12 +330,12 @@ qualysTc:
 #   customerId: "your-customer-id"
 #   cloudProvider: "AWS"
 #   gatewayUrl: "https://gateway.qg2.apps.qualys.com"
-# hostsensor:
+# host:
 #   enabled: true
 #   qualys:
 #     args:
 #       activationId: "host-sensor-activation-id"
-# qualysTc:
+# container:
 #   enabled: false
 #
 # Example 2: Cluster + General Sensors only (Azure)
@@ -331,9 +350,9 @@ qualysTc:
 #     AZURE:
 #       id: "your-cluster-id"
 #       region: "eastus"
-# hostsensor:
+# host:
 #   enabled: false
-# qualysTc:
+# container:
 #   enabled: true
 #   clusterSensor:
 #     enabled: true
@@ -357,12 +376,12 @@ qualysTc:
 #   clusterInfoArgs:
 #     AWS:
 #       arn: "arn:aws:eks:us-east-1:123456789:cluster/prod"
-# hostsensor:
+# host:
 #   enabled: true
 #   qualys:
 #     args:
 #       activationId: "host-sensor-activation-id"  # Different activation ID
-# qualysTc:
+# container:
 #   enabled: true
 #   clusterSensor:
 #     enabled: true
