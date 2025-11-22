@@ -20,8 +20,8 @@ helm install qualys-sensors qualys/qualys-unified \
   --set global.qualysPod=US2 \
   --set global.clusterInfoArgs.cloudProvider=AWS \
   --set global.clusterInfoArgs.AWS.arn=YOUR_CLUSTER_ARN \
-  --set qualysTc.clusterSensor.enabled=true \
-  --set qualysTc.qcsSensor.enabled=true \
+  --set container.clusterSensor.enabled=true \
+  --set container.qcsSensor.enabled=true \
   --namespace qualys \
   --create-namespace
 ```

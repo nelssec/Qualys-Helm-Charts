@@ -54,7 +54,7 @@ Get host sensor provider name (derived from cloud provider)
 {{- define "qualys-unified.hostsensorProviderName" -}}
 {{- $openshift := .Values.global.openshift | default false -}}
 {{- $cloudProvider := .Values.global.clusterInfoArgs.cloudProvider -}}
-{{- $override := .Values.hostsensor.qualys.args.providerName | default "" -}}
+{{- $override := .Values.host.qualys.args.providerName | default "" -}}
 {{- if and $override (ne $override "") -}}
   {{- $override -}}
 {{- else if $openshift -}}
@@ -72,7 +72,7 @@ Get host sensor provider name (derived from cloud provider)
 Get host sensor image repository (auto-selected based on provider)
 */}}
 {{- define "qualys-unified.hostsensorImageRepository" -}}
-{{- $override := .Values.hostsensor.qualys.image.repository | default "" -}}
+{{- $override := .Values.host.qualys.image.repository | default "" -}}
 {{- if and $override (ne $override "") -}}
   {{- $override -}}
 {{- else -}}
@@ -183,7 +183,7 @@ Get Qualys CMS Public URL based on qualysPod identifier
 Validate required values
 */}}
 {{- define "qualys-unified.validateValues" -}}
-{{- if or .Values.hostsensor.enabled .Values.qualysTc.enabled -}}
+{{- if or .Values.host.enabled .Values.container.enabled -}}
   {{- if not .Values.global.customerId -}}
     {{- fail "global.customerId is required when any sensor is enabled" -}}
   {{- end -}}
@@ -192,12 +192,12 @@ Validate required values
   {{- end -}}
 {{- end -}}
 
-{{- if .Values.hostsensor.enabled -}}
-  {{- if not .Values.hostsensor.qualys.args.activationId -}}
-    {{- fail "hostsensor.qualys.args.activationId is required when hostsensor is enabled" -}}
+{{- if .Values.host.enabled -}}
+  {{- if not .Values.host.qualys.args.activationId -}}
+    {{- fail "host.qualys.args.activationId is required when host is enabled" -}}
   {{- end -}}
   {{- if not .Values.global.clusterInfoArgs.cloudProvider -}}
-    {{- fail "global.clusterInfoArgs.cloudProvider is required when hostsensor is enabled" -}}
+    {{- fail "global.clusterInfoArgs.cloudProvider is required when host is enabled" -}}
   {{- end -}}
   {{- $cloudProvider := .Values.global.clusterInfoArgs.cloudProvider -}}
   {{- $openshift := .Values.global.openshift | default false -}}
@@ -206,12 +206,12 @@ Validate required values
   {{- end -}}
 {{- end -}}
 
-{{- if .Values.qualysTc.enabled -}}
+{{- if .Values.container.enabled -}}
   {{- if not .Values.global.activationId -}}
-    {{- fail "global.activationId is required when qualysTc (cluster/runtime/general sensors) is enabled" -}}
+    {{- fail "global.activationId is required when container (cluster/runtime/general sensors) is enabled" -}}
   {{- end -}}
   {{- if not .Values.global.clusterInfoArgs.cloudProvider -}}
-    {{- fail "global.clusterInfoArgs.cloudProvider is required when qualysTc is enabled" -}}
+    {{- fail "global.clusterInfoArgs.cloudProvider is required when container is enabled" -}}
   {{- end -}}
 {{- end -}}
 {{- end -}}
